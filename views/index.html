@@ -1,0 +1,58 @@
+<style>
+  .card {
+      /*border-left-color: rgba(0, 0, 0, 0.125) !important;*/
+      border-color: #A94716;
+      border-left-style: solid !important;
+      border-left-width: 1px  !important;
+      border-top-left-radius: 0.25rem !important;
+      border-bottom-left-radius: 0.25rem !important;
+  }
+  .card-title {
+    margin: 0px;
+  }
+  .card-body{
+    padding: .4rem;
+  }
+</style>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page"><?= Lang::trans('nav.homePage'); ?></li>
+  </ol>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <aside>
+        <?= $info ?>
+      </aside>
+    </div>
+    <div class="col-md-7">
+      <section><div id="moto"><?= $moto ?></div></section>
+      <section><div id="highlights"><?= $highlights ?></div></section>
+      <section><div id="mews"><?= $news ?></div></section>
+      <section>
+        <div class="card>">
+          <div class="card-body">
+            <div class="card-text text-center" 
+                 style="color: #A94716; font-size: large">
+              <?= $concludingStatement ?>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-2">
+      <aside>
+        <div>
+          <img src="/assets/media/icons/logocolor2.jpg" 
+               alt="<?= Lang::trans('general.icon') ?>" 
+               title="<?= Lang::trans('general.museumIcon') ?>" />
+        </div>
+        <div>
+          <?= $collage ?>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+

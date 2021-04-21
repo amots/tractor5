@@ -1,0 +1,23 @@
+
+<?= $breadCrumbs ?>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <aside>
+        <div>
+          <img src="/assets/media/icons/logocolor2.jpg" 
+               alt="<?= Lang::trans('general.icon') ?>" 
+               title="<?= Lang::trans('general.museumIcon') ?>" />
+        </div>
+      </aside>
+    </div>
+    <div class="col-md-7">
+      <?= $content ?>
+    </div>
+    <div class="col-md-3">
+      <aside>
+        <?= $info ?>
+      </aside>
+    </div>
+  </div>
+</div>

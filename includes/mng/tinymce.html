@@ -1,0 +1,33 @@
+<script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js" 
+referrerpolicy="origin"></script>
+
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#body_he",
+      inline: true,
+
+      plugins: "link image code directionality charmap emoticons",
+      directionality: 'rtl',
+      language: 'he_IL',
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#body_en",
+      directionality: 'ltr',
+      inline: true,
+      plugins: "link image code directionality charmap emoticons",
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>

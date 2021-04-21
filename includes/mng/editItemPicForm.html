@@ -1,0 +1,41 @@
+<div class="col">
+  <div class="card h-100">
+    <div class="card-img-top">
+      <img class="clearfix img-fluid center-block p-1" 
+           src="/assets/media/pics/<?= $pic['path'] ?>"/>
+      <figcaption class="ltr"><?= $pic['path'] ?></figcaption>
+    </div>
+    <div class="card-body">
+      <form action="/inventory/updateItemPic" method="POST" class="form-horizontal" role="form">
+        <div class="card-text">
+          <input type="hidden" name="picture_id" value="<?= $pic['picture_id'] ?>" />
+          <input type="hidden" name="item_id" value="<?= $pic['item_id'] ?>" />
+          <input type="hidden" name="token" id="token" value="<?= $csrf_token ?>" />
+          <input type="hidden" name="action" value ="submitItemPic" />
+          <div class="form-group">
+            <!--<div class="form-group">-->
+            <label for="captionHe" class="control-label">מקרא</label>
+            <div>
+              <input type="text" name="captionHe" class="form-control" value="<?= $pic['captionHe'] ?>" />
+            </div>
+            <div class="ltr">
+              <label for="captionEn" class="control-label">caption</label>
+              <input type="text" name="captionEn" class="form-control ltr" value="<?= $pic['captionEn'] ?>" />
+            </div>
+            <label for="creditHe" class="control-label">קרדיט</label>
+            <div>
+              <input type="text" name="creditHe" class="form-control" value="<?= $pic['creditHe'] ?>" />
+            </div>
+            <div class="ltr">
+              <label for="creditEn" class="control-label">credit</label>
+              <input type="text" name="creditEn" class="form-control ltr" value="<?= $pic['creditEn'] ?>" />
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary btn-block btn-sm form-control my-2"><?= lang::trans('mng.submit') ?></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

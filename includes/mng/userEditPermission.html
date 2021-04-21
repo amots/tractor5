@@ -1,0 +1,55 @@
+<script type="text/javascript">
+  $(document).ready(function () {
+      console.log('ready to serve');
+      $(".permission_opt").change(function () {
+          changed($(this).attr("data-p"))
+      });
+      $("#form_active").change(function () {
+          if ($(this).is(':checked'))
+              activeVal = "Yes";
+          else
+              activeVal = null;
+          $("#active").val(activeVal);
+      });
+  });
+  function changed(param) {
+      new_permission = 0;
+      $(".permission_opt").each(function () {
+          if ($(this).is(':checked'))
+              new_permission = new_permission + parseInt($(this).attr("data-p"));
+      })
+      console.log("new permission " + new_permission);
+      $("#permission").val(new_permission);
+  }
+</script>
+
+<div class="ltr"> 
+  <h4>permission for user: <span><?= $username ?></span></h4>
+  <form action="" method="POST" class="" role="form">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $csrf_token ?>" />
+    <input type="hidden" name="memberID" value="<?= $memberID ?>" />
+    <input type="hidden" name="action" value="updatePermission" />
+    <input type="hidden" id="permission" name="permission" value ="<?= $userPermission ?>" />
+    <input type="hidden" id="active" name="active" value ="<?= $active ?>" />
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<?= $email ?>" />
+        </div>
+        <div class="form-group">
+          <input type="checkbox" id="form_active" name="form_active" <?= $activeCheck ?>>
+                 <label for="form_active">active</label>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <?= $content ?>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <button type="submit" class="btn btn-primary wymupdate"><?= lang::trans('mng.submit')?></button>
+    </div>
+  </form>
+</div>

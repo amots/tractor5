@@ -1,0 +1,50 @@
+<script>
+  $(document).ready(function () {
+      path = $(location).attr('href');
+//      value = path.substring(path.lastIndexOf('/') + 1);
+      value = path.split('/').pop();
+      $('.invMenu').each(function () {
+          thisPath = $(this).data('path');
+          if (thisPath == value) {
+              $('a', this).addClass('active');
+          }
+      });
+  });
+</script>
+<ul class="nav justify-content-center nav-tabs">
+  <li class="nav-item invMenu" data-path="search">
+    <a class="nav-link" href="/inventory/search">                
+      <?= Lang::trans('service.search') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="tractors">
+    <a class="nav-link" href="/inventory/tractors">
+      <?= Lang::trans('collage.tractors') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="ctrack">
+    <a class="nav-link" href="/inventory/ctrack">
+      <?= Lang::trans('item.continuous_track') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="vehicles">
+    <a class="nav-link" href="/inventory/vehicles">
+      <?= Lang::trans('collage.vehicles') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="tools">
+    <a class="nav-link" href="/inventory/tools">
+      <?= Lang::trans('collage.tools') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="agron">
+    <a class="nav-link" href="/inventory/agron">
+      <?= Lang::trans('collage.collections') ?>
+    </a>
+  </li>
+  <li class="nav-item invMenu" data-path="archive">
+    <a class="nav-link" href="/inventory/archive">
+      <?= Lang::trans('mng.archive') ?>
+    </a>
+  </li>
+</ul>

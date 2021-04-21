@@ -1,0 +1,47 @@
+<script type='text/javascript' src='/resources/js/jquery.tablesorter.min.js'></script>
+<script>
+  $(document).ready(function ()
+  {
+      $("#atWork").tablesorter({sortList: [[1, 0]], headers: {'.noSort': {sorter: false}}})
+      $("#onHold").tablesorter({sortList: [[1, 0]], headers: {'.noSort': {sorter: false}}})
+  });
+</script>
+<div class="mx-3">
+  <?= $breadCrumbs ?>
+  <?= $mngNavBar ?>
+</div>
+<div class="container-fluid">
+  <div class="row mx-1">      
+    <div class="col-md-12">
+      <div id="messages"><?= $messages ?></div>
+      <div id="errors"><?= $errors ?></div>
+      <div class="text-center"><a href="/service/search">
+          <span class="text-success">חיפוש</span class="text-primary"></a></div>
+      <hr />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><?= Lang::trans('service.atwork') ?></h4>
+          <div class="card-text">
+            <?= $atWorkList ?>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><?= Lang::trans('service.onhold') ?></h4>
+          <div class="card -text">
+            <?= $onHoldList ?>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

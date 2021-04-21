@@ -1,0 +1,106 @@
+<script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js" 
+referrerpolicy="origin"></script>
+
+<script>
+  $(document).ready(function () {
+      tinymce.init({
+          selector: "#note",
+          inline: true,
+
+          plugins: "link image code directionality charmap emoticons",
+          directionality: 'rtl',
+          language: 'he_IL',
+          toolbar: "undo redo | styleselect | bold italic | wordcount code  link paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+          content_css: '/resources/css/tractor.css',
+          height: 300,
+
+          visualblocks_default_state: true,
+          end_container_on_empty_block: true
+      });
+      tinymce.init({
+          selector: "#reference",
+          inline: true,
+
+          plugins: "link image code directionality charmap emoticons",
+          directionality: 'rtl',
+          language: 'he_IL',
+          toolbar: "undo redo | styleselect | bold italic | wordcount code  link paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+          content_css: '/resources/css/tractor.css',
+          height: 300,
+
+          visualblocks_default_state: true,
+          end_container_on_empty_block: true
+      });
+  });
+</script>
+
+<form  class="form-inline" method="POST" class="form-horizontal" role="form">
+  <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $csrf_token ?>" />
+  <input type="hidden" name="ownership_id" value="<?= $ownership_id ?>" />
+  <input type="hidden" name="item_id" value="<?= $item_id ?>" />
+  <input type="hidden" name="caller" value="<?= $caller ?>" />
+  
+  <input type="hidden" name="action" value="updateOwnership" />
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="form-group rtl">
+        <label for="transaction_year" class="control-label">שנה</label>
+        <input
+            type="number"  max="<?= $maxYear ?>" name="transaction_year" id="transaction_year" 
+            placeholder="שנה"
+            class="form-control" value="<?= $transaction_year ?>"
+            />
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="form-group rtl">
+        <label for="transaction_month" class="control-label">חודש</label>
+        <input
+            type="number" min="1" max="12" name="transaction_month" id="transaction_month" 
+            placeholder="חודש"
+            class="form-control" value="<?= $transaction_month ?>"
+            />
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="form-group rtl">
+        <label for="transaction_day" class="control-label">יום</label>
+        <input
+            type="number" min="1" max="31" name="transaction_day" id="transaction_day" 
+            placeholder="יום"
+            class="form-control" value="<?= $transaction_day ?>"
+            />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="owner">בעלים</label>
+          <input
+              type="text" name="owner" id="sn" class="form-control text-left" required 
+              placeholder="בעלים" value="<?= $owner ?>" />
+        </div>
+        <div class="form-group">
+          <label for="reference">אסמכתא</label>
+          <div id="reference" class="form-control" placeholder="אסמכתא"><?= $reference ?></div>
+        </div>
+      </div>
+
+      <div class="col-sm-8">
+        <div class="form-group">
+          <label for="note">הערות</label>
+          <div class="form-control" id="note" placeholder ="הערות"><?= $note ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>

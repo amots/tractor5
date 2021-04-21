@@ -1,0 +1,109 @@
+<script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js" 
+referrerpolicy="origin"></script>
+
+<script>
+  $(document).ready(function () {
+      $('#nullify_close_date').click(function () {
+          console.log($('#close_date').val(null));
+      })
+      tinymce.init({
+          selector: "#note",
+          inline: true,
+
+          plugins: "link image code directionality charmap emoticons",
+          directionality: 'rtl',
+          language: 'he_IL',
+          toolbar: "undo redo | styleselect | bold italic | wordcount code  link paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+          content_css: '/resources/css/tractor.css',
+          height: 300,
+
+          visualblocks_default_state: true,
+          end_container_on_empty_block: true
+      });
+  });
+</script>
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-md-7">
+      <h2><a href="/collection/showItem?id=<?= $item_id ?>" target="_blank" title="לצפיה באתר">
+          <span class="glyphicon glyphicon-zoom-in"></span></a>
+        <?= $recordDescription ?>
+      </h2>
+    </div>
+
+    <div class="col-md-5">
+      <div class="panel panel-default pull-left" style="margin-top: 20px;" >
+        <div class="panel-body">
+          <?= $inventoryDecsription ?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+
+    <div class="col-md-4">
+      <?= $listOfRecords ?>
+    </div>
+
+    <div class="col-md-8">
+      <!--<div class="form-group">-->
+      <form class="navbar-form" role="search" method="POST" action="/service/update">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <input type="hidden" name="service_id" id="service_id" value="<?= $service_id ?>" />
+        <input type="hidden" name="item_id" id="item_id" value="<?= $item_id ?>" />
+        <!--        <div class="ltr">
+                </div>  -->
+        <div class="row">
+          <div class="form-group">
+            <label for="person" class="control-label">מבצע</label>
+            <!--            <input type="text" name="person" id="pesron" class="form-control" value="<?= $person ?>"/>-->
+            <select class="form-control" name="service_people_id" id="service_people_id">
+              <?= $servicePersonOptions ?>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-text">
+                  <div class="form-group mx-3">
+                    <?= $on_hold_form ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="open_date" class="control-label">פתיחה</label>
+              <input class="form-control" type="date" 
+                     name="open_date" id="open_date"
+                     value="<?= $open_date ?>" required />
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="close_date" class="control-label">סגירה</label>
+              <input class="form-control" type="date" 
+                     name="close_date" id="close_date"
+                     value="<?= $close_date ?>">
+              <buttom class="btn btn-default" id="nullify_close_date">פתח</buttom>
+            </div>
+          </div>
+        </div>
+        <!--<textarea name="note" class="form-control wymeditor rtl" rows="6"></textarea>-->
+        <div id="note" class="form-control mx-0 ltr" placeholder="תוכן"><?= $note ?></div>
+        
+        <div class="row">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+      <!--</div>-->
+
+    </div>
+  </div>
+</div>

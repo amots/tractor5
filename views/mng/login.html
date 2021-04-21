@@ -1,0 +1,38 @@
+<?= $breadCrumbs ?>
+<div class="ltr">
+
+  <div class="row">
+    <div class=" col-md-3"></div>
+    <div class="col-xs-12 col-md-6">
+
+
+      <div id="messages"><?= $message ?></div>
+      <div id="errors"><?= $error ?></div>
+      <div class="m-5">
+        <form role="form" name="login" method="post" action="/login">
+          <input type="hidden" name="token" id="token" value="<?= $csrf_token ?>" />
+          <input type="hidden" name="caller" id="caller" value="<?= $caller ?>" />
+          <input type="hidden" name="action" value="login" />
+          <div class="form-group ltr">
+            <label for="login-username" class="form-label">Username:</label><br />
+            <input id="login-username" 
+                   name="username" 
+                   type="text"
+                   class="form-control input-lg text-left"
+                   required
+                   />
+          </div>
+          <div class="form-group ltr">
+            <label for="login-password" class="form-label">Password:</label><br />
+            <input name="password" id="login-password"
+                   type="password" 
+                   class="form-control input-lg text-left"
+                   required
+                   />
+          </div>
+          <button type="submit" name="submitLogin" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

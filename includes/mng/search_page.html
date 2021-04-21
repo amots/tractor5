@@ -1,0 +1,150 @@
+<div class="container-fluid">
+  <div class="row">
+    <div id="searchForm" class="col-md-6">
+      <form  role="search" method="POST">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">    
+            <div class="col-md-4  text-wrap">
+              <label for="item_id" >קוד פריט</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="item_id" id="item_id" class="form-control ltr text-left" 
+                     placeholder="קוד פריט" value="<?= $item_id ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </form>
+
+      <form  role="search" method="POST">  
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">    
+            <div class="col-md-4 text-wrap">
+              <label for="PageHe" >תיאור</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="PageHe" id="PageHe" class="form-control" 
+                     placeholder="תיאור" value="<?= $PageHe ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form  role="search" method="POST">  
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">    
+            <div class="col-md-4 text-wrap">
+              <label for="registration" >קוד רישום</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="registration" id="registration" class="form-control ltr text-left" 
+                     placeholder="קוד רישום" value="<?= $registration ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form role="search" method="POST">  
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="vin" class="control-label text-wrap">מספר שילדה (VIN)</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="vin" id="vin" class="form-control ltr text-left" 
+                     placeholder="מספר שילדה" value="<?= $vin ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form role="search" method="POST">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row"> 
+            <div class="col-md-4 text-wrap">
+              <label for="engine_number" class="control-label">מספר מנוע</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="engine_number" id="engine_number" class="form-control ltr text-left" 
+                     placeholder="מספר מנוע" value="<?= $engine_number ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form role="search" method="POST">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row"> 
+            <div class="col-md-4 text-wrap">
+              <label for="sn" class="control-label">מספר סידורי (SN)</label>
+            </div>
+
+            <div class="col-md-6" >
+              <input type="search" name="sn" id="sn" class="form-control ltr text-left" 
+                     placeholder="מספר סידורי" value="<?= $sn ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form role="search" method="POST">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4 text-wrap">
+              <label for="companyHe" class="control-label">יצרן</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="companyHe" id="companyHe" class="form-control" placeholder="שם יצרן" value="<?= $companyHe ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <div id="searchResults" class="col-md-6">
+      <?= $searchResults ?>
+    </div>
+  </div>
+</div>

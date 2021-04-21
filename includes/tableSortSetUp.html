@@ -1,0 +1,9 @@
+<script type='text/javascript' src='/resources/js/jquery.tablesorter.min.js'></script>
+<script>
+    $(document).ready(function ()
+    {
+        $("#<?= $tableID ?>").tablesorter({<?= $options ?>});
+//          console.log('sorter for <?= $tableID ?> defined');
+    }
+    );
+</script>

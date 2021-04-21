@@ -1,0 +1,284 @@
+<script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js" 
+referrerpolicy="origin"></script>
+
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#PageHe",
+      inline: true,
+
+      plugins: "link image code directionality charmap emoticons",
+      directionality: 'rtl',
+      language: 'he_IL',
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#PageEn",
+      directionality: 'ltr',
+      inline: true,
+      plugins: "link image code directionality charmap emoticons",
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>
+<script>
+  $(document).ready(function () {
+      console.log('ready');
+      /* mGroup */
+      $("input[name='mGroupRadio']").change(function () {
+          value = $(this).data('id');
+          console.log(value)
+          $("input[name='mGroup']").val(value)
+      })
+      /* display */
+      var display_val;
+      newval = $('#display_checkbox').prop('checked') ? 1 : 0;
+      $('#display').val(newval);
+      $('#display_checkbox').change(function () {
+          newval = $('#display_checkbox').prop('checked') ? 1 : 0;
+          $('#display').val(newval);
+      })
+  });
+</script>
+<style>
+  .rtl .form-check .form-check-input {
+      float: none;
+  }
+  .rtl .form-check-label {
+      float: left;
+      margin-right: 1.8rem;
+  }
+  .ltr .mce-content-body, .ltr body.mceContentBody{
+      direction: ltr;
+  }
+</style>
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="mx-auto">
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="/inventory/editPics/<?= $item['item_id'] ?>">תמונות</a></li>
+        <li class="nav-item"><a class="nav-link disabled" href="/inventory/editItem?item=<?= $item['item_id'] ?>">תוכן</a></li>
+      </ul>
+    </div>
+
+    <h3>
+      <?= $item['title'] ?>
+    </h3>
+  </div>
+</div>
+<form action="" method="POST" class="row g-3" role="form">
+  <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $item['csrf_token'] ?>" />
+  <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>" />
+  <input type="hidden" name="action" value="storeItem" />
+  <input type="hidden" name="mGroup" value="<?= $item['mGroup'] ?>" />
+
+  <div class="card " style="background: rgba(25,135,84,.25);">
+    <div class="card-body" >
+      <div class="card-text">
+        <div class="row">
+          <div class="col-sm-4 px-4"> 
+            <div class="radio" id='mGroup'>
+              <?= $item['mGroupRadio'] ?>
+            </div>
+
+            <div class="form-group">
+              <label for="location">מיקום</label>
+              <select class="form-select" id="location" name="location">
+                <?= $item['locationSelect'] ?>
+              </select>
+            </div>
+            <div>
+              בעלות: <?= $item['ownership'] ?>
+            </div>
+          </div>
+
+          <div class="col-sm-4 px-4">
+            <div class="form-group">
+              <label for="registration">קוד רישום</label>
+              <input 
+                  type="text" name="registration" id="registration" 
+                  class="form-control ltr text-left" 
+                  placeholder="קוד רישום" value="<?= $item['registration'] ?>" />
+            </div>
+            <div class="form-group">
+              <label for="vin">מספר שילדה (VIN)</label>
+              <input 
+                  type="text" name="vin" id="vin" class="form-control ltr text-left" 
+                  placeholder="מספר שילדה" value="<?= $item['vin'] ?>" />
+            </div>
+
+          </div>
+          <div class="col-sm-4 px-4">
+            <div class="form-group">
+              <label for="engine_number">מספר מנוע</label>
+              <input 
+                  type="text" name="engine_number" id="engine_number" class="form-control ltr text-left" 
+                  placeholder="מספר מנוע" value="<?= $item['engine_number'] ?>" />
+            </div>
+            <div class="form-group">
+              <label for="sn">מספר סידורי (SN)</label>
+              <input 
+                  type="text" name="sn" id="sn" class="form-control ltr text-left" 
+                  placeholder="מספר סידורי" value="<?= $item['sn'] ?>" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary wymupdate"><?= lang::trans('mng.submit') ?></button>
+  <div class="card text-dark bg-light">
+    <div class="card-body" >
+      <div class="card-text">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="companyHe" class="control-label">יצרן</label>
+              <input 
+                  type="text" name="companyHe" id="companyHe" class="form-control" placeholder="שם יצרן" value="<?= $item['companyHe'] ?>" />
+            </div> 
+            <div class="form-group">
+              <label for="modelHe" class="control-label">דגם</label>
+              <input 
+                  type="text" name="modelHe" id="modelHe" class="form-control" 
+                  placeholder="דגם" value="<?= $item['modelHe'] ?>" />
+
+            </div>
+          </div>
+          <div class="col-sm-4 ltr">
+
+
+            <div class="form-group">
+              <label for="companyEn" class="control-label">Manufecturer</label>
+              <input 
+                  type="text" name="companyEn" id="companyEn" class="form-control ltr" placeholder="Manufecturer" value="<?= $item['companyEn'] ?>" />
+
+            </div>
+
+            <div class="form-group">
+              <label for="modelEn" class="control-label">Model</label>
+              <input 
+                  type="text" name="modelEn" id="modelEn" class="form-control ltr" 
+                  placeholder="Model" value="<?= $item['modelEn'] ?>" />
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="row>">
+              <div class="col-sm-4 px-2">
+                <div class="form-group">
+                  <!--<div class="col-sm-3">-->
+                  <label for="year" class="control-label">שנת ייצור</label>
+                  <input 
+                      type="number"  max="<?= date('Y'); ?>" name="year" id="year" class="form-control" value="<?= $item['year'] ?>" />
+                </div>
+              </div>
+
+              <div class="col-sm-4 px-2">
+                <div class="form-group">
+                  <label for="status" class="control-label">
+                    מצב
+                  </label>
+                  <select class="form-select" id="status" name="status">
+                    <?= $item['statusSelect'] ?>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-4 pt-3 px-2">                 
+                <input type="hidden" name="display" id="display">
+                <input 
+                    type="checkbox" id="display_checkbox"
+                    <?=
+                    ($item['display'] == TRUE) ? 'checked' : ''
+                    ?> /> הצג באתר
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary wymupdate"><?= lang::trans('mng.submit') ?></button>
+  <div class="card" style="background: rgba(13,110,253,.25);">
+    <div class="card-body">
+      <div class="card-text">
+        <div class="row">
+          <div class="col-sm-4">
+            <?= $item['driveMechanism'] ?>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="fuel_type">סוג דלק</label>
+              <select class="form-select" id='fuel_type' name="fuel_type">
+                <?= $item['fuelTypeSelect'] ?>
+              </select>
+              <!--              <input 
+                                type="text" name="fuel_type" id="fuel_type" class="form-control" 
+                                placeholder="סוג דלק" value="<?= $item['fuel_type'] ?>" />-->
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="color">צבע</label>
+              <select class="form-select" id='color' name="color">
+                <?= $item['colorSelect'] ?>
+              </select>
+              <!--              <input 
+                                type="text" id="color" class="form-control" 
+                                placeholder="צבע" value="<?= $item['color'] ?>" />-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary wymupdate"><?= lang::trans('mng.submit') ?></button>
+  <div class="card" style="background: rgba(255,193,7,.25);">
+    <div class="card-body">
+      <div class="card-text">
+        <div class="row">
+          <div class="form-group">
+            <div class="row">
+              <div class="form-group">
+                <div class="col-sm-6 px-2">
+                <label for="sourceHe" class="col-md-2 control-label">מקור</label>
+                  <input type="text" name="sourceHe" 
+                         class="form-control" value="<?= $item['sourceHe'] ?>" />
+                </div>
+                <div class="col-sm-6 px-2">
+                  <label for="sourceEn" class="col-md-2 control-label">source</label>
+                  <input type="text" name="sourceEn" 
+                         class="form-control ltr" value="<?= $item['sourceEn'] ?>" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div id="PageHe" class="form-control mx-0" placeholder="תוכן">
+                  <?= $item['PageHe'] ?>
+                </div>
+              </div>
+
+              <div class="col-sm-6 ltr">
+                <div id="PageEn" class="form-control mx-0" placeholder="content">
+                  <?= $item['PageEn'] ?>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary wymupdate"><?= lang::trans('mng.submit') ?></button>
+</form>

@@ -1,0 +1,82 @@
+
+<style>label {
+      background-color: #ffecb5;
+  }
+  .ltr .mce-content-body, .ltr body.mceContentBody{
+      direction: ltr;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="col-md-12">
+
+      <form action="" method="POST" class="row g-3" role="form">
+        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $item['csrf_token'] ?>" />
+        <input type="hidden" name="article_id" value="<?= $item['article_id'] ?>" />
+        <input type="hidden" name="action" value="storeArticle" />
+<button type="submit" class="btn btn-primary wymupdate">Submit</button>
+        <div class="form-group row">
+          <div class="card col-sm-6">
+            <div class="card-body">
+              <div class="card-text">
+                <div class="row">
+                  <label for="title_he" class="col-sm-2 control-label">כותר</label>
+                  <div class="col-sm-10">
+                    <input type="text" 
+                           name="title_he" id="title_he" class="form-control" 
+                           placeholder="כותר" required
+                           value="<?= $item['title_he'] ?>" />
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="author_he" class="col-sm-2 control-label">מחבר</label>
+                  <div class="col-sm-10">
+                    <input type="text" 
+                           name="author_he" id="author_he" class="form-control" 
+                           placeholder="מחבר" 
+                           value="<?= $item['author_he'] ?>" />
+                  </div>
+                </div>
+                <div id="body_he"  class="form-control mx-0" placeholder="תוכן">
+                  <?= $item['body_he'] ?></div>
+              </div>
+            </div>
+          </div>
+          <div class="card col-sm-6">
+            <div class="card-body">
+              <div class="card-text">
+                <div class="row">
+                  <div class="col-sm-10 ltr">
+                    <input type="text" 
+                           name="title_en" id="title_en" class="form-control" 
+                           placeholder="title" required
+                           value="<?= $item['title_en'] ?>" />
+                  </div>
+                  <label for="title_en" class="col-sm-2 col-form-label">title</label>
+                </div>
+                <div class="row">
+                  <div class="col-sm-10">
+                    <input type="text" 
+                           name="author_en" id="author_en" class="form-control ltr" 
+                           placeholder="author" 
+                           value="<?= $item['author_en'] ?>" />
+                  </div>
+                  <label for="author_en" class="col-sm-2 col-form-label">Author</label>
+                </div>
+                <div class="ltr">
+                  <div id="body_en" class="form-control mx-0 ltr" placeholder="content">
+                    <?= $item['body_en'] ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary wymupdate">Submit</button>
+
+      </form>
+    </div>
+
+  </div>
+</div>
