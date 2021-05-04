@@ -31,4 +31,5 @@ return [
     'editPics' => 'עריכת תמונות',
     'listAll' => 'כל הרשומות',
     'archive' => 'ארכיון',
+    'newItem'=>'פריט חדש',
 ];

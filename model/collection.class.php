@@ -20,13 +20,9 @@ class collection {
 
     public function renderCompaniesList() {
         $companies = $this->getCompaniesList(1);
-//        Debug::dump($companies,
-//                'companies in ' . __METHOD__ . ' line ' . __LINE__);
         $names = [];
         $index = 'company' . Lang::getLocale();
         foreach ($companies as $key => $value) {
-//            Debug::dump($value, 'value in ' . __METHOD__ . ' line ' . __LINE__);
-
             $names[] = $value[$index];
         }
         return join(' 	&bull; ', $names);
@@ -35,14 +31,12 @@ class collection {
     private function getCompaniesList($title) {
         $lang = Lang::getLocale();
         $pdo = db::getInstance();
-//        $companyLocale = 'company'.$lang;
         $sql = <<<EOF
-SELECT DISTINCT `company{$lang}` FROM `items`
-WHERE
-    `mGroup` = :title AND(`archive` IS NULL OR `archive` = 0) AND(NOT `company{$lang}` IS NULL)
-ORDER BY `company{$lang}`
-EOF;
-//    Debug::dump($sql, 'sql in ' . __METHOD__ . ' line ' . __LINE__);
+            SELECT DISTINCT `company{$lang}` FROM `items`
+            WHERE
+                `mGroup` = :title AND(`archive` IS NULL OR `archive` = 0) AND(NOT `company{$lang}` IS NULL)
+            ORDER BY `company{$lang}`
+            EOF;
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':title' => $title]);
@@ -92,57 +86,55 @@ EOF;
                 'literal' => Lang::trans('collage.collections'),
                 'mGroup' => 4,
             ],
-//            [
-//                'path' => '/assets/media/pics/woodenSprayer.jpg',
-//                'link' => '/activities/family',
-//                'literal' => Lang::trans('collage.4family'),
-//            ],
-//            [
-//                'path' => '/assets/media/pics/woodenSprayer.jpg',
-//                'link' => '/activities/kids',
-//                'literal' => Lang::trans('collage.4kids'),
-//            ],
+
+            /* [
+               'path' => '/assets/media/pics/woodenSprayer.jpg',
+               'link' => '/activities/family',
+               'literal' => Lang::trans('collage.4family'),
+           ],
+           [
+               'path' => '/assets/media/pics/woodenSprayer.jpg',
+               'link' => '/activities/kids',
+               'literal' => Lang::trans('collage.4kids'),
+           ], */
         ];
     }
 
     public function renderCollectionGroupPage($collection_group) {
         $list = $this->getItemsByGroup($collection_group);
         $gridDir = Lang::getLocale() == 'he' ? 'false' : 'true';
-//        Debug::dump($list, 'list in ' . __METHOD__ . ' line ' . __LINE__);
         $items = [];
         foreach ($list as $key => $value) {
             $title = $this->renderTitle($value);
             $link = "/collection/item/" . $value['item_id'];
             $items[] = <<<EOF
-<div class="col-sm-6 col-lg-4 mb-1" 
-    style="position: absolute; left: 0%; top: 0px;">
-      <div class="card" style=" border: unset; border-bottom:1px solid rgb(169, 71, 22,.125)">
-        <div class="card-body" style="padding:unset;">
-          <div class="card-text">
-             <a href="{$link}">{$title}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-EOF;
+                <div class="col-sm-6 col-lg-4 mb-1" 
+                    style="position: absolute; left: 0%; top: 0px;">
+                    <div class="card" style=" border: unset; border-bottom:1px solid rgb(169, 71, 22,.125)">
+                        <div class="card-body" style="padding:unset;">
+                        <div class="card-text">
+                            <a href="{$link}">{$title}</a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                EOF;
             $all = join('', $items);
         }
         return <<<EOF
-
-<h1></h1>
-<div class="row grid" 
-    data-masonry="{&quot;percentPosition&quot;: true,&quot;originLeft&quot;: {$gridDir}}" 
-    style="position: relative;">
-    {$all}
-  </div>
-EOF;
+            <h1></h1>
+            <div class="row grid" 
+                data-masonry="{&quot;percentPosition&quot;: true,&quot;originLeft&quot;: {$gridDir}}" 
+                style="position: relative;">
+                {$all}
+            </div>
+            EOF;
     }
 
     public function getItemsByGroup($collection_group) {
         $pdo = db::getInstance();
         $order = sprintf("`company%s`", Lang::getLocale());
         $sql = "SELECT * FROM `items` WHERE `mGroup` = :mGroup  ORDER BY {$order}";
-//        Debug::dump($sql, 'sql in ' . __METHOD__ . ' line ' . __LINE__);
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['mGroup' => $collection_group]);
@@ -199,8 +191,8 @@ EOF;
           $whereStr);
          */
         $sqlStr = <<<EOF
-SELECT * FROM `items` WHERE `item_id`=:requestID;
-EOF;
+            SELECT * FROM `items` WHERE `item_id`=:requestID;
+            EOF;
         $sth = $pdo->prepare($sqlStr);
         try {
             $sth->execute(array(':requestID' => $requestID));
@@ -210,14 +202,11 @@ EOF;
         }
 
         $results = $sth->fetch(PDO::FETCH_ASSOC);
-//        Debug::dump($results, 'results in ' . __METHOD__ . ' line ' . __LINE__);
         $results['pics'] = [];
         $itemPics = new itemPic();
         foreach ($itemPics->getItemPics($requestID) as $record) {
-//            $results['pics'][] = $record['path'];
             $results['pics'][] = $record;
         }
-//        Debug::dump($results, 'results in ' . __METHOD__ . ' line ' . __LINE__);
         return ($results);
 
         //        return $sqlStr;
@@ -228,10 +217,10 @@ EOF;
         $components = [];
         $components[] = '<h4>' . collection::renderTitle($item) . "</h4>";
         $components[] = <<<EOF
-<div id="pageContent{$uclang}">
-        {$item['Page' . ucfirst(Lang::getLocale())]}
-    </div>
-EOF;
+            <div id="pageContent{$uclang}">
+                    {$item['Page' . ucfirst(Lang::getLocale())]}
+                </div>
+            EOF;
         $components[] = '<div class="col-10 mt-4">' . util::renderLastUpdated($item['last_update']) . '</div>';
         return join('', $components);
     }
@@ -255,10 +244,10 @@ EOF;
         $_SESSION['csrf_token'] = $token;
         if ($item_id) {
             $item = $this->getItem($item_id);
-//            Debug::dump($item, 'item in ' . __METHOD__ . ' line ' . __LINE__);
         } else {
             $form = new form('items');
             $item = $form->genEmptyRecord();
+            $item['item_id']=null;
         }
         $item['title'] = $this->renderTitle($item);
         $item['csrf_token'] = $token;
@@ -272,45 +261,37 @@ EOF;
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/editItem.html');
         $renderer->viewData = ['item' => $item];
         $content = $renderer->render();
-//        $content = sprintf('<div class="text-center">edit item %s in %s line %s</div>',
-//                $item_id, __METHOD__, __LINE__);
-
         return $content;
     }
 
     private function renderEditMGroup($mGroup) {
         $groups = $this->get_collection_groups();
-//        Debug::dump($groups, 'groups in ' . __METHOD__ . ' line ' . __LINE__);
-//        Debug::dump($mGroup, 'mGroup in ' . __METHOD__ . ' line ' . __LINE__);
         $data = [];
         foreach ($groups as $key => $value) {
             $checked = ($mGroup == strval($value['collection_group_id'])) ? 'checked'
                         : NULL;
             $data[] = <<<EOF
-<div>
-  <input type="radio" id="{$value['collection_group_id']}" name="mGroupRadio" data-id="{$value['collection_group_id']}"
-  {$checked}>
-  <label for="{$value['collection_group_id']}">{$value['collection_group_' . Lang::getLocale()]}</label>
-</div>
-EOF;
+                <div>
+                <input type="radio" id="{$value['collection_group_id']}" name="mGroupRadio" data-id="{$value['collection_group_id']}"
+                {$checked}>
+                <label for="{$value['collection_group_id']}">{$value['collection_group_' . Lang::getLocale()]}</label>
+                </div>
+                EOF;
         }
-//        return "TODO " . __METHOD__ . ' line ' . __LINE__;
         return join("", $data);
     }
 
     private function renderEditLocation($location) {
         $locations = $this->getLocations();
-//        Debug::dump($locations, 'locations in ' . __METHOD__ . ' line ' . __LINE__);
         $data = ['<option></option>'];
         foreach ($locations as $key => $value) {
             $selected = ($location == strval($value['location_id'])) ? 'selected'
                         : NULL;
             $data[] = <<<EOF
-<option value="{$value['location_id']}" {$selected}>{$value['name']}
-</option>
-EOF;
+                <option value="{$value['location_id']}" {$selected}>{$value['name']}
+                </option>
+                EOF;
         }
-//        return "<div>TODO [location: {$location}] " . __METHOD__ . ' line ' . __LINE__ . "</div>";
         return join('', $data);
     }
 
@@ -319,11 +300,10 @@ EOF;
         foreach (self::$status as $key => $value) {
             $selected = ($curentStstus == strval($key)) ? 'selected' : NULL;
             $data[] = <<<EOF
-<option value="{$key}" {$selected}>{$value[Lang::getLocale()]}
-</option>
-EOF;
+                <option value="{$key}" {$selected}>{$value[Lang::getLocale()]}
+                </option>
+                EOF;
         }
-//        return "TODO " . __METHOD__ . ' line ' . __LINE__;
         return join('', $data);
     }
 
@@ -331,11 +311,10 @@ EOF;
         $fuels = [NULL, 'סולר', 'בנזין', 'בנזין-נפט', 'בנזין-נפט-מים'];
         $data = [];
         foreach ($fuels as $value) {
-//            Debug::dump($value, 'value in ' . __METHOD__ . ' line ' . __LINE__);
             $selected = ($fuel == $value) ? 'selected' : NULL;
             $data[] = <<<EOF
-<option value = "{$value}" {$selected}>{$value}</option>
-EOF;
+                <option value = "{$value}" {$selected}>{$value}</option>
+                EOF;
         }
         return join('', $data);
     }
@@ -347,8 +326,8 @@ EOF;
         foreach ($colors as $value) {
             $selected = ($color == $value) ? 'selected' : NULL;
             $data[] = <<<EOF
-<option value = "{$value}" {$selected}>{$value}</option>                    
-EOF;
+                <option value = "{$value}" {$selected}>{$value}</option>                    
+                EOF;
         }
         return join('', $data);
     }
@@ -369,12 +348,12 @@ EOF;
             $id = "drive{$key}";
             $label = Lang::trans('item.' . $value['literal']);
             $data[] = <<<EOF
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="drive_mechanism" id="{$id}" {$checked}
-      value="{$value['enum']}" />
-  <label class="form-check-label" for="{$id}">{$label}</label>
-</div>
-EOF;
+                <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="drive_mechanism" id="{$id}" {$checked}
+                    value="{$value['enum']}" />
+                <label class="form-check-label" for="{$id}">{$label}</label>
+                </div>
+                EOF;
         }
         return join(' ', $data);
     }
@@ -404,8 +383,6 @@ EOF;
             'gallery' => $itemPic->renderEditItemPicsGallery($item_id, $token),
         ];
         return $renderer->render();
-//        return '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
-//        return $itemPic->renderEditItemPicsGallery($item_id);
     }
 
     static public function getFullItem($requestID) {
@@ -414,8 +391,51 @@ EOF;
         $sth = $pdo->prepare($sqlStr);
         $sth->execute(array(':requestID' => $requestID));
         $result =  $sth->fetch();
-//        Debug::dump($result, 'result in ' . __METHOD__ . ' line ' . __LINE__);
         return $result;
     }
+    public function searchResults() {
+        Debug::dump($_POST, 'post at ' . util::getCaller());
+        /* $pdo = db::getInstance();
+        if (isset($_GET['searchString'])) {
+            switch ($this->registry->language) {
+                case 'he':
+                    $fields = array('`companyHe`', '`modelHe`', '`sourceHe`', '`PageHe`',
+                        '`year`');
+                    $sql['select'] = implode(',',
+                            array('`item_id`', '`companyHe`', '`modelHe`', '`sourceHe`',
+                        '`year`'));
+                    break;
+                default:
+                    $fields = array('`companyEn`', '`modelEn`', '`sourceEn`', '`PageEn`',
+                        '`year`');
+                    $sql['select'] = implode(',',
+                            array('`item_id`', '`companyEn`', '`modelEn`', '`sourceEn`',
+                        '`year`'));
+            }
+            $searchTerms = mb_split("[\s,]+", $_GET['searchString']);
 
+            $searchedStr = $_GET['searchString'];
+            $likeStr = $searchedStr;
+
+            $sql['from'] = '`items`';
+            foreach ($fields as $field) {
+                foreach ($searchTerms as $term) {
+                    $whereList[] = sprintf("(%s LIKE ?)", $field);
+                    $executeList[] = "%$term%";
+                }
+                $internalList[] = implode(" AND ", $whereList);
+                unset($whereList);
+            }
+            $sql['where'] = implode(" OR ", $internalList) ;
+            $sql['where'] = '`display`=1 AND ('.$sql['where'] . ")";
+            $sqlStr = sprintf("SELECT %s FROM %s WHERE %s;", $sql['select'],
+                    $sql['from'], $sql['where']);
+            $query = $pdo->prepare($sqlStr);
+            $query->execute($executeList);
+            $results = $query->fetchALL(PDO::FETCH_ASSOC);
+            return $results;
+        } else {
+            return NULL;
+        } */
+    }
 }

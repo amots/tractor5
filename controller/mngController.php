@@ -16,7 +16,6 @@ class mngController extends baseController
 
     private $user;
     private $rt;
-    private $permission;
     private $renderer;
     private $errors = [];
     private $messages = [];
@@ -34,11 +33,9 @@ class mngController extends baseController
         $this->user = new User();
         $this->rt = explode('/', $_REQUEST['rt']);
         $this->permission = $this->user->read_permission();
-        //        Debug::dump($registry,'registry in ' . __METHOD__ . ' line ' . __LINE__);
         $this->mng = new mng();
         $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
-        //        $this->renderer->viewData = $this->setMenuPermissions();
-        $this->registry->template->mngNavBar = $this->mng->renderMngMenu(); //$this->renderer->render();
+        $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
     }
 
     public function index()
@@ -130,31 +127,12 @@ class mngController extends baseController
         exit();
     }
 
-    private function setMenuPermissions()
-    {
-        $this->checkAuthorization();
-        $hide = 'd-none';
-        $table = [
-            'ms_auto' => $this->registry->template->ms_auto,
-            'hide1' => $_SESSION['permission'] & User::permission_content ? NULL
-                : $hide,
-            'hide2' => $_SESSION['permission'] & User::permission_inventory ? NULL
-                : $hide,
-            'hide4' => $_SESSION['permission'] & User::permission_service ? NULL
-                : $hide,
-            'hide8' => $_SESSION['permission'] & User::permission_ownership ? NULL
-                : $hide,
-            'hide16' => $_SESSION['permission'] & User::permission_administrator
-                ? NULL : $hide,
-        ];
-        return $table;
-    }
-
     public function editArticle()
     {
         $this->checkAuthorization(User::permission_administrator);
-        if (isset($_POST['action']) and $_POST['action'] == 'storeArticle')
+        if (isset($_POST['action']) and $_POST['action'] == 'storeArticle'){
             $this->articleUpdate();
+        }
         $indexAt = 2;
         if (isset($this->rt[$indexAt]) and is_numeric($this->rt[$indexAt])) {
             $article_id_literal = $article_id = strval($this->rt[$indexAt]);
@@ -177,8 +155,6 @@ class mngController extends baseController
         $this->registry->template->content = $essay->renderArticleEditContent($article_id);
         $this->errors[] = $essay->get_errors();
         $this->renderTemplateAnnouncements();
-        // $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
-        // $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -256,21 +232,31 @@ class mngController extends baseController
 
     public function articleUpdate()
     {
+
+        // Debug::dump($this->errors, 'errors in ' . util::getCaller());
+        // Debug::dump($_POST, 'post in ' . util::getCaller());
+        $returnId = filter_input(INPUT_POST,'article_id',FILTER_VALIDATE_INT);
+        // Debug::dump($this->errors, 'errors in ' . util::getCaller());
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
             $this->errors[] = 'Failed to validate token';
-            return;
+        } else {
+            $form = new form('articles');
+            $this->errors[] = $form->storePostedData();
         }
         unset($_SESSION['csrf_token']);
-        $form = new form('articles');
-        $result = $form->storePostedData();
-        if (util::is_array_empty($result)) {
-            //            $this->messages = "record {$form->last_id} save alright";
+        // Debug::dump($this->errors, 'errors in ' . util::getCaller());
+
+        if (util::is_array_empty($this->errors)) {
+            // Debug::dump("record {$form->last_id} save alright", 'in ' . util::getCaller());
             $_SESSION['messages'] = "record {$form->last_id} save alright";
+            // $returnId = $form->last_id;
         } else {
-            //            $this->errors[] = $result;
-            $_SESSION['errors'] = $result;
+            // Debug::dump("Errors found", 'in ' . util::getCaller());
+            $_SESSION['errors'] = $this->errors;
         }
-        header('location: /mng/editArticle/' . $form->last_id);
+        // Debug::dump($returnId, 'return id in ' . util::getCaller());
+        // exit;
+        header('location: /mng/editArticle/' . $returnId);
     }
 
     private function highLightUpdate()
@@ -316,6 +302,23 @@ class mngController extends baseController
     {
         $this->checkAuthorization(User::permission_administrator);
         $indexAt = 2;
+        if (
+            isset($_POST['action'])
+            and ($_POST['action'] == 'storeBrief')
+        ) {
+            if (!util::validatePostToken('csrf_token', 'csrf_token')) {
+                $this->errors[] = 'Verification Error';
+            } else {
+                $form = new form('briefs');
+                $results = $form->storePostedData();
+                if (util::is_array_empty($results)) {
+                    $this->messages[] = "Record {$form->last_id} Saved OK";
+                } else {
+                    $this->errors[] = $results;
+                }
+            }
+            unset($_SESSION['csrf_token']);
+        }
         if (isset($this->rt[$indexAt]) and is_numeric($this->rt[$indexAt])) {
             $briefs_id = strval($this->rt[$indexAt]);
             $brief_id_literal = join(' ', [Lang::trans('mng.edit'), $briefs_id]);
@@ -340,6 +343,8 @@ class mngController extends baseController
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
+        // Debug::dump($this->errors, 'errors at ' . util::getCaller());
+        // Debug::dump($_POST, 'post at ' . util::getCaller());
     }
     public function user()
     {

@@ -31,4 +31,5 @@ return [
     'editPics' => 'Edit pictures',
     'listAll' => 'List all records',
     'archive' => 'Archive',
+    'newItem'=>'New Item',
 ];

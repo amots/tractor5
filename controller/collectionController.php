@@ -32,8 +32,8 @@ class collectionController Extends baseController {
 
     public function tractors() {
         $this->registry->template->footerStuff = <<<EOF
-<script src="/resources/js/masonry.min.js"></script>
-EOF;
+            <script src="/resources/js/masonry.min.js"></script>
+            EOF;
         $this->registry->template->pageTitle = Lang::trans('nav.theTractors');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -51,8 +51,8 @@ EOF;
 
     public function vehicles() {
         $this->registry->template->footerStuff = <<<EOF
-<script src="/resources/js/masonry.min.js"></script>
-EOF;
+            <script src="/resources/js/masonry.min.js"></script>
+            EOF;
         $this->registry->template->pageTitle = Lang::trans('nav.theVehicles');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -70,8 +70,8 @@ EOF;
 
     public function tools() {
         $this->registry->template->footerStuff = <<<EOF
-<script src="/resources/js/masonry.min.js"></script>
-EOF;
+            <script src="/resources/js/masonry.min.js"></script>
+            EOF;
         $this->registry->template->pageTitle = Lang::trans('nav.theTools');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -89,8 +89,8 @@ EOF;
 
     public function agron() {
         $this->registry->template->footerStuff = <<<EOF
-<script src="/resources/js/masonry.min.js"></script>
-EOF;
+            <script src="/resources/js/masonry.min.js"></script>
+            EOF;
         $this->registry->template->pageTitle = Lang::trans('nav.theCollection');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -108,13 +108,13 @@ EOF;
 
     public function item() {
         $rt = explode('/', $_GET['rt']);
-//        Debug::dump($rt,'rt in ' . __METHOD__ . ' line ' . __LINE__);
+        // Debug::dump($rt,'rt in ' . __METHOD__ . ' line ' . __LINE__);
         if (!isset($rt[2]) or ! is_numeric($rt[2])) {
             header('location: /collection');
         }
         $requestID = intval($rt['2']);
         $item = $this->collection->getItem($requestID);
-//        Debug::dump($item,'item in ' . __METHOD__ . ' line ' . __LINE__);
+        // Debug::dump($item,'item in ' . __METHOD__ . ' line ' . __LINE__);
         $title = join(' ',
                 [$item['company' . ucfirst(Lang::getLocale())],
             $item['model' . ucfirst(Lang::getLocale())]]);
@@ -125,7 +125,7 @@ EOF;
                         'link' => $this->collection->navLinkFromGroup($item['mGroup'])],
                     ['literal' => $title, 'link' => NULL],
         ]);
-//        Debug::dump($title,'title in ' . __METHOD__ . ' line ' . __LINE__);
+        // Debug::dump($title,'title in ' . __METHOD__ . ' line ' . __LINE__);
         $this->registry->template->cLang = ucfirst(Lang::getLocale());
         $this->registry->template->pageTitle = $title;
         $this->registry->template->content = $this->collection->renderItemPage($item);
@@ -137,4 +137,8 @@ EOF;
         $this->registry->template->show('/envelope/bottom');
     }
 
+    public function search() {
+        $list = $this->collection->searchResults();
+        Debug::dump($list,'result list at ' . util::getCaller());
+    }
 }

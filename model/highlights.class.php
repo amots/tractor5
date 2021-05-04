@@ -44,6 +44,10 @@ class highlights {
         return $str;
     }
 
+    public function renderSingleHighlight($highlights_id) {
+        return $this->formatHighlight($this->fetchSingleHighlight($highlights_id));
+    }
+
     private function formatHighlight($item) {
         $strf = '';
         switch (lang::getLocale()) {
@@ -74,7 +78,7 @@ class highlights {
             $strf .= $item['embed'];
         }
         if (strlen($item['image']) > 0) {
-            $strf .= '<div><img src="' . $item['image'] . '" class="img-responsive img-align-center"  /></div>';
+            $strf .= '<div><img src="' . $item['image'] . '" class="img-fluid mx-auto"  /></div>';
         }
         return $strf;
     }
@@ -92,15 +96,14 @@ class highlights {
         return $items;
     }
 
-    public function renderHighlightsList($mode) {
+    public function renderHighlightsList($mode = null) {
         $items = [];
         $list = $this->fetchHighlights($mode);
-//        Debug::dump($list, 'list in ' . __METHOD__ . ' line ' . __LINE__);
         foreach ($list as $key => $value) {
             $title = util::shorten_string($value['title_he']);
             $items[] = <<<EOF
                 <tr>
-                    <td><a href="/mng/editHighlight?id={$value['highlights_id']}">{$title}</a></td>
+                    <td><a href="/highlights/{$value['highlights_id']}">{$title}</a></td>
                     <td>{$value['creation']}</td>
                     <td>{$value['expiration']}</td>
                 </tr>                    
@@ -191,10 +194,6 @@ class highlights {
             $item['expiration'] = NULL;
             $item['highlights_id'] = NULL;
         }
-/*
-        Debug::dump($item, 'item in ' . __METHOD__ . ' line ' . __LINE__);
-        $content = '<div class="text-center">TODO: '.$highlights_id . ' in ' . __METHOD__ . "</div>";
-*/
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/highlightEditContent.html');
         $renderer->viewData = ['item' => $item];
         return $renderer->render();

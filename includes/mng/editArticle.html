@@ -1,9 +1,42 @@
+<script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#body_he",
+      inline: true,
 
-<style>label {
-      background-color: #ffecb5;
+      plugins: "link image code directionality charmap emoticons",
+      directionality: 'rtl',
+      language: 'he_IL',
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>
+<script type="text/javascript">
+  tinymce.init({
+      selector: "#body_en",
+      directionality: 'ltr',
+      inline: true,
+      plugins: "link image code directionality charmap emoticons",
+      toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
+      content_css: '/resources/css/tractor.css',
+      height: 300,
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true
+  });
+</script>
+<style>
+  label {
+    background-color: #ffecb5;
   }
-  .ltr .mce-content-body, .ltr body.mceContentBody{
-      direction: ltr;
+
+  .ltr .mce-content-body,
+  .ltr body.mceContentBody {
+    direction: ltr;
   }
 </style>
 
@@ -15,7 +48,7 @@
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $item['csrf_token'] ?>" />
         <input type="hidden" name="article_id" value="<?= $item['article_id'] ?>" />
         <input type="hidden" name="action" value="storeArticle" />
-<button type="submit" class="btn btn-primary wymupdate">Submit</button>
+        <button type="submit" class="btn btn-primary wymupdate">Submit</button>
         <div class="form-group row">
           <div class="card col-sm-6">
             <div class="card-body">
@@ -23,23 +56,20 @@
                 <div class="row">
                   <label for="title_he" class="col-sm-2 control-label">כותר</label>
                   <div class="col-sm-10">
-                    <input type="text" 
-                           name="title_he" id="title_he" class="form-control" 
-                           placeholder="כותר" required
-                           value="<?= $item['title_he'] ?>" />
+                    <input type="text" name="title_he" id="title_he" class="form-control" placeholder="כותר" required
+                      value="<?= $item['title_he'] ?>" />
                   </div>
                 </div>
                 <div class="row">
                   <label for="author_he" class="col-sm-2 control-label">מחבר</label>
                   <div class="col-sm-10">
-                    <input type="text" 
-                           name="author_he" id="author_he" class="form-control" 
-                           placeholder="מחבר" 
-                           value="<?= $item['author_he'] ?>" />
+                    <input type="text" name="author_he" id="author_he" class="form-control" placeholder="מחבר"
+                      value="<?= $item['author_he'] ?>" />
                   </div>
                 </div>
-                <div id="body_he"  class="form-control mx-0" placeholder="תוכן">
-                  <?= $item['body_he'] ?></div>
+                <div id="body_he" class="form-control mx-0" placeholder="תוכן">
+                  <?= $item['body_he'] ?>
+                </div>
               </div>
             </div>
           </div>
@@ -48,19 +78,15 @@
               <div class="card-text">
                 <div class="row">
                   <div class="col-sm-10 ltr">
-                    <input type="text" 
-                           name="title_en" id="title_en" class="form-control" 
-                           placeholder="title" required
-                           value="<?= $item['title_en'] ?>" />
+                    <input type="text" name="title_en" id="title_en" class="form-control" placeholder="title" required
+                      value="<?= $item['title_en'] ?>" />
                   </div>
                   <label for="title_en" class="col-sm-2 col-form-label">title</label>
                 </div>
                 <div class="row">
                   <div class="col-sm-10">
-                    <input type="text" 
-                           name="author_en" id="author_en" class="form-control ltr" 
-                           placeholder="author" 
-                           value="<?= $item['author_en'] ?>" />
+                    <input type="text" name="author_en" id="author_en" class="form-control ltr" placeholder="author"
+                      value="<?= $item['author_en'] ?>" />
                   </div>
                   <label for="author_en" class="col-sm-2 col-form-label">Author</label>
                 </div>

@@ -11,6 +11,18 @@
       </aside>
     </div>
     <div class="col-md-7">
+      <form action="/collection/search" method="POST">
+        <div class="input-group mb-3">
+          <input type="text" 
+            class="form-control" 
+            placeholder="<?= lang::trans('nav.searchString') ?>" 
+            name="searchString">
+          <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+            <?= lang::trans('nav.search') ?>
+          </button>
+        </div>
+      </form>
+      
       <?= $content ?>
     </div>
     <div class="col-md-3">

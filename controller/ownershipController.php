@@ -76,7 +76,7 @@ class ownershipController Extends baseController {
         } else { /* no params */
             if (isset($this->rt[$itemIndexAt]) and strtoupper($this->rt[$itemIndexAt]) ==
                     "ALL") {
-                $this->messages[] = 'List only distinct by Item';
+                $this->messages[] = 'List distinct by Item';
                 array_push($baseBread,
                         ['literal' => Lang::trans('mng.ownershipAll'), 'link' => NULL]);
                 $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs($baseBread);

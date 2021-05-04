@@ -20,5 +20,8 @@ return[
     'theVehicles' => 'כלי רכב',
     'theTools' => 'כלי עבודה',
     'agron' => 'אגרון',
+    'searchString' => 'מחרוזת חיפוש',
+    'search' => 'חפש',
+    'highlights' =>'הבזקים',
 ];
 

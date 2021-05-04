@@ -20,5 +20,8 @@ return[
     'theVehicles' => 'Vehicles',
     'theTools' => 'Tools',
     'agron' => 'Agron',
+    'searchString' => 'search string',
+    'search' => 'Search',
+    'highlights' =>'Highlights',
 ];
 

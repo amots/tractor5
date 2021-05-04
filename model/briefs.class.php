@@ -54,12 +54,13 @@ class briefs
             if ($edit) {
                 $icon = list_items::$biPencilSquare;
                 $line = <<<EOT
-                <a href="/mng/editBrief/{$item['briefs_id']}">{$icon}</a> {$title}
-                EOT;
+                    <a href="/mng/editBrief/{$item['briefs_id']}">{$icon}</a> 
+                    <a href="/briefs/show/{$item['briefs_id']}" target="_blank">{$title}</a>
+                    EOT;
             } else {
                 $line = <<<EOT
-               <a href="/briefs/show/{$item['briefs_id']}">{$title}</a>
-               EOT;
+                    <a href="/briefs/show/{$item['briefs_id']}">{$title}</a>
+                    EOT;
             }
             $ret[] = <<<EOF
                 <li class="list-group-item">{$line}</li>
@@ -100,7 +101,7 @@ class briefs
             EOT;
     }
 
-    public function updateBrief_outdated()
+    /* public function updateBrief_outdated()
     {
         $fields = $_POST;
         unset($fields['csrf_token']);
@@ -158,21 +159,25 @@ class briefs
         }
         $this->messages[] = 'updated OK in ' . __METHOD__ . ' line ' . __LINE__;
         return TRUE;
-    }
+    } */
 
-    public function renderEditBrief($briefs_id) {
+    public function renderEditBrief($briefs_id)
+    {
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
         if (is_numeric($briefs_id))
-                $item = $this->getBrief($briefs_id);
+            $item = $this->getBrief($briefs_id);
         else {
             $form = new form('briefs');
             $item = $form->genEmptyRecord();
+            $item['briefs_id'] = null;
+            $item['updated'] = null;
         }
         $item['csrf_token'] = $token;
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editBrief.html");
         $renderer->viewData = ['item' => $item];
         $content = $renderer->render();
         return $content;
-        /*return "TODO in " . util::getCaller();  */  }
+        /*return "TODO in " . util::getCaller();  */
+    }
 }

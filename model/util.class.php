@@ -5,13 +5,16 @@
  *
  * @author amots
  */
-class util {
+class util
+{
 
-    static function IsNullOrEmptyString($question) {
+    static function IsNullOrEmptyString($question)
+    {
         return (!isset($question) || trim($question) === '');
     }
 
-    static function email_encode($address, $txt = "") {
+    static function email_encode($address, $txt = "")
+    {
         $hrefTxt = 'mailto:' . $address;
         $id = uniqid("", false);
         $addArray = "";
@@ -39,20 +42,22 @@ class util {
         return $response;
     }
 
-    static function shorten_string($string, $max = 50) {
+    static function shorten_string($string, $max = 50)
+    {
         $workStr = strip_tags($string);
         $tok = strtok($workStr, ' ');
         $workStr = '';
         while ($tok !== false && mb_strlen($workStr) < $max) {
             if (mb_strlen($workStr) + mb_strlen($tok) <= $max)
-                    $workStr .= $tok . ' ';
+                $workStr .= $tok . ' ';
             else break;
             $tok = strtok(' ');
         }
         return trim($workStr) . '&hellip;';
     }
 
-    static function RandomToken($length = 32) {
+    static function RandomToken($length = 32)
+    {
         if (!isset($length) || intval($length) <= 8) {
             $length = 32;
         }
@@ -67,7 +72,8 @@ class util {
         }
     }
 
-    static function validatePostToken($postname, $sessionTokenID) {
+    static function validatePostToken($postname, $sessionTokenID)
+    {
         $valid = FALSE;
         if (isset($_SESSION[$sessionTokenID])) {
             $valid = ($_POST[$postname] === $_SESSION[$sessionTokenID]);
@@ -75,13 +81,15 @@ class util {
         return $valid;
     }
 
-    static function validateValueToken($tokenValue, $sessionTokenName) {
+    static function validateValueToken($tokenValue, $sessionTokenName)
+    {
         if (isset($_SESSION[$sessionTokenName]))
-                return $tokenValue === $_SESSION[$sessionTokenName];
+            return $tokenValue === $_SESSION[$sessionTokenName];
         else return FALSE;
     }
 
-    static function simplifyArray($data) {
+    static function simplifyArray($data)
+    {
         if (is_null($data)) return $data;
         if (!is_array($data)) {
             $tmp = [];
@@ -89,43 +97,54 @@ class util {
             $data = $tmp;
         }
         $return = [];
-        array_walk_recursive($data,
-                function($a) use (&$return) {
-            $return[] = $a;
-        });
+        array_walk_recursive(
+            $data,
+            function ($a) use (&$return) {
+                $return[] = $a;
+            }
+        );
         return $return;
     }
 
-    static function is_array_empty($multidim_array) {
+    static function is_array_empty($multidim_array)
+    {
         $simplified = self::simplifyArray($multidim_array);
+        foreach ($simplified as $key => $value) {
+            if (self::IsNullOrEmptyString($value)) {
+               unset($simplified[$key]);
+            }
+        }
         return empty($simplified);
     }
 
-    static function renderErrors($errors) {
+    static function renderErrors($errors)
+    {
         $data = [];
         $errors = self::simplifyArray($errors);
         foreach ($errors as $key => $value) {
             if (!self::IsNullOrEmptyString($value))
-                    $data [] = <<<EOF
-<div class="alert alert-danger p-0" role="alert">{$value}</div>
-EOF;
+                $data[] = <<<EOF
+                    <div class="alert alert-danger p-0" role="alert">{$value}</div>
+                    EOF;
         }
         return join(' ', $data);
     }
 
-    static function renderMessages($messages) {
+    static function renderMessages($messages)
+    {
         $data = [];
         $messages = self::simplifyArray($messages);
         foreach ($messages as $key => $value) {
             if (!self::IsNullOrEmptyString($value))
-                    $data [] = <<<EOF
-<div class="alert alert-info p-0" role="alert">{$value}</div>
-EOF;
+                $data[] = <<<EOF
+                    <div class="alert alert-info p-0" role="alert">{$value}</div>
+                    EOF;
         }
         return join(' ', $data);
     }
 
-    static function balanceArrays($source, $n) {
+    static function balanceArrays($source, $n)
+    {
         $new = [];
         for ($i = 0; $i < $n; $i++) {
             $new[$i] = [];
@@ -138,7 +157,8 @@ EOF;
         return $new;
     }
 
-    static function balance2levelArray($dataTable, $n) {
+    static function balance2levelArray($dataTable, $n)
+    {
         $source = $dataTable;
         $new = [];
         for ($i = 0; $i < $n; $i++) {
@@ -153,7 +173,7 @@ EOF;
             while ($notfull) {
                 $item = array_shift($source);
                 $len = count($item[0]) + count($item[1]);
-                if (($accumulated + round($len / 2) ) > $quota) {
+                if (($accumulated + round($len / 2)) > $quota) {
                     array_unshift($source, $item);
                     $notfull = FALSE;
                 } else {
@@ -166,7 +186,8 @@ EOF;
         return $new;
     }
 
-    static function renderLastUpdated($date) {
+    static function renderLastUpdated($date)
+    {
         $retStr = '';
         if (strlen($date) > 0) {
             $formated = date("Y-m-d", strtotime($date));
@@ -174,12 +195,13 @@ EOF;
                     <small class="text-muted">
                     עודכן: {$formated}
                     </small>
-EOF;
+                    EOF;
         }
         return $retStr;
     }
 
-    static function shuffle_assoc(&$array) {
+    static function shuffle_assoc(&$array)
+    {
         $keys = array_keys($array);
         shuffle($keys);
         foreach ($keys as $key) {
@@ -189,7 +211,8 @@ EOF;
         return true;
     }
 
-    static function auto_copyright($year = 'auto') {
+    static function auto_copyright($year = 'auto')
+    {
         if (intval($year) == 'auto') {
             $year = date('Y');
         }
@@ -204,31 +227,36 @@ EOF;
         }
     }
 
-    static function renderIncompeteDate($year, $month, $day) {
+    static function renderIncompeteDate($year, $month, $day)
+    {
         $collection = [];
         if (!util::IsNullOrEmptyString($year))
-                $collection[] = "<bdi>{$year}</bdi>";
+            $collection[] = "<bdi>{$year}</bdi>";
         if (!util::IsNullOrEmptyString($month)) {
             $monthName = self::monthName($month);
             $collection[] = "<bdi>{$monthName}</bdi>";
             if (!util::IsNullOrEmptyString($day))
-                    $collection[] = "<bdi>{$day}</bdi>";
+                $collection[] = "<bdi>{$day}</bdi>";
         }
         return join(" ", array_reverse($collection));
     }
 
-    static function monthName($num) {
-        $month = [1 => 'ינואר', 2 => 'פברואר', 3 => 'מרץ', 4 => 'אפריל', 5 => 'מאי',
+    static function monthName($num)
+    {
+        $month = [
+            1 => 'ינואר', 2 => 'פברואר', 3 => 'מרץ', 4 => 'אפריל', 5 => 'מאי',
             6 => 'יוני', 7 => 'יולי', 8 => 'אוגוסט', 9 => 'ספטמבר', 10 => 'אוקטובר',
             11 => 'נובמבר', 12 =>
-            'דצמבר'];
+            'דצמבר'
+        ];
         if ($num > 0 and $num <= 12) {
             return $month[$num];
         }
         return NULL;
     }
 
-    static function getCaller() {
+    static function getCaller()
+    {
         $dbt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $caller = isset($dbt[1]['function']) ? $dbt[1]['function'] : null;
         $class = isset($dbt[1]['class']) ? $dbt[1]['class'] : null;
@@ -236,20 +264,20 @@ EOF;
         return "{$class}::{$caller} line {$line}";
     }
 
-    static function printR($data, $txt = NULL) {
+    static function printR($data, $txt = NULL)
+    {
         $dbt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $caller = isset($dbt[1]['function']) ? $dbt[1]['function'] : null;
         $class = isset($dbt[1]['class']) ? $dbt[1]['class'] : null;
         $line = isset($dbt[0]['line']) ? $dbt[0]['line'] : null;
         $print = print_r($data, TRUE);
         return <<<EOF
-<div class="card">
-    <h4>{$txt} at {$class}::{$caller} line {$line}</h4>
-      <div class="card-body"><div class="card-text"><pre>{$print}</pre></div></div>
-</div>        
-EOF;
+            <div class="card">
+                <h4>{$txt} at {$class}::{$caller} line {$line}</h4>
+                <div class="card-body"><div class="card-text"><pre>{$print}</pre></div></div>
+            </div>        
+            EOF;
     }
-
 }
 
 /** * end of class ** */
