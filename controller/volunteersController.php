@@ -34,28 +34,29 @@ class volunteersController Extends baseController {
         $volunteersPage = $this->people->renderVolunteersPage();
         $header = Lang::trans('nav.activeVolunteers');
         return <<<EOF
-<style>
-    .media-object{
-        max-width: 100px;
-    }
-    .media{
-        display: table; overflow: hidden;
-    }
-    .media-bottom {
-        display: table-cell; vertical-align: bottom;
-    }
-    .head4 {
-        color: #A94716 !important;
-        font-size: 1.2rem;
-    }
-</style>        
-<h1>{$header}</h1>
-<div class="row">
-{$founders}
-</div>
-<div class="row">
-{$volunteersPage}
-</div>
+            <script src="/resources/js/masonry.min.js"></script>
+            <style>
+                .media-object{
+                    max-width: 100px;
+                }
+                .media{
+                    display: table; overflow: hidden;
+                }
+                .media-bottom {
+                    display: table-cell; vertical-align: bottom;
+                }
+                .head4 {
+                    color: #A94716 !important;
+                    font-size: 1.2rem;
+                }
+            </style>        
+            <h1>{$header}</h1>
+            <div class="row">
+            {$founders}
+            </div>
+            <div>
+            {$volunteersPage}
+            </div>
 EOF;
     }
 }

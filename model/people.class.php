@@ -12,8 +12,7 @@ class people {
     static $picPath = '/assets/media/pics/people/';
 
     public function __construct() {
-//        $this->registry = $registry;
-        $this->locale = Lang::getLocale(); //$this->registry->language;
+        $this->locale = Lang::getLocale(); 
     }
 
     public function renderActiveVolunteers() {
@@ -41,51 +40,7 @@ class people {
     public function renderVolunteersPage() {
         $data = $this->getActiveVolunteers();
         return $this->formatPeopleList($data, 2);
-/*        
-        $peoplePanel = [];
-        foreach ($data as $key => $individual) {
-            $surname = $individual["sur_name_{$this->locale}"];
-            $lastname = $individual["last_name_{$this->locale}"];
-            $homeTown = $individual["home_town_{$this->locale}"];
-            $nameParts = [];
-            $nameParts[] = <<<EOF
-                    <span class="head4">{$surname} {$lastname}</span>
-EOF;
-            if (!util::IsNullOrEmptyString($homeTown)) {
-                $nameParts[] = $homeTown;
-            }
-            $nameStr = join(', ', $nameParts);
-            $about = $individual["about_{$this->locale}"];
-            if (util::IsNullOrEmptyString($individual['image_path']) or
-                    ! file_exists(__SITE_PATH . "/media/pics/people/{$individual['image_path']}")) {
-                $imgPath = 'anon.jpg';
-            } else {
-                $imgPath = $individual['image_path'];
-            }
-            $peoplePanel[] = <<<EOF
-  <div class="media">
-    <div class="pull-right">
-        <img class="media-object" 
-            src="/media/pics/people/{$imgPath}" 
-          alt="{$surname} {$lastname}" />
-    </div>
-    <div class="media-body media-bottom">
-<!--        <h4 class="media-heading">{$surname} {$lastname}</h4> -->
-<div>{$nameStr}</div>
-    {$about}
-    </div>
-</div>
-EOF;
-        }
-        $twoCol = util::balanceArrays($peoplePanel, 2);
-        $cols = [];
-        foreach ($twoCol as $col) {
 
-            $cols[] = join('', $col);
-        }
-        return '<div class="col-md-6">' . join('</div><div class="col-md-6">',
-                        $cols) . '</div>';
-        */
     }
 
     public function renderFoundersPage() {
@@ -167,8 +122,8 @@ EOF;
             $homeTown = $individual["home_town_{$this->locale}"];
             $nameParts = [];
             $nameParts[] = <<<EOF
-                    <span class="head4">{$surname} {$lastname}</span>
-EOF;
+                <span class="head4">{$surname} {$lastname}</span>
+                EOF;
             if (!util::IsNullOrEmptyString($homeTown)) {
                 $nameParts[] = $homeTown;
             }
@@ -180,21 +135,44 @@ EOF;
             } else {
                 $imgPath = self::$picPath . $individual['image_path'];
             }
+            $colVal = 12/$columns;
             $peoplePanel[] = <<<EOF
-                <div class="media p-1">
-                    <div class="pull-right">
-                        <img class="media-object p-1" 
-                            src="{$imgPath}" 
-                            alt="{$surname} {$lastname}" />
+                <div class="d-flex align-items-center col-{$colVal}">
+                    <div class="flex-shrink-0">
+                    <figure class="figure">
+                    <img class="media-object p-1" src="{$imgPath}"  alt="{$surname} {$lastname}" />
+                </figure>  
                     </div>
-                    <div class="media-body media-bottom">
-                <div>{$nameStr}</div>
-                    {$about}
+                    <div class="flex-grow-1 ms-1">
+                        <div>{$nameStr}</div>
+                        {$about}
                     </div>
                 </div>
                 EOF;
+            /* $peoplePanel[] = <<<EOF
+                <div class="media p-1 col-{$colVal}">
+                    <div class="pull-right">
+                        <figure class="figure">
+                            <img class="media-object p-1" src="{$imgPath}"  alt="{$surname} {$lastname}" />
+                        </figure>    
+                    </div>
+                    <div class="media-body media-bottom">
+                        <div>{$nameStr}</div>
+                        {$about}
+                    </div>
+                </div>
+                EOF; */
         }
-        $twoCol = util::balanceArrays($peoplePanel, $columns);
+        $gridDir = Lang::getLocale() == 'he' ? 'false' : 'true';
+        $content = join(' ',$peoplePanel);
+        return <<<EOF
+            <div class="row grid" 
+            data-masonry='{"percentPosition": true,"originLeft": {$gridDir}}' 
+            style="position: relative;">
+                {$content}
+            </div>
+            EOF;
+       /*  $twoCol = util::balanceArrays($peoplePanel, $columns);
         $cols = [];
         foreach ($twoCol as $col) {
             $cols[] = join('', $col);
@@ -204,7 +182,7 @@ EOF;
                             $cols) . '</div>';
         } else {
             return '<div class="col-md-12">' . join('', $cols) . '</div>';
-        }
+        } */
     }
 
 }

@@ -163,9 +163,9 @@ class inventoryController Extends baseController {
 
     public function uploadItemPic() {
         $item_id = filter_input(INPUT_POST, 'item_id');
-        $itemPics = new itemPic($this->registry, $item_id);
+        $itemPics = new item_pic($this->registry, $item_id);
         if (util::validatePostToken('token', 'csrf_token')) {
-            $response = upload::handleUpload(__SITE_PATH . '/assets/media/pics');
+            $response = upload::handleUpload(__SITE_PATH . '/assets/media/pics/items');
             if ($response['success']) {
                 $_SESSION['messages'][] = $response['response'];
                 $itemPics->registerItemPic($item_id, $response['fileName']);

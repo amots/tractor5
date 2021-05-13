@@ -284,8 +284,8 @@ EOF;
             if ($param == strtoupper($value['link'])) {
                 if ($value['collection_group_id'] == 1) {
                     $where = <<<EOF
-`mGroup` = 1 and upper(left(`registration`,1)) = "T";
-EOF;
+                        `mGroup` = 1 and upper(left(`registration`,1)) = "T";
+                        EOF;
                     $found = TRUE;
                     break;
                 } else {
@@ -311,11 +311,11 @@ EOF;
             'sourceEn',
             'sl.name as location', 'display']);
         $sql = <<<EOF
-SELECT {$field2get} FROM `items` it 
-    LEFT JOIN storage_location sl ON
-    sl.location_id = it.`location` 
-WHERE {$where}
-EOF;
+            SELECT {$field2get} FROM `items` it 
+                LEFT JOIN storage_location sl ON
+                sl.location_id = it.`location` 
+            WHERE {$where}
+            EOF;
 //        Debug::dump([$param,$where], 'where in ' . __METHOD__ . ' line ' . __LINE__);
         return $sql;
     }

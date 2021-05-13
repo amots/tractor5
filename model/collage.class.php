@@ -18,7 +18,7 @@ class collage {
     public $errors = [];
     static $tableStyle = "border-collapse: separate; border-spacing: 2px; margin-left:auto; margin-right:auto;";
 
-    const IMG_PATH = '/assets/media/pics/';
+    const IMG_PATH = '/assets/media/pics/items/';
     const empty_pic_path = '/assets/media/dummy500x500.jpg';
 
     public function __construct() {

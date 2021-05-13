@@ -23,5 +23,6 @@ return[
     'searchString' => 'search string',
     'search' => 'Search',
     'highlights' =>'Highlights',
+    'companies' =>'Companies',
 ];
 

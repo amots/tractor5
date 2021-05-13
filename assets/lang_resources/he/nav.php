@@ -23,5 +23,6 @@ return[
     'searchString' => 'מחרוזת חיפוש',
     'search' => 'חפש',
     'highlights' =>'הבזקים',
+    'companies' =>'חברות',
 ];
 

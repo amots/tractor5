@@ -5,7 +5,8 @@
  *
  * @author amots
  */
-class list_items {
+class list_items
+{
 
     private $list, $cols, $pages, $titles;
     static public $biPencilSquare = <<<EOF
@@ -32,14 +33,15 @@ class list_items {
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
         </svg>
         EOF;
-    static public $plus_square= <<<EOF
+    static public $plus_square = <<<EOF
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
         </svg>
         EOF;
 
-    function __construct($items, $n = NULL, $titles = NULL) {
+    function __construct($items, $n = NULL, $titles = NULL)
+    {
         $this->editIcon = self::$biPencilSquare;
         $this->list = $items;
         $this->cols = $n;
@@ -47,7 +49,8 @@ class list_items {
         $this->pages = util::balanceArrays($this->list, $this->cols);
     }
 
-    public function getArticlesPage() {
+    public function getArticlesPage()
+    {
         $formatedItems = [];
         foreach ($this->list as $key => $item) {
             $formatedItems[] = <<<EOF
@@ -58,12 +61,15 @@ class list_items {
                 </li>
                 EOF;
         }
-        $listStr = '<ul class="list-group list-group-flush">' . join('',
-                        $formatedItems) . '</ul>';
+        $listStr = '<ul class="list-group list-group-flush">' . join(
+            '',
+            $formatedItems
+        ) . '</ul>';
         return $listStr;
     }
 
-    public function getBriefsPage() {
+    public function getBriefsPage()
+    {
         $formatedItems = [];
         foreach ($this->list as $key => $item) {
             $formatedItems[] = <<<EOF
@@ -74,12 +80,15 @@ class list_items {
                 </li>
                 EOF;
         }
-        $listStr = '<ul class="list-group list-group-flush">' . join('',
-                        $formatedItems) . '</ul>';
+        $listStr = '<ul class="list-group list-group-flush">' . join(
+            '',
+            $formatedItems
+        ) . '</ul>';
         return $listStr;
     }
 
-    public function getHighlightsPage() {
+    public function getHighlightsPage()
+    {
         $formatedItems = [];
         foreach ($this->list as $key => $item) {
             $shortTitle = util::shorten_string($item['title_' . lang::getLocale()]);
@@ -92,12 +101,15 @@ class list_items {
                 </li>
                 EOF;
         }
-        $listStr = '<ul class="list-group list-group-flush">' . join('',
-                        $formatedItems) . '</ul>';
+        $listStr = '<ul class="list-group list-group-flush">' . join(
+            '',
+            $formatedItems
+        ) . '</ul>';
         return $listStr;
     }
 
-    public function getAnnouncementsPage() {
+    public function getAnnouncementsPage()
+    {
         $formatedItems = [];
         foreach ($this->list as $key => $item) {
             $shortTitle = util::shorten_string($item['title_' . Lang::getLocale()]);
@@ -109,11 +121,52 @@ class list_items {
                 </li>
                 EOF;
         }
-        $listStr = '<ul class="list-group list-group-flush">' . join('',
-                        $formatedItems) . '</ul>';
+        $listStr = '<ul class="list-group list-group-flush">' . join(
+            '',
+            $formatedItems
+        ) . '</ul>';
         return $listStr;
     }
-
+    public function getSearchResultsPage()
+    {
+        $formatedItems = [];
+        foreach ($this->list as $key => $item) {
+            // Debug::dump($item,'item at ' . util::getCaller());
+            $desc = collection::renderTitle($item);
+            $link = "/collection/item/{$item['item_id']}";
+            $formatedItems[] = <<<EOT
+                <li class="list-group-item">
+                <a href="{$link}">{$desc}</a>
+                </li>
+                EOT;
+        }
+        $itemized = join('', $formatedItems);
+        // Debug::dump($itemized,'itemized at ' . util::getCaller());
+        $listStr = <<<EOT
+            <ul class="list-group list-group-flush">{$itemized}</ul>
+            EOT;
+        return $listStr;
+        // return "TODO at " . util::getCaller();
+    }
+    public function getCurrentCompPage()
+    {
+        // Debug::dump($this->list, 'list at ' . util::getCaller());
+        $lines = [];
+        foreach ($this->list as $item) {
+            $title = collection::renderTitle($item);
+            $lines[] = <<<EOF
+                <li class="list-group-item">
+                <a href="/collection/item/{$item['item_id']}">{$title}</a>
+                </li>
+                EOF;
+        }
+        $itemized = join(' ', $lines);
+        $returnStr = <<<EOF
+            <ul class="list-group list-group-flush">{$itemized}</ul>
+            EOF;
+        // $size = count($this->list);
+        // return 
+        // "<div dir=ltr>TODO list of [{$size}] items at " .  util::getCaller() . "</div>";
+        return $returnStr;
+    }
 }
-
-?>
