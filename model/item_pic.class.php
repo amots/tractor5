@@ -4,7 +4,7 @@
  * Description of itemPic
  *
  * @author amots
- * @date 2021-03-12
+ * @since 2021-03-12
  */
 class item_pic
 {

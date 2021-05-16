@@ -3,7 +3,7 @@
 /**
  *
  * @author amots
- * @date 2021-03-30
+ * @since 2021-03-30
  */
 class serviceController extends baseController
 {
@@ -34,7 +34,7 @@ class serviceController extends baseController
 
     public function index()
     {
-        $this->checkAuthorization(User::permission_service);
+        User::checkAuthorization(User::permission_service);
         $this->registry->template->pageTitle = Lang::trans('service.service');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -52,7 +52,7 @@ class serviceController extends baseController
 
     public function search()
     {
-        $this->checkAuthorization(User::permission_service);
+        User::checkAuthorization(User::permission_service);
         //        if (isset($_POST['submit'])){
         //        Debug::dump($_POST,'post in ' . __METHOD__ . ' line ' . __LINE__);}
         $this->registry->template->pageTitle = Lang::trans('service.service');
@@ -72,7 +72,7 @@ class serviceController extends baseController
 
     public function editService()
     {
-        $this->checkAuthorization();
+        User::checkAuthorization(User::permission_service);
         $form = new form('service');
         if (!isset($this->rt[2]) or util::IsNullOrEmptyString($this->rt[2])) {
             $this->registry->template->show('error404');
@@ -123,7 +123,7 @@ class serviceController extends baseController
     public function update()
     {
         $storeErrors = [];
-        $this->checkAuthorization(User::permission_service);
+        User::checkAuthorization(User::permission_service);
         $item_id = filter_input(INPUT_POST, 'item_id');
         $service_id = filter_input(INPUT_POST, 'service_id');
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
@@ -144,16 +144,6 @@ class serviceController extends baseController
 
         $newUrl = "/service/editService/{$item_id}/{$service_id}";
         header('location: ' . $newUrl);
-    }
-
-    private function checkAuthorization($level = 0)
-    {
-
-        if ($this->user->read_permission() and (($level == 0) or ($this->user->read_permission() &
-            $level))) return;
-        $_SESSION['errors'][] = 'User must be authorized to access';
-        header('Location: /login');
-        exit();
     }
 
     private function renderTemplateAnnouncements()

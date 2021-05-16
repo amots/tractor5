@@ -4,7 +4,7 @@
  * Description of collection
  *
  * @author amots
- * @date 2021-03-10
+ * @since 2021-03-10
  */
 class collection
 {
@@ -137,22 +137,11 @@ class collection
                 'mGroup' => 1,
             ],
             [
-                'path' => '/assets/media/pics/items/woodenSprayer.jpg',
+                'path' => '/assets/media/pics/items/49_woodenSprayer.jpg',
                 'link' => '/collection/3',
                 'literal' => Lang::trans('collage.tools'),
                 'mGroup' => 3,
             ],
-
-            /* [
-               'path' => '/assets/media/pics/items/woodenSprayer.jpg',
-               'link' => '/activities/family',
-               'literal' => Lang::trans('collage.4family'),
-           ],
-           [
-               'path' => '/assets/media/pics/items/woodenSprayer.jpg',
-               'link' => '/activities/kids',
-               'literal' => Lang::trans('collage.4kids'),
-           ], */
         ];
     }
 
@@ -255,21 +244,6 @@ class collection
     public function getItem($requestID)
     {
         $pdo = db::getInstance();
-        /*
-          switch ($this->registry->language) {
-          case "he":
-          $selectStr = "item_id, display, pics, mGroup, companyHe as company, modelHe as model, year, status, sourceHe as source, pageHe as page, last_update";
-
-          break;
-
-          default:
-          $selectStr = "item_id, display, pics, mGroup, companyEn as company, modelEn as model, year, status, sourceEn as source, pageEn as page, last_update";
-          }
-          $whereStr = "item_id=:requestID";
-          $fromStr = "items";
-          $sqlStr = sprintf("SELECT %s FROM %s WHERE %s;", $selectStr, $fromStr,
-          $whereStr);
-         */
         $sqlStr = <<<EOF
             SELECT * FROM `items` WHERE `item_id`=:requestID;
             EOF;
@@ -536,16 +510,27 @@ class collection
         $list = $query->fetchAll();
         return $list;
     }
-    public function getItemsByCompany($company)
+    public function getItemsByCompany($company,$collection_group_id = null)
     {
         // debug::dump($company,'company at ' . util::getCaller());
         $lang = ucfirst(Lang::getLocale());
-        $sql = "SELECT * FROM `items` WHERE `company{$lang}`= :company";
+        $wherwStr = "`company{$lang}`= :company";
+        $data = [':company' => $company];
+        if (!util::IsNullOrEmptyString($collection_group_id)) {
+            $wherwStr .= " AND `mGroup` = :mGroup";
+            $data[':mGroup'] = $collection_group_id;
+        }
+        // $sql = "SELECT * FROM `items` WHERE `company{$lang}`= :company";
+        $sql = "SELECT * FROM `items` WHERE {$wherwStr}";
+        // debug::dump($sql,'company at ' . util::getCaller());
         $pdo = db::getInstance();
         try {
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':company', $company, PDO::PARAM_STR);
-            $stmt->execute();
+            /* $stmt->bindValue(':company', $company, PDO::PARAM_STR);
+            if (!util::IsNullOrEmptyString($collection_group_id)) {
+                $stmt->bindValue(':mGroup', $collection_group_id, PDO::PARAM_INT);
+            } */
+            $stmt->execute($data);
         } catch (\Throwable $th) {
             $erros[] = $th->getMessage();
             Debug::dump($erros, 'Error at ' . util::getCaller());

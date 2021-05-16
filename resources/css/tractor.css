@@ -1,15 +1,15 @@
 /* CSS Document */
-/*$navBarBackground:#A94716;*/
-/*
-from Ayala 
-mustuard: B116| G180|R203 
-azure: B224| G198|R174 
-red: B68| G62|R190
-*/
-/* 
-    Created on : Mar 3, 2017, 8:43:12 PM
-    Author     : amots
-*/
+    /*$navBarBackground:#A94716;*/
+    /*
+    from Ayala 
+    mustuard: B116| G180|R203 
+    azure: B224| G198|R174 
+    red: B68| G62|R190
+    */
+    /**
+     * @since: Mar 3, 2017, 8:43:12 PM
+     * @auuthor: amots
+    */
 @font-face {
     font-family: 'Alef';
     src: url("Alef/Alef-Webfont/Alef-bold.eot");

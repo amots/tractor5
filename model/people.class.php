@@ -4,7 +4,7 @@
  * Description of people
  *
  * @author amots
- * @date 2020-03-17
+ * @since 2020-03-17
  */
 class people {
 

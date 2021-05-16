@@ -1,10 +1,12 @@
 <?php
 
+use function PHPSTORM_META\type;
+
 /**
  * Description of collectionController
  *
  * @author amots
- * @date 2021-03-10
+ * @since 2021-03-10
  */
 class collectionController extends baseController
 {
@@ -48,93 +50,6 @@ class collectionController extends baseController
         $this->registry->template->show('/envelope/bottom');
     }
 
-
-    /* public function tractors()
-    {
-        // Debug::dump($_SERVER['HTTP_REFERER'], 'referer at ' . util::getCaller());
-        $this->registry->template->footerStuff = <<<EOF
-            <script src="/resources/js/masonry.min.js"></script>
-            EOF;
-        $this->registry->template->pageTitle = Lang::trans('nav.theTractors');
-        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-            ['literal' => Lang::trans('nav.theCollection'), 'link' => '/collection'],
-            ['literal' => Lang::trans('nav.theTractors'), 'link' => NULL],
-        ]);
-        $this->registry->template->companies = $this->collection->renderCompaniesList(1);
-        $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
-        $this->registry->template->info = $renderer->render();
-        $this->registry->template->content = $this->collection->renderCollectionGroupPage(1);
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
-        $this->registry->template->show('/envelope/head');
-        $this->registry->template->show('collection');
-        $this->registry->template->show('/envelope/bottom');
-    }
-
-    public function vehicles()
-    {
-        // Debug::dump($_SERVER['HTTP_REFERER'], 'referer at ' . util::getCaller());
-        $this->registry->template->footerStuff = <<<EOF
-            <script src="/resources/js/masonry.min.js"></script>
-            EOF;
-        $this->registry->template->pageTitle = Lang::trans('nav.theVehicles');
-        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-            ['literal' => Lang::trans('nav.theCollection'), 'link' => '/collection'],
-            ['literal' => Lang::trans('nav.theVehicles'), 'link' => NULL],
-        ]);
-        $this->registry->template->companies = $this->collection->renderCompaniesList(2);
-        $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
-        $this->registry->template->info = $renderer->render();
-        $this->registry->template->content = $this->collection->renderCollectionGroupPage(2);
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
-        $this->registry->template->show('/envelope/head');
-        $this->registry->template->show('collection');
-        $this->registry->template->show('/envelope/bottom');
-    }
-
-    public function tools()
-    {
-        $this->registry->template->footerStuff = <<<EOF
-            <script src="/resources/js/masonry.min.js"></script>
-            EOF;
-        $this->registry->template->pageTitle = Lang::trans('nav.theTools');
-        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-            ['literal' => Lang::trans('nav.theCollection'), 'link' => '/collection'],
-            ['literal' => Lang::trans('nav.theTools'), 'link' => NULL],
-        ]);
-        $this->registry->template->companies = $this->collection->renderCompaniesList(3);
-        $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
-        $this->registry->template->info = $renderer->render();
-        $this->registry->template->content = $this->collection->renderCollectionGroupPage(3);
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
-        $this->registry->template->show('/envelope/head');
-        $this->registry->template->show('collection');
-        $this->registry->template->show('/envelope/bottom');
-    }
-
-    public function agron()
-    {
-        $this->registry->template->footerStuff = <<<EOF
-            <script src="/resources/js/masonry.min.js"></script>
-            EOF;
-        $this->registry->template->pageTitle = Lang::trans('nav.theCollection');
-        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-            ['literal' => Lang::trans('nav.theCollection'), 'link' => '/collection'],
-            ['literal' => Lang::trans('nav.agron'), 'link' => NULL],
-        ]);
-        $this->registry->template->companies = $this->collection->renderCompaniesList(4);
-        $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
-        $this->registry->template->info = $renderer->render();
-        $this->registry->template->content = $this->collection->renderCollectionGroupPage(4);
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
-        $this->registry->template->show('/envelope/head');
-        $this->registry->template->show('collection');
-        $this->registry->template->show('/envelope/bottom');
-    } */
-
     public function item()
     {
         if (!isset($this->rt[2]) or !is_numeric($this->rt[2])) {
@@ -142,6 +57,7 @@ class collectionController extends baseController
         }
         $requestID = intval($this->rt['2']);
         $item = $this->collection->getItem($requestID);
+        $this->check4view($item);
         $title = join(
             ' ',
             [
@@ -209,7 +125,7 @@ class collectionController extends baseController
                 ['literal' => Lang::trans('nav.companies'), 'link' => NULL],
             ]);
         }
-        $list = $this->collection->getItemsByCompany($currentCompany);
+        $list = $this->collection->getItemsByCompany($currentCompany,$collection_group_id);
         $this->registry->template->pageTitle = Lang::trans('nav.companies');
         $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
         $this->registry->template->info = $renderer->render();
@@ -220,5 +136,24 @@ class collectionController extends baseController
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('collection');
         $this->registry->template->show('/envelope/bottom');
+    }
+
+    private function check4view(array $item)
+    {
+        $level = 19;
+        $verified = false;
+        if ($item['archive']) {
+            $permission = User::permission();
+            if (isset($_REQUEST['forceview'])) {
+                if ($permission and (($level == 0) or ($permission & $level))) {
+                    $verified = true;
+                }
+            }
+        } else {
+            $verified = true;
+        }
+        if (!$verified) {
+            header('location: /error404');
+        }
     }
 }

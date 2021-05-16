@@ -4,7 +4,7 @@
  * Description of ownership
  *
  * @author amots
- * @date 2020-09-06
+ * @since 2020-09-06
  */
 class ownership {
 

@@ -4,7 +4,7 @@
  * Description of service
  *
  * @author amots
- * @date 2021-03030
+ * @since 2021-03030
  */
 class service {
 
@@ -72,7 +72,7 @@ class service {
         $items = [];
         $editIcon = list_items::$biPencilSquare;
         foreach ($list as $key => $value) {
-            $link2item = "/collection/showItem?id={$value['item_id']}";
+            $link2item = "/collection/item?id={$value['item_id']}";
             $link2service = "/service/editService/{$value['item_id']}/{$value['service_id']}";
             $title = collection::renderTitle($value);
             $person = join(' ', [$value['sur_name_he'], $value['last_name_he']]);

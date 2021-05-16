@@ -27,14 +27,14 @@ class inventoryController Extends baseController {
         $this->inventory = new inventory();
         $this->user = new User();
         $this->rt = explode('/', $_REQUEST['rt']);
-        $this->permission = $this->user->read_permission();
+        $this->permission = User::permission();//$this->user->read_permission();
         $this->mng = new mng();
         $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
         $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
     }
 
     public function index() {
-        $this->checkAuthorization(User::permission_inventory);
+        User::checkAuthorization(User::permission_inventory);
         $this->registry->template->pageTitle = Lang::trans('mng.inventory');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -55,29 +55,30 @@ class inventoryController Extends baseController {
     }
 
     public function search() {
-        $this->checkAuthorization(User::permission_inventory);
+        User::checkAuthorization(User::permission_inventory);
         $this->registry->template->pageTitle = Lang::trans('mng.search');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
                     ['literal' => Lang::trans('mng.inventory'), 'link' => "/inventory"],
                     ['literal' => Lang::trans('service.search'), 'link' => NULL],
         ]);
-        $renderer = new template_renderer(__SITE_PATH . '/includes/tableSortSetUp.html',
+        /* $renderer = new template_renderer(__SITE_PATH . '/includes/tableSortSetUp.html',
                 [
             'tableID' => 'list2Sort',
             'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
         ]);
-        $this->registry->template->headerStuff = $renderer->render();
+        $this->registry->template->headerStuff = $renderer->render(); */
 
         $this->registry->template->content = $this->inventory->renderInventorySearchPage();
         $this->renderTemplateAnnouncements();
         $this->registry->template->show('/envelope/head');
-        $this->registry->template->show('/service/serviceSearch');
+        // $this->registry->template->show('/service/serviceSearch');
+        $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
     }
 
     public function editItem() {
-        $this->checkAuthorization(User::permission_items);
+        User::checkAuthorization(User::permission_items);
         if (isset($_POST['action']) and $_POST['action'] == 'storeItem')
                 $this->itemUpdate();
         $indexAt = 2;
@@ -95,7 +96,7 @@ class inventoryController Extends baseController {
                     ['literal' => Lang::trans('mng.editItem'), 'link' => NULL],
         ]);
         $collection = new collection();
-//        $content = '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
+    //    $content = '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
         $content = $collection->renderEditItem($item_id);
         $this->registry->template->content = $content;
         $this->renderTemplateAnnouncements();
@@ -110,7 +111,7 @@ class inventoryController Extends baseController {
             return;
         }
         unset($_SESSION['csrf_token']);
-//        Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
+    //    Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
         $form = new form('items');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
@@ -122,7 +123,7 @@ class inventoryController Extends baseController {
     }
 
     public function editPics() {
-        $this->checkAuthorization(User::permission_items);
+        User::checkAuthorization(User::permission_items);
         $indexAt = 2;
         if (isset($this->rt[$indexAt]) and is_numeric($this->rt[$indexAt])) {
             $item_id = strval($this->rt[$indexAt]);
@@ -135,7 +136,7 @@ class inventoryController Extends baseController {
         ]);
         $collection = new collection();
         $this->registry->template->content = $collection->renderEditItemPics($item_id);
-//        '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
+    //    '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
         $this->renderTemplateAnnouncements();
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
@@ -144,7 +145,7 @@ class inventoryController Extends baseController {
     }
 
     public function updateItemPic() {
-//        Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
+    //    Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
         $item_id = filter_input(INPUT_POST, 'item_id', FILTER_VALIDATE_INT);
         if (!util::validatePostToken('token', 'csrf_token')) {
             $this->errors[] = 'Failed to validate token';
@@ -181,13 +182,6 @@ class inventoryController Extends baseController {
         header('location: /inventory/editPics/' . $item_id);
     }
 
-    private function checkAuthorization($level = 0) {
-        if ($this->user->read_permission() and ( ($level == 0) or ( $this->user->read_permission() &
-                $level))) return;
-        $_SESSION['errors'][] = 'User must be authorized to access';
-        header('Location: /login');
-        exit();
-    }
 
     private function renderTemplateAnnouncements() {
         $this->registry->template->errors = util::renderErrors($this->errors);

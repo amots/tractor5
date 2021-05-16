@@ -32,7 +32,7 @@ class mngController extends baseController
         unset($_SESSION['errors']);
         $this->user = new User();
         $this->rt = explode('/', $_REQUEST['rt']);
-        $this->permission = $this->user->read_permission();
+        $this->permission = User::permission();//$this->user->read_permission();
         $this->mng = new mng();
         $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
         $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
@@ -40,7 +40,7 @@ class mngController extends baseController
 
     public function index()
     {
-        $this->checkAuthorization();
+        User::checkAuthorization();
         $this->registry->template->pageTitle = Lang::trans('mng.mng');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -55,7 +55,7 @@ class mngController extends baseController
 
     public function content()
     {
-        $this->checkAuthorization(User::permission_content);
+        User::checkAuthorization(User::permission_content);
         $this->registry->template->pageTitle = Lang::trans('mng.mng');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
@@ -118,18 +118,10 @@ class mngController extends baseController
         $this->registry->template->show('/envelope/bottom');
     }
 
-    private function checkAuthorization($level = 0)
-    {
-        if ($this->user->read_permission() and (($level == 0) or ($this->user->read_permission() &
-            $level))) return;
-        $_SESSION['errors'][] = 'User must be authorized to access';
-        header('Location: /login');
-        exit();
-    }
 
     public function editArticle()
     {
-        $this->checkAuthorization(User::permission_administrator);
+        User::checkAuthorization(User::permission_administrator);
         if (isset($_POST['action']) and $_POST['action'] == 'storeArticle'){
             $this->articleUpdate();
         }
@@ -162,7 +154,7 @@ class mngController extends baseController
 
     public function editHighlight()
     {
-        $this->checkAuthorization(User::permission_administrator);
+        User::checkAuthorization(User::permission_administrator);
         $indexAt = 2;
         if (isset($_POST['action']) and $_POST['action'] == 'storeHighlight') {
             $this->highLightUpdate();
@@ -199,7 +191,7 @@ class mngController extends baseController
 
     public function editAnnouncemet()
     {
-        $this->checkAuthorization(User::permission_administrator);
+        User::checkAuthorization(User::permission_administrator);
         if (isset($_POST['action']) and $_POST['action'] == 'storeAnnouncement') {
             $this->announcementUpdate();
             //            exit();
@@ -300,7 +292,7 @@ class mngController extends baseController
 
     public function editBrief()
     {
-        $this->checkAuthorization(User::permission_administrator);
+        User::checkAuthorization(User::permission_administrator);
         $indexAt = 2;
         if (
             isset($_POST['action'])
@@ -346,9 +338,35 @@ class mngController extends baseController
         // Debug::dump($this->errors, 'errors at ' . util::getCaller());
         // Debug::dump($_POST, 'post at ' . util::getCaller());
     }
+
+    public function quality()
+    {
+        User::checkAuthorization(User::permission_administrator);   
+        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
+            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+            ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
+            ['literal' => Lang::trans('mng.quality'), 'link' => NULL],
+        ]);
+        $this->registry->template->pageTitle = Lang::trans('mng.quality');
+        $renderer = new template_renderer(__SITE_PATH . '/includes/tableSortSetUp.html',
+                [
+            'tableID' => 'list2Sort',
+            'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
+        ]);
+        $this->registry->template->headerStuff = $renderer->render();
+        $qualityModel = new quality();
+        $this->registry->template->qualityMenu = $qualityModel->renderQualityMenu();
+        $this->registry->template->content = $qualityModel->renderQualityPage();
+
+        $this->renderTemplateAnnouncements();
+        
+        $this->registry->template->show('/envelope/head');
+        $this->registry->template->show('/mng/quality');
+        $this->registry->template->show('/envelope/bottom');
+    }
     public function user()
     {
-        $this->checkAuthorization(User::permission_administrator);
+        User::checkAuthorization(User::permission_administrator);
         if (isset($_POST['action']) and $_POST['action'] == 'updatePermission') {
             $this->userUpdate();
         }

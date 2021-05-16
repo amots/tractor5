@@ -1,0 +1,30 @@
+<style>
+    .list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #c3daf050;
+    border-color: #c8ddf150;
+}
+</style>
+<div class="mx-3">
+    <?= $breadCrumbs ?>
+
+    <div class="container-fluid">
+        <div class="row mx-1">
+            <div class="col-md-2">
+                <?= $qualityMenu ?>
+            </div>
+
+            <div class="col">
+                <div id="messages" class="text-center">
+                    <?= $messages ?>
+                </div>
+                <div id="errors" class="text-center">
+                    <?= $errors ?>
+                </div>
+                <?= $content ?>
+            </div>
+        </div>
+    </div>
+
+</div>

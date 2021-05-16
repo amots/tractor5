@@ -4,7 +4,7 @@
  * Description of templateRenderer
  *
  * @author amots
- * @date 2017-11-07
+ * @since 2017-11-07
  */
 class template_renderer {
 

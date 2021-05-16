@@ -4,7 +4,7 @@
  * Description of ownershipController
  *
  * @author amots
- * @date 2021-04-04
+ * @since 2021-04-04
  */
 class ownershipController Extends baseController {
 
@@ -21,15 +21,14 @@ class ownershipController Extends baseController {
         unset($_SESSION['errors']);
         $this->user = new User();
         $this->rt = explode('/', $_REQUEST['rt']);
-        $this->permission = $this->user->read_permission();
+        $this->permission = User::permission();//$this->user->read_permission();
         $this->mng = new mng();
         $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
         $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
     }
 
     public function index() {
-        $this->checkAuthorization(User::permission_ownership);
-//        Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
+        User::checkAuthorization(User::permission_ownership);
         if (isset($_POST['action']) and $_POST['action'] = 'updateOwnership') {
             $this->ownershipUpdate($_POST['caller']);
         }
@@ -110,14 +109,6 @@ class ownershipController Extends baseController {
             $_SESSION['errors'] = $result;
         }
         header("location: {$caller}/{$form->last_id}");
-    }
-
-    private function checkAuthorization($level = 0) {
-        if ($this->user->read_permission() and ( ($level == 0) or ( $this->user->read_permission() &
-                $level))) return;
-        $_SESSION['errors'][] = 'User must be authorized to access';
-        header('Location: /login');
-        exit();
     }
 
     private function renderTemplateAnnouncements() {
