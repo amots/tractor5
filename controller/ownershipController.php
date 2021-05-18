@@ -1,7 +1,6 @@
 <?php
 
 /**
- * Description of ownershipController
  *
  * @author amots
  * @since 2021-04-04
@@ -61,7 +60,7 @@ class ownershipController Extends baseController {
                                 ['literal' => Lang::trans('mng.newRecord'), 'link' => NULL]);
                         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs($baseBread);
                         $this->registry->template->content = $ownObj->renderItemOwnEditPage($item_id);
-//                        $this->registry->template->content ="Render new record for {$this->rt[$itemIndexAt]}";
+                    //    $this->registry->template->content ="Render new record for {$this->rt[$itemIndexAt]}";
                     }
                 }
             } else {
@@ -100,7 +99,7 @@ class ownershipController Extends baseController {
             return;
         }
         unset($_SESSION['csrf_token']);
-//        Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
+    //    Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
         $form = new form('ownership');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {

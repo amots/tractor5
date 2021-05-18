@@ -55,20 +55,26 @@ class form
 
     public function storePostedData()
     {
+        $this->storeData($_POST);
+    }
+
+
+    public function storeData($data2handle)
+    {
         $errors = [];
         $data = $index = [];
         foreach ($this->dataStruct as $colDef) {
             $fieldname = $colDef['COLUMN_NAME'];
-            $isPosted = isset($_POST[$fieldname]);
+            $isPosted = isset($data2handle[$fieldname]);
             if (strtoupper($colDef['COLUMN_KEY']) === 'PRI') {
                 if ($isPosted) {
-                    if (!util::IsNullOrEmptyString($_POST[$fieldname]))
-                        $index = [$fieldname => $_POST[$fieldname]];
+                    if (!util::IsNullOrEmptyString($data2handle[$fieldname]))
+                        $index = [$fieldname => $data2handle[$fieldname]];
                 }
             }
             if (!$this->updatable($colDef)) continue;
             if ($isPosted) {
-                $posted = $_POST[$fieldname];
+                $posted = $data2handle[$fieldname];
                 if (!$this->validateField($colDef, $posted)) {
                     $errors[] = "failed to validate field " . $fieldname . " with: " . $posted;
                 } else {

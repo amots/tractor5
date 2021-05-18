@@ -1,16 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of mngController
- *
- * @author amots
- */
+    /**
+     * Description of mngController
+     *
+     * @author amots
+     */
 class mngController extends baseController
 {
 
@@ -32,7 +26,7 @@ class mngController extends baseController
         unset($_SESSION['errors']);
         $this->user = new User();
         $this->rt = explode('/', $_REQUEST['rt']);
-        $this->permission = User::permission();//$this->user->read_permission();
+        $this->permission = User::permission();
         $this->mng = new mng();
         $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
         $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
@@ -117,7 +111,6 @@ class mngController extends baseController
         $this->registry->template->show('/mng/content');
         $this->registry->template->show('/envelope/bottom');
     }
-
 
     public function editArticle()
     {
@@ -398,20 +391,28 @@ class mngController extends baseController
 
     private function userUpdate()
     {
-        Debug::dump($_POST, 'post in ' . __METHOD__ . ' line ' . __LINE__);
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'] = 'Failed to validate token';
-            return;
+            $_SESSION['errors'] = 'Failed to validate token ' . util::getCaller();
+            header('location: /mng/user/');
+            exit();
         }
         unset($_SESSION['csrf_token']);
         $form = new form('members');
-        $result = $form->storePostedData();
+        $convertedData = [];
+        foreach($_POST as $key=>$value) {
+            $cValue = ($key == 'password') ? password_hash($value, PASSWORD_BCRYPT) : $_POST[$key];
+            $convertedData[$key] = $cValue;
+
+        }
+       
+        $result = $form->storeData($convertedData);
         if (util::is_array_empty($result)) {
             $_SESSION['messages'] = "record {$form->last_id} save alright";
         } else {
             $_SESSION['errors'] = $result;
         }
         header('location: /mng/user/');
+        exit();
     }
 
     private function renderTemplateAnnouncements()

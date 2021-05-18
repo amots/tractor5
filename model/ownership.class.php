@@ -35,39 +35,39 @@ class ownership {
         );
         $listAllLiteral = Lang::trans('mng.listAll');
         $listAllAnchor = <<<EOF
-<div class="m-3"><a href="/ownership/all">$listAllLiteral</a></div>
-EOF;
+            <div class="m-3"><a href="/ownership/all">$listAllLiteral</a></div>
+            EOF;
         return $listAllAnchor . $renderer->render();
     }
 
     public function renderOwnRecordsList($item_id) {
         $records = $this->getAllOwnRecordItem($item_id);
-//        Debug::dump($records, 'records ' . __METHOD__ . ' line ' . __LINE__);
+    //    Debug::dump($records, 'records ' . __METHOD__ . ' line ' . __LINE__);
 
         $title = $this->renderTitle($item_id);
         $plus = list_items::$plus_square;
         $recordsList = $this->renderOwnershipRecords($records);
         return <<<EOF
-<script> $(document).ready(function(){ $('svg').attr('height',40);$('svg').attr('width',40);})</script>
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">[{$item_id}] {$title}</h4>                
-        <div class="text-right card-text">
-            <div>{$recordsList}</div>
-            <a href="/ownership/{$item_id}/new">{$plus}</a>
-        </div>
-    </div>
-</div>
-    
-EOF;
+            <script> $(document).ready(function(){ $('svg').attr('height',40);$('svg').attr('width',40);})</script>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">[{$item_id}] {$title}</h4>                
+                    <div class="text-right card-text">
+                        <div>{$recordsList}</div>
+                        <a href="/ownership/{$item_id}/new">{$plus}</a>
+                    </div>
+                </div>
+            </div>                
+            EOF;
     }
 
     public function renderItemOwnEditPage($item_id, $ownership_id = NULL) {
         $ownData = $this->getOwnItem($ownership_id);
-//        Debug::dump($ownData, 'ownership data in ' . __METHOD__ . ' line ' . __LINE__);
+    //    Debug::dump($ownData, 'ownership data in ' . __METHOD__ . ' line ' . __LINE__);
         $data = $ownData;
         $data['item_id'] = $item_id;
         $data['maxYear'] = date('Y');
+        $data['ownership_id'] = $ownership_id;
         $data['csrf_token'] = $this->set_CSRF_Token();
         $data['caller'] = "/ownership/{$item_id}";
 
@@ -160,12 +160,14 @@ EOF;
     public function listAllOwnershipItems() {
         $pdo = db::getInstance();
         $sqlStr = "SELECT * FROM `ownership` ORDER BY `item_id`";
-        $sqlStr = 'SELECT
-    ownership.*,items.registration,items.companyHe, items.modelHe,items.year,items.sourceHe
-FROM
-    `ownership`
-JOIN `items` ON items.item_id = ownership.item_id
-ORDER BY `item_id`';
+        $sqlStr = <<<EOT
+            SELECT
+                ownership.*,items.registration,items.companyHe, items.modelHe,items.year,items.sourceHe
+            FROM
+                `ownership`
+            JOIN `items` ON items.item_id = ownership.item_id
+            ORDER BY `item_id`
+            EOT;
 
         $stmt = $pdo->prepare($sqlStr);
         try {
@@ -195,14 +197,14 @@ ORDER BY `item_id`';
             $since = util::renderIncompeteDate($item['transaction_year'],
                             $item['transaction_month'], $item['transaction_day']);
             $itemLink = <<<EOF
-<a href="/collection/item/{$item['item_id']}" target=_blank>{$name}</a>
-EOF;
+                <a href="/collection/item/{$item['item_id']}" target=_blank>{$name}</a>
+                EOF;
             $ownershipEditLink = <<<EOF
-<a href="/ownership/{$item['item_id']}">$this->editIcon</a>
-EOF;
+                <a href="/ownership/{$item['item_id']}">$this->editIcon {$item['item_id']}</a>
+                EOF;
             $formatedItem[] = <<<EOF
-<td>{$ownershipEditLink}</td><td>{$item['registration']}</td><td>{$itemLink}</td><td>{$item['owner']}</td><td>{$since}</td>
-EOF;
+                <td>{$ownershipEditLink}</td><td>{$item['registration']}</td><td>{$itemLink}</td><td>{$item['owner']}</td><td>{$since}</td>
+                EOF;
         }
 
         $content = $table_pre . $thead . '<tbody>' . '<tr>' . join('</tr><tr>',
@@ -213,14 +215,14 @@ EOF;
     private function generateEmptyOwnItem($item_id) {
         $form = new form('ownership');
         $emptyItem = $form->genEmptyRecord();
-//        $emptyItem = [];
-//        $fields = $this->getFields();
-//        //        Debug::dump($fields, ' fields in '.__METHOD__ . ' line ' . __LINE__);
-//        foreach ($fields as $key => $value) {
-//            $emptyItem[$value['COLUMN_NAME']] = $value['COLUMN_DEFAULT'];
-//        }
-//        $emptyItem['item_id'] = $item_id;
-//        //        Debug::dump($emptyItem, ' fields in '.__METHOD__ . ' line ' . __LINE__);
+    /*        $emptyItem = [];
+       $fields = $this->getFields();
+       //        Debug::dump($fields, ' fields in '.__METHOD__ . ' line ' . __LINE__);
+       foreach ($fields as $key => $value) {
+           $emptyItem[$value['COLUMN_NAME']] = $value['COLUMN_DEFAULT'];
+       }
+       $emptyItem['item_id'] = $item_id;
+       //        Debug::dump($emptyItem, ' fields in '.__METHOD__ . ' line ' . __LINE__); */
         return $emptyItem;
     }
 
@@ -276,11 +278,11 @@ EOF;
                             $value['transaction_day']
             );
             $items[] = <<<EOF
-<a href="/ownership/{$value['item_id']}/{$value['ownership_id']}">
-{$date} בעלות
-{$value['owner']}
-</a>
-EOF;
+                <a href="/ownership/{$value['item_id']}/{$value['ownership_id']}">
+                {$date} בעלות
+                {$value['owner']}
+                </a>
+                EOF;
         }
         return join('<br />', $items);
     }
@@ -306,8 +308,8 @@ EOF;
             $this['errors'][] = $exc->getMessage();
         }
         $item = $stmt->fetch();
-//        Debug::dump($item, 'ownership item in ' . __METHOD__ . ' line ' . __LINE__);
-//return util::renderIncompeteDate($item['transaction_year'], $item['transaction_month'], $item['transaction_day']);
+    //    Debug::dump($item, 'ownership item in ' . __METHOD__ . ' line ' . __LINE__);
+    //    return util::renderIncompeteDate($item['transaction_year'], $item['transaction_month'], $item['transaction_day']);
         return $item['owner'];
     }
 

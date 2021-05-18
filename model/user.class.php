@@ -1,6 +1,5 @@
 <?php
 
-//include('password.php');
 
 class User extends Password
 {
@@ -99,21 +98,45 @@ class User extends Password
     public function renderUserSelectionList()
     {
         $list = $this->getAllUsers();
+        // $list[] = ['username'=>list_items::$plus_square];
         $data = [];
         foreach ($list as $key => $value) {
             $data[] = <<<EOF
                 <div class="ltr">
-                <a href="/mng/user/{$value['username']}">{$value['username']}</a>
+                <a href="/mng/user/{$value['memberID']}">{$value['username']}</a>
                 </div>                    
                 EOF;
         }
+        $addIcon = list_items::$addUser;
+        $token = util::RandomToken();
+        $_SESSION['NewToken'] = $token;
+        $data[] = <<<EOF
+            <div class="ltr">
+            <a href="/mng/user/NewUser?t={$token}">חדש {$addIcon}</a>
+            </div>
+            EOF;
         $content = join('', $data);
         return $content;
     }
 
-    public function renderEditUserPermission($username)
+    public function renderEditUserPermission($memberID)
     {
-        $user = $this->getUserData($username);
+        if (isset($_GET['t'])) {
+            if (util::validateValueToken($_GET['t'], 'NewToken')) {
+                $form = new form('members');
+                $user = $form->genEmptyRecord();
+                $user['memberID'] = null;
+                $new = true;
+            } else {
+                $_SESSION['errors'] = 'Failed to verify token';
+                header('location: /mng/user');
+            }
+        } else {
+            $user = $this->getUserData($memberID);
+            $new = false;
+        }
+        // Debug::dump($user,'user at ' . util::getCaller());
+        unset($_SESSION['NewToken']);
         $data = [];
         foreach ($this->permission as $key => $value) {
             if ($value == 0) continue;
@@ -124,14 +147,18 @@ class User extends Password
                 <input type="checkbox" id="{$key}" name="{$key}" data-p = "{$this->permission[$key]}"
                 class="permission_opt"
                 {$checked}>
-                <label for="{$key}">{$key} {$this->permission[$key]} {$and}</label>
+                <label for="{$key}">{$key} 
                 </div>
                 EOF;
         }
         $content = join('', $data);
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
-        $renderer = new template_renderer(__SITE_PATH . '/includes/mng/userEditPermission.html');
+        if ($new) {
+            $renderer = new template_renderer(__SITE_PATH . '/includes/mng/userNew.html');
+        } else {
+            $renderer = new template_renderer(__SITE_PATH . '/includes/mng/userEditPermission.html');
+        }
         $renderer->viewData = [
             'content' => $content,
             'memberID' => $user['memberID'],
@@ -140,7 +167,8 @@ class User extends Password
             'activeCheck' => (strtoupper($user['active']) == 'YES') ? 'checked' : NULL,
             'active' => $user['active'],
             'email' => $user['email'],
-            'username' => $username,
+            'username' => $user['username'],
+            'okIcon' => list_items::$ok,
         ];
         return $renderer->render();
     }
@@ -163,12 +191,12 @@ class User extends Password
         return $data;
     }
 
-    private function getUserData($username)
+    private function getUserData($memberID)
     {
         $db = db::getInstance();
         try {
-            $stmt = $db->prepare('SELECT * FROM members WHERE username = :username AND UPPER(active)="YES" ');
-            $stmt->execute(array('username' => $username));
+            $stmt = $db->prepare('SELECT * FROM members WHERE memberID = :memberID AND UPPER(active)="YES" ');
+            $stmt->execute(array('memberID' => $memberID));
 
             return $stmt->fetch();
         } catch (PDOException $e) {
