@@ -153,7 +153,7 @@ EOF;
         return $stmt->fetch();
     }
 
-    public function renderCollage($data, $cols, $rows)
+    public function renderCollage($data, $cols, $rows, $showLiteral = false)
     {
         /*
          * path
@@ -201,17 +201,22 @@ EOF;
                         src="/assets/media/empty500x500.jpg" />                
                     EOF;
                 /* $colElements[] = <<<EOF
-                    <td style="{$currrentStyle}"><a href="{$inf['link']}">{$singleImg}</a></td>
-                    EOF; */
-                    $colElements[] = <<<EOF
+                <td style="{$currrentStyle}"><a href="{$inf['link']}">{$singleImg}</a></td>
+                EOF; */
+                if ($showLiteral) {
+                    $overlayText = <<< EOT
+                        <div class="px-2" style="position: absolute; top: 50%; left: 50%;
+                                transform: translate(-50%, -50%);color:#A94716;font-size: 2.5rem;
+                                background-color: rgba(249, 240, 240, 0.5);
+                                font-weight:bold">
+                            {$inf['literal']}
+                        </div>
+                        EOT;
+                } else $overlayText = null;
+                $colElements[] = <<<EOF
                     <td style="{$currrentStyle}">
                         <div style="position: relative; text-align: center;">
-                            <div class="px-2" style="position: absolute; top: 50%; left: 50%;
-                            transform: translate(-50%, -50%);color:#A94716;font-size: 2.5rem;
-                            background-color: rgba(249, 240, 240, 0.5);
-                            font-weight:bold">
-                                {$inf['literal']}
-                            </div>
+                            {$overlayText}
                                 <a href="{$inf['link']}">{$singleImg}</a>
                         </div>
                     </td>

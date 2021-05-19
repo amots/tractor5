@@ -107,7 +107,7 @@ class collection
     {
         $collage = new collage();
         $data = $this->genLandingPageData();
-        return $collage->renderCollage($data, 2, 2);
+        return $collage->renderCollage($data, 2, 2, true);
     }
 
     private function genLandingPageData()
