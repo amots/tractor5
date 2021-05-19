@@ -27,7 +27,7 @@ class collage
         $this->itemLiteral = 'model' . lang::getLocale();
     }
 
-    public function getCollage($width, $height)
+    public function getCollage($width, $height, $showLiteral = false)
     {
         $picList = $this->getImages($width * $height);
         return $this->formatRandomPicsCollage($picList, $width, $height);
@@ -55,7 +55,7 @@ class collage
         return $selected;
     }
 
-    public function formatRandomPicsCollage($picList, $cols, $rows)
+    public function formatRandomPicsCollage($picList, $cols, $rows, $showLiteral = false)
     {
         $data = [];
         foreach ($picList as $key => $id) {
@@ -70,7 +70,7 @@ class collage
         return $this->renderCollage($data, $cols, $rows);
     }
 
-    public function formatRandomPicsCollage_deprecated($picList, $width, $height)
+    /* public function formatRandomPicsCollage_deprecated($picList, $width, $height)
     {
         if (sizeof($picList) == 0) return NULL;
         $tableStyle = self::$tableStyle;
@@ -81,9 +81,9 @@ class collage
         }
         $wp = 100 / $width;
         $retStr .= <<<EOF
-<div class="table-responsive-md">
-    <table class="table" style="{$tableStyle}">
-EOF;
+        <div class="table-responsive-md">
+            <table class="table" style="{$tableStyle}">
+        EOF;
 
         $imgPath = $this::IMG_PATH;
         for ($row = 0; $row < $height; $row++) {
@@ -108,7 +108,7 @@ EOF;
         }
         $retStr .= '</table></div>';
         return $retStr;
-    }
+    } */
 
     private function renderSingleImg($inf)
     {
