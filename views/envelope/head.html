@@ -29,8 +29,9 @@
 
       <div class="jumbotron jumbotron-fluid hero-unit" 
        style="background-image: url(/assets/media/banners/<?= $bannerFileName ?>);">
-       <div class="container pt-3">
-        <h3 class="display-6 jumboHeader"><?= Lang::trans('general.museumName') ?></h3>
+       <div class="container pt-4">
+        <!-- <h3 class="display-6 jumboHeader"><?= Lang::trans('general.museumName') ?></h3> -->
+      <?= file_get_contents(__SITE_PATH . "/assets/media/banners/title_". Lang::getLocale() .".svg") ?>
       </div>
     </div>
 
