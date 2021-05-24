@@ -62,7 +62,7 @@ class list_items
         EOF; */
         static public $ok = <<<EOF
             <svg xmlns="http://www.w3.org/2000/svg" 
-            width="32" height="32" fill="currentColor" viewBox="0 0 64 80" x="0px" y="0px"><title>check, done, tick, interface icon</title><g data-name="Layer 1"><path d="M26.47,50.6h.05a2,2,0,0,0,1.53-.79L53.58,16.62a2,2,0,1,0-3.16-2.43l-24,31.23L13.52,30.28a2,2,0,1,0-3,2.59l14.46,17A2,2,0,0,0,26.47,50.6Z"/></g></svg>
+            width="32" height="32" fill="currentColor" width="16" height="16" viewBox="0 0 64 80" x="0px" y="0px"><title>check, done, tick, interface icon</title><g data-name="Layer 1"><path d="M26.47,50.6h.05a2,2,0,0,0,1.53-.79L53.58,16.62a2,2,0,1,0-3.16-2.43l-24,31.23L13.52,30.28a2,2,0,1,0-3,2.59l14.46,17A2,2,0,0,0,26.47,50.6Z"/></g></svg>
             EOF;
     
         function __construct($items, $n = NULL, $titles = NULL)

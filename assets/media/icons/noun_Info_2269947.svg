@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 100" x="0px" y="0px">
+<title>info</title>
+<style>
+.cls-2 {
+        font-size: 5px;
+        font-family: HelveticaNeue-Bold, Helvetica Neue;
+        font-weight: 700;
+ 		fill-opacity: 0; 
+      }
+
+      .cls-3 {
+        fill:currentColor;
+      }
+</style>
+<g class="cls-3">
+<path d="M57.64111,20.0545A5.20472,5.20472,0,1,0,61.32135,26.429,5.20472,5.20472,0,0,0,57.64111,20.0545Z"/>
+<path d="M60.11377,69.0827c-4.46149,1.97675-11.31714,4.0896-9.51837-2.62353L58.767,35.96252l-17.7461,1.22467a2.70539,2.70539,0,0,0,.36231,5.39863l1.29889-.08472a3.26744,3.26744,0,0,1,3.36865,4.1062L38.76453,73.79968c-1.38642,5.17426,4.60193,8.56653,12.4956,4.5716a39.60121,39.60121,0,0,0,9.83423-7.91938A.85956.85956,0,0,0,60.11377,69.0827Z"/>
+<path d="M50,5A45,45,0,1,0,95,50,45,45,0,0,0,50,5Zm0,85A40,40,0,1,1,90,50,40.04527,40.04527,0,0,1,50,90Z"/>
+<text class="cls-2" x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Markus</text>
+<text class="cls-2" x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text>
+</g>
+</svg>

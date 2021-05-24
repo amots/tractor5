@@ -316,12 +316,12 @@ body.mceContentBody, .mce-content-body {
 }
 
 .svg-icon svg {
-    height: 1em;
-    width: 1em;
+    height: 1.1rem;
+    width: 1.1rem;
 }
 
 .svg-icon.svg-baseline svg {
-    top: .125em;
+    top: .4rem;
     position: relative;
 }
 

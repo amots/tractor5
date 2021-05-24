@@ -318,6 +318,7 @@ class collection
         $item['driveMechanism'] = $this->renderEditDriveMechanism($item['drive_mechanism']);
         $item['fuelTypeSelect'] = $this->renderFuelTypeSelect($item['fuel_type']);
         $item['colorSelect'] = $this->renderColorSelect($item['color']);
+        $item['displayArchive'] = (User::permission() & User::permission_administrator) ? 'contents' : 'none';
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/editItem.html');
         $renderer->viewData = ['item' => $item];
         $content = $renderer->render();

@@ -24,28 +24,29 @@ class inventory
         $data = $this->getInventoryRecords($param);
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/inventoryNav.html');
         $inventoryNav = $renderer->render();
+        $isAdmin = User::permission() & User::permission_administrator;
+        $infoIcon = file_get_contents(__SITE_PATH . "/assets/media/icons/noun_Info_2269947.svg");
         foreach ($data as $key => $item) {
-            $enbleviewRestricted = $item['display'] > 0 ? '' : '&' . collection::$viewRestricted;
-            $itemLink = "/collection/item/" . $item['item_id'] . $enbleviewRestricted;
+            $enableViewRestricted = $item['display'] > 0 ? '' : '&' . collection::$viewRestricted;
+            $itemLink = "/collection/item/" . $item['item_id'] . $enableViewRestricted;
+            $editLink = "/inventory/editItem/{$item['item_id']}";
             if (strtoupper($param) == 'ARCHIVE') {
-                $editLink = $itemLink;
-            } else {
-                $editLink = "/inventory/editItem/{$item['item_id']}";
-            }
+                if (!$isAdmin) {
+                    $editLink = $itemLink;
+                }
+            } 
+
             $name = collection::renderTitle($item);
-            $registrationTxt = (util::IsNullOrEmptyString($item['registration']))
-                ? 'N/A' : $item['registration'];
+            // $registrationTxt = (util::IsNullOrEmptyString($item['registration'])) ? 'N/A' : $item['registration'];
 
             $statusText = (isset(collection::$status[$item['status']]['he'])) ? collection::$status[$item['status']]['he']
                 : '';
-            // $drive_mechanism = isset($item['drive_mechanism']) ? Lang::trans('item.' . $item['drive_mechanism'])
-            // : NULL;
             $displayed = $item['display'] > 0 ? '' : list_items::$thumbsDown;
-            $editIcon = list_items::$biPencilSquare;
+            $editIcon = ((strtoupper($param) == 'ARCHIVE') and !$isAdmin) ? $infoIcon : list_items::$biPencilSquare;
             $lines[] = <<<EOF
                 <td class="text-right">
                     <a href="{$editLink}">
-                    {$editIcon}
+                    <span class="svg-icon svg-baseline">{$editIcon}</span>
                     {$item['item_id']}
                     </a>
                 </td>
@@ -77,37 +78,6 @@ class inventory
             EOF;
         return $retStr;
     }
-
-    
-    /* private function getAllInventoryRecords()
-    {
-        $pdo = db::getInstance();
-        $field2get = join(
-            ',',
-            [
-                'item_id', 'registration', 'vin', 'companyHe', 'companyEn', 'modelHe',
-                'modelEn',
-                'drive_mechanism', 'fuel_type', 'color', 'year', 'status', 'sourceHe',
-                'sourceEn',
-                'sl.name as location', 'display'
-            ]
-        );
-        $sql = <<<EOF
-            SELECT {$field2get} FROM `items` it 
-                LEFT JOIN storage_location sl ON
-                sl.location_id = it.`location` 
-            EOF;
-        try {
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute();
-        } catch (Exception $ex) {
-            array_push($this->errors, $ex->getMessage());
-            array_push($_SERVER['errors'], $ex->getMessage());
-            return NULL;
-        }
-        $items = $stmt->fetchAll();
-        return $items;
-    } */
 
     private function getInventoryRecords($param)
     {

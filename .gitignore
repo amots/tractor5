@@ -5,3 +5,4 @@ controller/testController.php
 .com.greenworldsoft.syncfolderspro
 **/*.jpg
 .gitignore
+views/test.html
