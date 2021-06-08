@@ -7,12 +7,12 @@ class User extends Password
     public $permission;
 
     const permission_guest = 0;
+    const permission_administrator = 1;
     const permission_inventory = 2;
     const permission_service = 4;
     const permission_items = 8;
     const permission_content = 16;
     const permission_ownership = 32;
-    const permission_administrator = 1;
 
     function __construct()
     {

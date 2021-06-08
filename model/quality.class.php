@@ -85,7 +85,7 @@ class quality
             $iten_id = $record['item_id'];
             $list[] = <<<EOF
                 <tr><td>{$record['item_id']}</td>
-                <td><a href="/collection/item/{$iten_id}" target="_BLANK">{$title}</a></td>
+                <td><a href="/collection/item/{$iten_id}&forceview" target="_BLANK">{$title}</a></td>
                 <td class="ltr">{$record['path']}</td></tr>
                 EOF;
         }

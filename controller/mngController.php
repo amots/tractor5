@@ -334,7 +334,7 @@ class mngController extends baseController
 
     public function quality()
     {
-        User::checkAuthorization(User::permission_administrator);   
+        User::checkAuthorization(User::permission_inventory);   
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
