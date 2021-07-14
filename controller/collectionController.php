@@ -61,6 +61,7 @@ class collectionController extends baseController
         $title = join(
             ' ',
             [
+                $item['caption_' . Lang::getLocale()],
                 $item['company' . ucfirst(Lang::getLocale())],
                 $item['model' . ucfirst(Lang::getLocale())]
             ]

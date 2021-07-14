@@ -19,6 +19,7 @@ class service {
             service.`item_id`,
             people.sur_name_he,
             people.last_name_he,
+            items.caption_he,
             items.companyHe,
             items.modelHe,
             items.year,
@@ -202,7 +203,7 @@ class service {
                 $searchStr = $_POST[$key];
             }
         }
-        $elements2get = ['item_id', 'companyHe', 'modelHe', 'sourceHe', 'registration',
+        $elements2get = ['item_id', 'caption_he', 'companyHe', 'modelHe', 'sourceHe', 'registration',
             'year'];
         $elementsStr = '`' . join('`,`', $elements2get) . '`';
         $sql = "SELECT {$elementsStr} FROM items WHERE {$column} LIKE '%{$searchStr}%';";
@@ -282,7 +283,7 @@ class service {
     private function renrerResultItem($item) {
         $retData = [];
         $editIcon = list_items::$biPencilSquare;
-        foreach (['registration', 'companyHe', 'modelHe', 'year', 'sourceHe'] as
+        foreach (['registration', 'caption_he', 'companyHe', 'modelHe', 'year', 'sourceHe'] as
                     $key) {
             if (!util::IsNullOrEmptyString($item[$key])) {
                 $retData[] = $item[$key];

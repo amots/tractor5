@@ -91,7 +91,7 @@ class ownership {
         }
         unset($_SESSION['csrf_token']);
         $list = $this->getSearchData();
-        //        Debug::dump($list, 'search results ' . __METHOD__ . ' line ' . __LINE__);
+            //    Debug::dump($list, 'search results ' . __METHOD__ . ' line ' . __LINE__);
         $formatterList = [];
         foreach ($list as $key => $item) {
             $link = "/ownership/{$item['item_id']}";
@@ -115,7 +115,7 @@ class ownership {
             }
         }
         $elements2get = [
-            'item_id', 'companyHe', 'modelHe', 'sourceHe', 'registration',
+            'item_id','caption_he', 'companyHe', 'modelHe', 'sourceHe', 'registration',
             'year', 'PageHe'
         ];
         $elementsStr = '`' . join('`,`', $elements2get) . '`';
@@ -162,7 +162,7 @@ class ownership {
         $sqlStr = "SELECT * FROM `ownership` ORDER BY `item_id`";
         $sqlStr = <<<EOT
             SELECT
-                ownership.*,items.registration,items.companyHe, items.modelHe,items.year,items.sourceHe
+                ownership.*,items.registration, items.caption_he,items.companyHe, items.modelHe,items.year,items.sourceHe
             FROM
                 `ownership`
             JOIN `items` ON items.item_id = ownership.item_id

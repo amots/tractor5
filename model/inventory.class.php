@@ -22,6 +22,7 @@ class inventory
     {
         $lines = [];
         $data = $this->getInventoryRecords($param);
+        // Debug::dump($data,'data at ' . util::getCaller());
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/inventoryNav.html');
         $inventoryNav = $renderer->render();
         $isAdmin = User::permission() & User::permission_administrator;
@@ -143,7 +144,7 @@ class inventory
         }
         unset($_SESSION['csrf_token']);
         $list = $this->getSearchData();
-        //        Debug::dump($list, 'list in ' . __METHOD__ . ' line ' . __LINE__);
+            //    Debug::dump($list, 'list in ' . __METHOD__ . ' line ' . __LINE__);
         $listArray = [];
         foreach ($list as $key => $item) {
             $listArray[] = $this->renrerResultItem($item);
@@ -163,7 +164,7 @@ class inventory
             }
         }
         $elements2get = [
-            'item_id', 'companyHe', 'modelHe', 'sourceHe', 'registration',
+            'item_id', 'companyHe', 'caption_he','modelHe', 'sourceHe', 'registration',
             'year'
         ];
         $elementsStr = '`' . join('`,`', $elements2get) . '`';
@@ -188,7 +189,7 @@ class inventory
     {
         $retData = [];
         $editIcon = list_items::$biPencilSquare;
-        foreach (['registration', 'companyHe', 'modelHe', 'year', 'sourceHe'] as
+        foreach (['registration', 'caption_he', 'companyHe', 'modelHe', 'year', 'sourceHe'] as
             $key) {
             if (!util::IsNullOrEmptyString($item[$key])) {
                 $retData[] = $item[$key];
@@ -236,6 +237,7 @@ class inventory
         $field2get = join(
             ',',
             [
+                'caption_he', 'caption_en',
                 'item_id', 'registration', 'vin', 'companyHe', 'companyEn', 'modelHe',
                 'modelEn',
                 'drive_mechanism', 'fuel_type', 'color', 'year', 'status', 'sourceHe',

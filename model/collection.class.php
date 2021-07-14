@@ -54,7 +54,7 @@ class collection
             $items[$value['mGroup']][] = $value['company'];
         }
         foreach ($this->mGroup as $key => $value) {
-            $txt = $value['group_'. lang::getLocale()];
+            $txt = $value['group_' . lang::getLocale()];
             $names[] = <<<EOT
             
                 <a href="/collection/{$key}">
@@ -231,7 +231,8 @@ class collection
     {
         $retData = [];
         $ext = ucfirst(Lang::getLocale());
-        foreach (['company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
+        
+        foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
             $key) {
             if (!util::IsNullOrEmptyString($item[$key])) {
                 $retData[] = trim($item[$key]);
@@ -511,7 +512,7 @@ class collection
         $list = $query->fetchAll();
         return $list;
     }
-    public function getItemsByCompany($company,$collection_group_id = null)
+    public function getItemsByCompany($company, $collection_group_id = null)
     {
         // debug::dump($company,'company at ' . util::getCaller());
         $lang = ucfirst(Lang::getLocale());
