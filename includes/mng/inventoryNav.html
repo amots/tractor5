@@ -1,7 +1,6 @@
 <script>
   $(document).ready(function () {
       path = $(location).attr('href');
-//      value = path.substring(path.lastIndexOf('/') + 1);
       value = path.split('/').pop();
       $('.invMenu').each(function () {
           thisPath = $(this).data('path');

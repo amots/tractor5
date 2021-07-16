@@ -61,7 +61,10 @@ class serviceController extends baseController
             ['literal' => Lang::trans('service.service'), 'link' => '/service'],
             ['literal' => Lang::trans('service.search'), 'link' => NULL],
         ]);
-        $this->registry->template->content = $this->service->renderServiceSearchPage();
+        $searchClass = new search('/service/editService/', '/collection/item/');
+        $searchPage = $searchClass->renderSearchPage();
+        $this->registry->template->content = $searchPage;
+        // $this->registry->template->content = $this->service->renderServiceSearchPage();
         $this->errors[] = $this->service->errors;
         $this->messages[] = $this->service->messages;
         $this->renderTemplateAnnouncements();

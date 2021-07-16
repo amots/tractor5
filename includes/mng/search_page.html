@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <div class="row">
     <div id="searchForm" class="col-md-6">
-      <form  role="search" method="POST">
+        <?= $genratedForm ?>
+      <!-- <form  role="search" method="POST">
         <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
         <div class="container-fluid">
           <div class="row">    
@@ -22,6 +23,28 @@
         </div>
       </form>
 
+
+      <form  role="search" method="POST">  
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">    
+            <div class="col-md-4 text-wrap">
+              <label for="caption_he" >כותר</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="caption_he" id="caption_he" class="form-control" 
+                     placeholder="כותר" value="<?= $caption_he ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
       <form  role="search" method="POST">  
         <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
         <div class="container-fluid">
@@ -32,6 +55,25 @@
             <div class="col-md-6" >
               <input type="search" name="PageHe" id="PageHe" class="form-control" 
                      placeholder="תיאור" value="<?= $PageHe ?>" />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
+                <?= $searchIcon ?>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form role="search" method="POST">
+        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4 text-wrap">
+              <label for="companyHe" class="control-label">יצרן</label>
+            </div>
+            <div class="col-md-6" >
+              <input type="search" name="companyHe" id="companyHe" class="form-control" placeholder="שם יצרן" value="<?= $companyHe ?>" />
             </div>
             <div class="col-md-2">
               <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
@@ -121,25 +163,8 @@
             </div>
           </div>
         </div>
-      </form>
-      <form role="search" method="POST">
-        <input type="hidden" name="csrf_token" id="token" value="<?= $csrf_token ?>" />
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-4 text-wrap">
-              <label for="companyHe" class="control-label">יצרן</label>
-            </div>
-            <div class="col-md-6" >
-              <input type="search" name="companyHe" id="companyHe" class="form-control" placeholder="שם יצרן" value="<?= $companyHe ?>" />
-            </div>
-            <div class="col-md-2">
-              <button type="submit" name="submit" id="search_submit" class="btn btn-primary btn-sm">
-                <?= $searchIcon ?>
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
+      </form> -->
+      
 
     </div>
 
