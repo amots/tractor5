@@ -159,6 +159,14 @@ class serviceController extends baseController
             ['literal' => Lang::trans('service.service'), 'link' => '/service'],
             ['literal' => Lang::trans('service.all'), 'link' => NULL],
         ]);
+        $renderer = new template_renderer(
+            __SITE_PATH . '/includes/tableSortSetUp.html',
+            [
+                'tableID' => 'allServiceRecords',
+                'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
+            ]
+        );
+        $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $this->service->renderListAllPage();
         $this->renderTemplateAnnouncements();
         $this->registry->template->show('/envelope/head');

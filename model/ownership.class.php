@@ -187,7 +187,7 @@ class ownership {
     private function renderListAll($items) {
         $headerItems = ['פריט', 'רישום', 'שם פריט', 'בעלות', 'מאז'];
 
-        $table_pre = '<table id="list2sort" class="table table-sm table-hover table-responsive tablesorter tablesorter-default">';
+        $table_pre = '<table id="allOwnerships" class="table table-sm table-hover table-responsive tablesorter tablesorter-default">';
         $table_post = '</table>';
 
         $thead = '<thead><tr><th>' . join('</th><th>', $headerItems) . '</th>' . '</tr></thead>';
