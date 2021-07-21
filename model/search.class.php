@@ -115,7 +115,7 @@ class search
         $viewStr = $textStr = join(" ", $retData);
         if (!util::IsNullOrEmptyString($this->view_url)) {
             $viewStr = <<<EOF
-            <a href="{$this->view_url}/{$item["item_id"]}" target=_blank>{$textStr}</a>
+            <a href="{$this->view_url}{$item["item_id"]}" target=_blank>{$textStr}</a>
             EOF;
         }
         $ret = <<<EOF

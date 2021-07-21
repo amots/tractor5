@@ -7,4 +7,8 @@ return [
     'personInCharge' => 'In Charge',
     'itemName' => 'Item Name',
     'search' => 'Search',
+    'all'=>'All records',
+    'complete'=>'Completed', 
+    'onHold'=>'On hold',
+    'atWork'=>'At work',
 ];

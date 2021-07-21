@@ -1,0 +1,20 @@
+<script type='text/javascript' src='/resources/js/jquery.tablesorter.min.js'></script>
+<script>
+  $(document).ready(function ()
+  {
+      $("#allServiceRecords").tablesorter({sortList: [[1, 0]], headers: {'.noSort': {sorter: false}}})
+     
+  });
+</script>
+<div class="mx-3">
+  <?= $breadCrumbs ?>
+  <?= $mngNavBar ?>
+  <div id="messages"><?= $messages ?></div>
+  <div id="errors"><?= $errors ?></div>
+</div>
+<div class="row">
+  <div  class="col-md-12 mx-5">
+    <?= $service_nav_bar ?>
+    <?= $content ?>
+  </div>
+</div>

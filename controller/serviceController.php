@@ -28,8 +28,9 @@ class serviceController extends baseController
         $this->mng = new mng();
         $this->rt = explode('/', $_REQUEST['rt']);
         $this->service = new service();
-        $this->renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
-        $this->registry->template->mngNavBar = $this->mng->renderMngMenu(); 
+        // $renderer = new template_renderer(__SITE_PATH . '/includes/mng/mngNav.html');
+        $this->registry->template->mngNavBar = $this->mng->renderMngMenu();
+        $this->registry->template->service_nav_bar = $this->service->renderServiceMenu();
     }
 
     public function index()
@@ -149,13 +150,28 @@ class serviceController extends baseController
         header('location: ' . $newUrl);
     }
 
+    public function listAll()
+    {
+        User::checkAuthorization(User::permission_service);
+        $this->registry->template->pageTitle = Lang::trans('service.service');
+        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
+            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+            ['literal' => Lang::trans('service.service'), 'link' => '/service'],
+            ['literal' => Lang::trans('service.all'), 'link' => NULL],
+        ]);
+        $this->registry->template->content = $this->service->renderListAllPage();
+        $this->renderTemplateAnnouncements();
+        $this->registry->template->show('/envelope/head');
+        $this->registry->template->show('service/serviceList');
+        $this->registry->template->show('/envelope/bottom');
+    }
     private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);
     }
 
-   /*  private function setMenuPermissions()
+    /*  private function setMenuPermissions()
     {
         $this->checkAuthorization();
         $hide = 'd-none';

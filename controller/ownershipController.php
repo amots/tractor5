@@ -38,6 +38,10 @@ class ownershipController extends baseController
         $baseBread = [
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
         ];
+        $listAllLiteral = Lang::trans('mng.listAll');
+        $listAllAnchor = <<<EOF
+            <div class="m-3"><a href="/ownership/all">$listAllLiteral</a></div>
+            EOF;
         $ownObj = new ownership();
         $itemIndexAt = 1;
         $recordIndexAt = 2;
@@ -108,7 +112,7 @@ class ownershipController extends baseController
                 // $this->registry->template->content = $ownObj->renderOwnSearchPage();
                 $searchClass = new search('/ownership/', '/collection/item/');
                 $searchPage = $searchClass->renderSearchPage();
-                $this->registry->template->content = $searchPage;
+                $this->registry->template->content = $listAllAnchor . $searchPage;
             }
         }
         $this->renderTemplateAnnouncements();
