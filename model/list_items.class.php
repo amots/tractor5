@@ -190,7 +190,7 @@ class list_items
             $desc = collection::renderTitle($item);
             if ($item['count'] > 1) {
                 $badge =  <<<EOT
-                <span class="badge bg-secondary">{$item['count']}</span>
+                <span class="badge bg-secondary data-bs-toggle="tooltip" title="יש יותר מרשומה אחת"">{$item['count']}</span>
                 EOT;
             } else  $badge = null;
             $viewLink = "/collection/item/{$item['item_id']}";
