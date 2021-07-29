@@ -6,18 +6,21 @@
  * @author amots
  * @since 2020-03-17
  */
-class volunteersController Extends baseController {
+class volunteersController extends baseController
+{
     private $people;
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
         $this->people = new people();
     }
 
-    public function index() {
+    public function index()
+    {
         $this->registry->template->pageTitle = Lang::trans('nav.theVolunteers');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-                    ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-                    ['literal' => Lang::trans('nav.theVolunteers'), 'link' => NULL],
+            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+            ['literal' => Lang::trans('nav.theVolunteers'), 'link' => NULL],
         ]);
         $this->registry->template->content = $this->renderPeopleContent();
         $renderer = new template_renderer();
@@ -29,12 +32,26 @@ class volunteersController Extends baseController {
         $this->registry->template->show('/envelope/bottom');
     }
 
-    private function renderPeopleContent() {
+    private function renderPeopleContent()
+    {
         $founders = $this->people->renderFoundersPage();
         $volunteersPage = $this->people->renderVolunteersPage();
         $header = Lang::trans('nav.activeVolunteers');
         return <<<EOF
-            <script src="/resources/js/masonry.min.js"></script>
+            <script>
+                
+                $(document).ready(function () {
+                    var grid = $('.grid').masonry({});
+                    grid.imagesLoaded().progress( function() {
+                        grid.masonry('layout');
+                      });
+                });
+
+                
+            </script>
+            <script src="/resources/js/masonry.min.js"></script> 
+            <script src="/resources/js/imagesloaded.js"></script> 
+            
             <style>
                 .media-object{
                     max-width: 100px;

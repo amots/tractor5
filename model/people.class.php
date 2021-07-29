@@ -39,13 +39,13 @@ class people {
 
     public function renderVolunteersPage() {
         $data = $this->getActiveVolunteers();
-        return $this->formatPeopleList($data, 2);
+        return $this->formatPeopleList($data, 2, 'volunteers');
 
     }
 
     public function renderFoundersPage() {
         $data = $this->getFounders();
-        return $this->formatPeopleList($data, 1);
+        return $this->formatPeopleList($data, 1, 'founders');
     }
 
     private function getActiveVolunteers() {
@@ -114,7 +114,7 @@ class people {
         return $stmt->fetchAll();
     }
 
-    private function formatPeopleList($data, $columns) {
+    private function formatPeopleList($data, $columns,$id) {
         $peoplePanel = [];
         foreach ($data as $key => $individual) {
             $surname = $individual["sur_name_{$this->locale}"];
@@ -166,7 +166,7 @@ class people {
         $gridDir = Lang::getLocale() == 'he' ? 'false' : 'true';
         $content = join(' ',$peoplePanel);
         return <<<EOF
-            <div class="row grid" 
+            <div class="row grid" id="$id"
             data-masonry='{"percentPosition": true,"originLeft": {$gridDir}}' 
             style="position: relative;">
                 {$content}
