@@ -11,7 +11,7 @@ class aboutController Extends baseController {
     }
 
     public function index() {
-        $this->registry->template->pageTitle = Lang::trans('nav.venue');
+        $this->registry->template->pageTitle = Lang::trans('nav.aboutUs');
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
                     ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
                     ['literal' => Lang::trans('nav.venue'), 'link' => NULL],

@@ -39,15 +39,12 @@ class volunteersController extends baseController
         $header = Lang::trans('nav.activeVolunteers');
         return <<<EOF
             <script>
-                
                 $(document).ready(function () {
                     var grid = $('.grid').masonry({});
                     grid.imagesLoaded().progress( function() {
                         grid.masonry('layout');
                       });
                 });
-
-                
             </script>
             <script src="/resources/js/masonry.min.js"></script> 
             <script src="/resources/js/imagesloaded.js"></script> 
