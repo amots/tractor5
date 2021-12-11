@@ -24,5 +24,6 @@ return[
     'search' => 'Search',
     'highlights' =>'Highlights',
     'companies' =>'Companies',
+    'documentation' => 'Documentation',
 ];
 

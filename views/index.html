@@ -1,22 +1,26 @@
 <style>
   .card {
-      /*border-left-color: rgba(0, 0, 0, 0.125) !important;*/
-      border-color: #A94716;
-      border-left-style: solid !important;
-      border-left-width: 1px  !important;
-      border-top-left-radius: 0.25rem !important;
-      border-bottom-left-radius: 0.25rem !important;
+    /*border-left-color: rgba(0, 0, 0, 0.125) !important;*/
+    border-color: #A94716;
+    border-left-style: solid !important;
+    border-left-width: 1px !important;
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
   }
+
   .card-title {
     margin: 0px;
   }
-  .card-body{
+
+  .card-body {
     padding: .4rem;
   }
 </style>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page"><?= Lang::trans('nav.homePage'); ?></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <?= Lang::trans('nav.homePage'); ?>
+    </li>
   </ol>
 </nav>
 <div class="container-fluid">
@@ -27,14 +31,37 @@
       </aside>
     </div>
     <div class="col-md-7">
-      <section><div id="moto"><?= $moto ?></div></section>
-      <section><div id="highlights"><?= $highlights ?></div></section>
-      <section><div id="mews"><?= $news ?></div></section>
+      <section>
+        <div id="moto">
+          <?= $moto ?>
+        </div>
+      </section>
+      <section>
+        <div class="card" id="acivities">
+          <div class="card-body" style="position: relative;">
+            <img class="img-fluid mx-auto" src="/assets/media/banners/collage_kids.jpg" />
+            <div class="text-center" style="position: absolute; top:3%; right:15%; left:15%; opacity: 75%;">
+              <div class="text-dark bg-light">
+                <?= $activities ?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div id="highlights">
+          <?= $highlights ?>
+        </div>
+      </section>
+      <section>
+        <div id="mews">
+          <?= $news ?>
+        </div>
+      </section>
       <section>
         <div class="card>">
           <div class="card-body">
-            <div class="card-text text-center" 
-                 style="color: #A94716; font-size: large">
+            <div class="card-text text-center" style="color: #A94716; font-size: large">
               <?= $concludingStatement ?>
             </div>
           </div>
@@ -44,9 +71,8 @@
     <div class="col-md-2">
       <aside>
         <div class="me-4">
-          <img src="/assets/media/icons/logocolor2.svg" 
-               alt="<?= Lang::trans('general.icon') ?>" 
-               title="<?= Lang::trans('general.museumIcon') ?>" />
+          <img src="/assets/media/icons/logocolor2.svg" alt="<?= Lang::trans('general.icon') ?>"
+            title="<?= Lang::trans('general.museumIcon') ?>" />
         </div>
         <div>
           <?= $collage ?>
@@ -55,4 +81,3 @@
     </div>
   </div>
 </div>
-

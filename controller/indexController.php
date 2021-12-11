@@ -16,6 +16,8 @@ Class indexController Extends baseController {
         $this->registry->template->news = $news->renderValidNews();
         $renderer->viewFile = __SITE_PATH . '/includes/' . Lang::getLocale() . '/concludignStatement.html';
         $this->registry->template->concludingStatement = $renderer->render();
+        $renderer->viewFile = __SITE_PATH . '/includes/' . Lang::getLocale() . '/for_kids.html';
+        $this->registry->template->activities = $renderer->render();
     }
 
     public function index() {

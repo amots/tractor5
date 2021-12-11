@@ -11,4 +11,5 @@ return [
     'wheels' => 'wheels',
     'continuous_track' => 'Continuous track',
     'IR' => 'Irrelevant',
+    'license_number'=> 'license number',
 ];

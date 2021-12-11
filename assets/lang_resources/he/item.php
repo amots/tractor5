@@ -11,4 +11,5 @@ return [
     'wheels' => 'גלגלים',
     'continuous_track' => 'זחלילי',
     'IR' => 'לא רלוונטי',
+    'license_number'=> 'מספר רישוי',
 ];

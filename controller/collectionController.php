@@ -50,7 +50,7 @@ class collectionController extends baseController
         $this->registry->template->show('/envelope/bottom');
     }
 
-    public function item()
+    public function item($requestID = null)
     {
         if (!isset($this->rt[2]) or !is_numeric($this->rt[2])) {
             header('location: /collection');
@@ -126,7 +126,7 @@ class collectionController extends baseController
                 ['literal' => Lang::trans('nav.companies'), 'link' => NULL],
             ]);
         }
-        $list = $this->collection->getItemsByCompany($currentCompany,$collection_group_id);
+        $list = $this->collection->getItemsByCompany($currentCompany, $collection_group_id);
         $this->registry->template->pageTitle = Lang::trans('nav.companies');
         $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
         $this->registry->template->info = $renderer->render();
@@ -156,5 +156,13 @@ class collectionController extends baseController
         if (!$verified) {
             header('location: /error404');
         }
+    }
+    public function showItem()
+    {
+        /** 
+         * for backward competabilty
+         */
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        header('location: /collection/item/' . $id);
     }
 }

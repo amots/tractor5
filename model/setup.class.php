@@ -26,8 +26,8 @@ class setup {
         foreach (Lang::getOtherLocale() as $lang) {
             $langLiteral = Lang::trans('general.myLang', $lang);
             $langLinks[] = <<<EOF
-<li class="nav-item "><a href="?lang={$lang}" class="nav-link">{$langLiteral}</a></li>                           
-EOF;
+                <li class="nav-item "><a href="?lang={$lang}" class="nav-link">{$langLiteral}</a></li>                           
+                EOF;
         }
         return join('&nbsp;', $langLinks);
     }

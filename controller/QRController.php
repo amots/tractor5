@@ -7,7 +7,7 @@
  * @Date 2018-10-18
  * url example: tractor.org.il/QR/005
  */
-class QRController Extends Controller {
+class QRController Extends baseController {
 
     private $rt = NULL;
     private $qr;
@@ -16,6 +16,7 @@ class QRController Extends Controller {
         parent::__construct($registry);
         $this->rt = explode('/', $_REQUEST['rt']);
         $this->qr = new QR();
+        // Debug::dump($this->rt, 'rt in ' . util::getCaller());
     }
 
     public function index() {
@@ -26,8 +27,21 @@ class QRController Extends Controller {
             if (!is_null($link)) {
                 $dest = 'location: ' . $link;
             }
+            else {
+                echo <<<EOT
+                    Trying to acccess non existant link
+                    {$this->rt[1]}
+                    EOT;
+                exit();
+            }
         }
+        // echo 'dest is: ' . $dest;
+        // Debug::dump($link, 'link in ' . util::getCaller());
+
+        // echo 'link is: ' . $link;
         header($dest);
     }
-
+public function list () {
+    echo $this->qr->listQR();
+}
 }

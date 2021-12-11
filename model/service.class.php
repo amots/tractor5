@@ -18,21 +18,27 @@ class service
     static $onHoldTypes = ['0' => 'בעבודה', '1' => 'בהמתנה'];
 
     private $retrieveStr = <<<EOF
-        SELECT
+            SELECT
             service_id,
             service.`item_id`,
             people.sur_name_he,
             people.last_name_he,
             items.caption_he,
+            items.caption_en,
             items.companyHe,
+            items.companyEn,
             items.modelHe,
+            items.modelEn,
             items.year,
             items.sourceHe,
-            items.registration
+            items.sourceEn,
+            items.registration,
+            storage_location.name as `location`
         FROM
             `service`
         JOIN items ON items.item_id = service.item_id
         LEFT JOIN people ON people.people_id = service.service_people_id
+        LEFT JOIN storage_location ON storage_location.location_id = items.location
         EOF;
     private $tableHeaders;
     static $status = [0=>'complete',1=>'onHold',2=>'atWork'];
@@ -42,8 +48,10 @@ class service
         $itemNameLiteral = Lang::trans('service.itemName');
         $inChargeLiteral = Lang::trans('service.personInCharge');
         $registractionLiteral = Lang::trans('item.registration');
+        $locationLiteral = 'מיקום';
         $this->tableHeaders = <<<EOF
-            <thead><tr><td class="noSort"></td><td>$registractionLiteral</td><td>{$inChargeLiteral}</td><td>{$itemNameLiteral}</td></tr></thead>
+            <thead><tr><td class="noSort"></td><td>$registractionLiteral</td><td>{$inChargeLiteral}</td><td>{$itemNameLiteral}</td>
+            <td>{$locationLiteral}</td></tr></thead>
             EOF;
     }
 
@@ -92,6 +100,7 @@ class service
                 <td>{$value['registration']}</td>
                 <td>{$person}</td>
                 <td><a href="{$link2item}" target="_blank">{$title}</a></td>
+                <td>{$value['location']}</td>
                 EOF;
         }
         $joinedList = join('</tr><tr>', $items);

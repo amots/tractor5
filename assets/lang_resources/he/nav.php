@@ -24,5 +24,6 @@ return[
     'search' => 'חפש',
     'highlights' =>'הבזקים',
     'companies' =>'חברות',
+    'documentation' => 'תיעוד',
 ];
 

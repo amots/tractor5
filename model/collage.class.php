@@ -188,7 +188,7 @@ class collage
                     EOF; */
 
                 $currrentStyle = <<<EOF
-                    background-image: url({$inf['path']});
+                    background-image: url('{$inf['path']}');
                     background-size:cover;
                     background-position:center;
                     background-repeat:no-repeat;
