@@ -117,7 +117,7 @@ class collage
         $imgPath = '/assets/media/';
         $fname = 'empty150x150.jpg';
         $str = <<<EOF
-            <a href="/collection/item?id={$id}"> 
+            <a href="/collection/item/{$id}"> 
                 <img class="img-fluid mx-auto" 
                     style="max-height:30%;width:auto;opacity:0" 
                     src="{$imgPath}{$fname}" title="{$nameLocale}" />

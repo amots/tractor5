@@ -91,7 +91,7 @@ class service
         $items = [];
         $editIcon = list_items::$biPencilSquare;
         foreach ($list as $key => $value) {
-            $link2item = "/collection/item?id={$value['item_id']}";
+            $link2item = "/collection/item/{$value['item_id']}";
             $link2service = "/service/editService/{$value['item_id']}/{$value['service_id']}";
             $title = collection::renderTitle($value);
             $person = join(' ', [$value['sur_name_he'], $value['last_name_he']]);
@@ -204,7 +204,7 @@ class service
         $newLink = sprintf('<a href="/service/editService/%s">חדש</a>', $id);
         $items = [];
         foreach ($list as $key => $item) {
-            $brief = util::shorten_string($item['note'], 30);
+            $brief = util::shorten_string($item['note'], 500);
             $items[] = <<<EOF
                 <a href="/service/editService/{$item['item_id']}/{$item['service_id']}">ערוך</a>
                 {$item['open_date']}
