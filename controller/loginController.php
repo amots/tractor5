@@ -5,30 +5,33 @@
  *
  * @author amots
  */
-class loginController Extends baseController {
+class loginController extends baseController
+{
 
     private $user;
 
-    function __construct($registry) {
-//        Debug::dump($_SESSION, 'session in ' . __METHOD__ . ' line ' . __LINE__);
+    function __construct($registry)
+    {
+        //        Debug::dump($_SESSION, 'session in ' . __METHOD__ . ' line ' . __LINE__);
         parent::__construct($registry);
         $this->registry->template->message = isset($_SESSION['messages']) ?
-                util::renderMessages($_SESSION['messages']) : NULL;
+            util::renderMessages($_SESSION['messages']) : NULL;
         $this->registry->template->error = isset($_SESSION['errors']) ?
-                util::renderErrors($_SESSION['errors']) : NULL;
+            util::renderErrors($_SESSION['errors']) : NULL;
         $this->user = new User();
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
         $this->rt = explode('/', $_REQUEST['rt']);
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
-                    ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-                    ['literal' => Lang::trans('mng.login'), 'link' => NULL],
+            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+            ['literal' => Lang::trans('mng.login'), 'link' => NULL],
         ]);
     }
 
-    public function index() {
+    public function index()
+    {
         $this->registry->template->pageTitle = Lang::trans('mng.login');
-//        Debug::dump($_POST,'post in ' . __METHOD__ . ' line ' . __LINE__);
+        //        Debug::dump($_POST,'post in ' . __METHOD__ . ' line ' . __LINE__);
         if (isset($_POST['submitLogin'])) {
             $this->dologin();
         }
@@ -44,11 +47,14 @@ class loginController Extends baseController {
         $this->renderLogin();
     }
 
-    public function dologin() {
+    public function dologin()
+    {
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
-        if (!isset($_POST['token']) or ! util::validatePostToken('token',
-                        'csrf_token')) {
+        if (!isset($_POST['token']) or !util::validatePostToken(
+            'token',
+            'csrf_token'
+        )) {
             $_SESSION['errors'][] = 'invalid csrf';
             header('location: /mng/login');
             exit();
@@ -64,12 +70,14 @@ class loginController Extends baseController {
         }
     }
 
-    public function logout() {
+    public function logout()
+    {
         $this->user->logout();
         header('location: /');
     }
 
-    private function renderLogin() {
+    private function renderLogin()
+    {
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
         $this->registry->template->csrf_token = $token;
@@ -77,5 +85,4 @@ class loginController Extends baseController {
         $this->registry->template->show('/mng/login');
         $this->registry->template->show('/envelope/bottom');
     }
-
 }

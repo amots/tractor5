@@ -12,4 +12,5 @@ return [
     'museumName'=>'Lev-Hasharon (private) museum for history of tractors and agricultural machinery',
     'tractor_collection'=>'Tractor collection',
     '404' =>'page not found',
+    'admin' => 'Site admin',
 ];
