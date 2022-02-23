@@ -116,14 +116,19 @@ class people {
 
     private function formatPeopleList($data, $columns,$id) {
         $peoplePanel = [];
+        $rip = Lang::trans('general.rip');
         foreach ($data as $key => $individual) {
             $surname = $individual["sur_name_{$this->locale}"];
             $lastname = $individual["last_name_{$this->locale}"];
+            if ($individual['deceased']) {
+                $lastname = "{$lastname} {$rip}";
+            }
             $homeTown = $individual["home_town_{$this->locale}"];
             $nameParts = [];
             $nameParts[] = <<<EOF
                 <span class="head4">{$surname} {$lastname}</span>
                 EOF;
+                
             if (!util::IsNullOrEmptyString($homeTown)) {
                 $nameParts[] = $homeTown;
             }
@@ -149,19 +154,6 @@ class people {
                     </div>
                 </div>
                 EOF;
-            /* $peoplePanel[] = <<<EOF
-                <div class="media p-1 col-{$colVal}">
-                    <div class="pull-right">
-                        <figure class="figure">
-                            <img class="media-object p-1" src="{$imgPath}"  alt="{$surname} {$lastname}" />
-                        </figure>    
-                    </div>
-                    <div class="media-body media-bottom">
-                        <div>{$nameStr}</div>
-                        {$about}
-                    </div>
-                </div>
-                EOF; */
         }
         $gridDir = Lang::getLocale() == 'he' ? 'false' : 'true';
         $content = join(' ',$peoplePanel);
@@ -172,17 +164,7 @@ class people {
                 {$content}
             </div>
             EOF;
-       /*  $twoCol = util::balanceArrays($peoplePanel, $columns);
-        $cols = [];
-        foreach ($twoCol as $col) {
-            $cols[] = join('', $col);
-        }
-        if ($columns > 1) {
-            return '<div class="col-md-6">' . join('</div><div class="col-md-6">',
-                            $cols) . '</div>';
-        } else {
-            return '<div class="col-md-12">' . join('', $cols) . '</div>';
-        } */
+       
     }
 
 }

@@ -35,8 +35,9 @@ class collection
             $index = 'company';
             foreach ($companies as $value) {
                 // $data = ['comp'=>];
+                $searchStr = urlencode($value[$index]);
                 $names[] = <<<EOF
-                    <a href="/collection/compList?comp={$value[$index]}&t={$title}">
+                    <a href="/collection/compList?comp={$searchStr}&t={$title}">
                         $value[$index]
                     </a>
                     EOF;
@@ -89,7 +90,10 @@ class collection
         $sql = <<<EOF
             SELECT DISTINCT `company{$lang}`AS company, `mGroup` FROM `items`
             WHERE
-                {$mgroupWhere} (`archive` IS NULL OR `archive` = 0) AND (NOT `company{$lang}` IS NULL)
+                {$mgroupWhere} (`archive` IS NULL 
+                OR `archive` = 0) 
+                AND (NOT `company{$lang}` IS NULL)
+                AND `display` = 1
             ORDER BY `company{$lang}`
             EOF;
         try {
@@ -516,10 +520,10 @@ class collection
     {
         // debug::dump($company,'company at ' . util::getCaller());
         $lang = ucfirst(Lang::getLocale());
-        $wherwStr = "`company{$lang}`= :company";
+        $wherwStr = "`company{$lang}`= :company AND `display` = 1";
         $data = [':company' => $company];
         if (!util::IsNullOrEmptyString($collection_group_id)) {
-            $wherwStr .= " AND `mGroup` = :mGroup";
+            $wherwStr .= " AND `mGroup` = :mGroup AND `display` = 1" ;
             $data[':mGroup'] = $collection_group_id;
         }
         // $sql = "SELECT * FROM `items` WHERE `company{$lang}`= :company";

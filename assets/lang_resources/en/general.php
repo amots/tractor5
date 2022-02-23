@@ -13,4 +13,5 @@ return [
     'tractor_collection'=>'Tractor collection',
     '404' =>'page not found',
     'admin' => 'Site admin',
+    'rip' => 'RIP',
 ];
