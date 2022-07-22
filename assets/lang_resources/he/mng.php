@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Hebrew
+ */
 return [
     'mng' => 'ניהול',
     'login' => 'כניסה',
