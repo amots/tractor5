@@ -43,6 +43,22 @@ class inventoryController extends baseController
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.inventory'), 'link' => NULL],
         ]);
+        $itemScript = <<<EOF
+            <script>
+            $(document).ready(function () {
+                $('#item_id').bind("enterKey", function (e) {
+                    console.log($('#item_id').val());
+                    window.location.href='/inventory/editItem/' + $('#item_id').val();
+                });
+                $('#item_id').keyup(function (e) {
+                    if (e.keyCode == 13)
+                    {
+                        $(this).trigger("enterKey");
+                    }
+                });
+            });
+            </script>
+            EOF;
         $renderer = new template_renderer(
             __SITE_PATH . '/includes/tableSortSetUp.html',
             [
@@ -50,7 +66,8 @@ class inventoryController extends baseController
                 'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
             ]
         );
-        $this->registry->template->headerStuff = $renderer->render();
+
+        $this->registry->template->headerStuff = $itemScript . $renderer->render();
 
         $this->registry->template->content = $this->renderIndexContent();
         $this->renderTemplateAnnouncements();

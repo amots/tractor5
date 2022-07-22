@@ -1,18 +1,21 @@
 <script>
   $(document).ready(function () {
-      path = $(location).attr('href');
-      value = path.split('/').pop();
-      $('.invMenu').each(function () {
-          thisPath = $(this).data('path');
-          if (thisPath == value) {
-              $('a', this).addClass('active');
-          }
-      });
+    path = $(location).attr('href');
+    value = path.split('/').pop();
+    $('.invMenu').each(function () {
+      thisPath = $(this).data('path');
+      if (thisPath == value) {
+        $('a', this).addClass('active');
+      }
+    });
   });
 </script>
 <ul class="nav justify-content-center nav-tabs">
+  <li class="nav-item">
+    <input type="number" class="form-control" id="item_id" placeholder="מספר פריט" />
+  </li>
   <li class="nav-item invMenu" data-path="search">
-    <a class="nav-link" href="/inventory/search">                
+    <a class="nav-link" href="/inventory/search">
       <?= Lang::trans('service.search') ?>
     </a>
   </li>
