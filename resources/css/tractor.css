@@ -379,6 +379,9 @@ body.mceContentBody, .mce-content-body {
 .hide-md-2 {
     width: unset;
 }
+.hidden-mobile {
+    display: none;
+  }
 /*  X-Small devices (portrait phones, less than 576px)
 // No media query for `xs` since this is the default in Bootstrap */
 
@@ -391,7 +394,9 @@ body.mceContentBody, .mce-content-body {
 
 /*  Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-   
+    .hidden-mobile {
+        display: block;
+      }
    
 }
 
