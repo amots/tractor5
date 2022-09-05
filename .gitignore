@@ -1,4 +1,3 @@
-/nbproject/private/
 .gitignore
 test.php
 controller/testController.php
@@ -6,3 +5,5 @@ controller/testController.php
 **/*.jpg
 .gitignore
 views/test.html
+.DS_Store
+tractor5.code-workspace

@@ -5,18 +5,21 @@
  *
  * @author amots
  */
-class highlights {
+class highlights
+{
 
     var $lang;
     var $highlights;
     var $orderedItems;
 
-    function __construct() {
+    function __construct()
+    {
         $this->highlights = $this->loadHighlights();
         $this->orderedItems = $this->sortHighlights($this->highlights);
     }
 
-    function loadHighlights() {
+    function loadHighlights()
+    {
         $now = new DateTime();
         $today_date = $now->format('Y-m-d');
         $items = [];
@@ -28,13 +31,16 @@ class highlights {
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            Debug::dump($ex->getMessage(),
-                    'excute error in ' . __METHOD__ . ' line ' . __LINE__);
+            Debug::dump(
+                $ex->getMessage(),
+                'excute error in ' . __METHOD__ . ' line ' . __LINE__
+            );
         }
         return $stmt->fetchAll();
     }
 
-    public function renderHighlights() {
+    public function renderHighlights()
+    {
         $str = "";
         if (count($this->orderedItems) > 0) {
             foreach ($this->orderedItems as $highLight) {
@@ -44,11 +50,13 @@ class highlights {
         return $str;
     }
 
-    public function renderSingleHighlight($highlights_id) {
+    public function renderSingleHighlight($highlights_id)
+    {
         return $this->formatHighlight($this->fetchSingleHighlight($highlights_id));
     }
 
-    private function formatHighlight($item) {
+    private function formatHighlight($item)
+    {
         $strf = '';
         switch (lang::getLocale()) {
             case "he":
@@ -56,47 +64,61 @@ class highlights {
                 $body = $item['body_he'];
                 $linkTitle = 'לפרטים נוספים';
                 break;
-            default :
+            default:
                 $title = $item['title_en'];
                 $body = $item['body_en'];
                 $linkTitle = 'for further details';
         }
 
-        if (strlen($item['link']) > 0) {
-            $linkStr = sprintf('<button class="btn" type="button" onclick="window.open(\'%s\', \'_blank\')">%s</button>',
-                    $item['link'], $linkTitle);
+        //if (strlen($item['link']) > 0) {
+        if (!util::IsNullOrEmptyString($item['link'])) {
+            $linkStr = sprintf(
+                '<button class="btn" type="button" onclick="window.open(\'%s\', \'_blank\')">%s</button>',
+                $item['link'],
+                $linkTitle
+            );
         } else $linkStr = '';
 
-        if (strlen($title) > 0 || strlen($body) > 0) {
+        if (!util::IsNullOrEmptyString($title) || !util::IsNullOrEmptyString($body)) {
             $strf .= '<div class="well  well-sm">';
             $strf .= strlen($title) > 0 ? '<h4>' . $title . '</h4>' : '';
             $strf .= strlen($body) > 0 ? $body : '';
             $strf .= $linkStr;
             $strf .= '</div>';
         }
-        if (strlen($item['embed']) > 0) {
+        if (!util::IsNullOrEmptyString($item['embed'])) {
             $strf .= $item['embed'];
         }
-        if (strlen($item['image']) > 0) {
+        if (!util::IsNullOrEmptyString($item['image'])) {
             $strf .= '<div><img src="' . $item['image'] . '" class="img-fluid mx-auto"  /></div>';
         }
         return $strf;
     }
 
-    private function sortHighlights($items) {
+    private function sortHighlights($items)
+    {
         if (!empty($items)) {
             foreach ($items as $key => $row) {
                 $w[$key] = $row['weight'];
                 $s[$key] = $row['sticky'];
                 $d[$key] = $row['creation'];
             }
-            array_multisort($w, SORT_ASC, $s, SORT_DESC, $d, SORT_DESC,
-                    SORT_STRING, $items);
+            array_multisort(
+                $w,
+                SORT_ASC,
+                $s,
+                SORT_DESC,
+                $d,
+                SORT_DESC,
+                SORT_STRING,
+                $items
+            );
         }
         return $items;
     }
 
-    public function renderHighlightsList($mode = null) {
+    public function renderHighlightsList($mode = null)
+    {
         $items = [];
         $list = $this->fetchHighlights($mode);
         foreach ($list as $key => $value) {
@@ -109,11 +131,14 @@ class highlights {
                 </tr>                    
                 EOF;
         }
-        return '<table class="table"><tr><th>כותר</th><th>התחלה</th><th>סיום</th></tr><tr>' . join('</tr><tr>',
-                        $items) . '</tr></table>';
+        return '<table class="table"><tr><th>כותר</th><th>התחלה</th><th>סיום</th></tr><tr>' . join(
+            '</tr><tr>',
+            $items
+        ) . '</tr></table>';
     }
 
-    public function fetchHighlights($mode = NULL) {
+    public function fetchHighlights($mode = NULL)
+    {
 
         switch ($mode) {
             case 'CURRENT':
@@ -121,7 +146,7 @@ class highlights {
                 $today_date = $now->format('Y-m-d');
                 $where = "`expiration`>=:eToday and `creation`<=:cToday";
                 break;
-            default :
+            default:
                 $where = "1";
                 break;
         }
@@ -135,13 +160,16 @@ class highlights {
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            Debug::dump($ex->getMessage(),
-                    'excute error in ' . __METHOD__ . ' line ' . __LINE__);
+            Debug::dump(
+                $ex->getMessage(),
+                'excute error in ' . __METHOD__ . ' line ' . __LINE__
+            );
         }
         return $stmt->fetchAll();
     }
 
-    static function fetchSingleHighlight($id) {
+    static function fetchSingleHighlight($id)
+    {
         $pdo = db::getInstance();
         $sql = "SELECT * FROM `highlights` WHERE `highlights_id` = :highlights_id LIMIT 1";
         $stmt = $pdo->prepare($sql);
@@ -149,40 +177,48 @@ class highlights {
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            Debug::dump($ex->getMessage(),
-                    'excute error in ' . __METHOD__ . ' line ' . __LINE__);
+            Debug::dump(
+                $ex->getMessage(),
+                'excute error in ' . __METHOD__ . ' line ' . __LINE__
+            );
         }
         return $stmt->fetch();
     }
 
-    public function renderMngBreadcrumbs($type = NULL) {
+    public function renderMngBreadcrumbs($type = NULL)
+    {
         switch ($type) {
-            case 'current' :
+            case 'current':
                 return breadCrumbs::genBreadCrumbs([
-                            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-                            ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
-                            ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
-                            ['literal' => Lang::trans('mng.currentHighlights'),
-                                'link' => NULL],
+                    ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+                    ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
+                    ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
+                    [
+                        'literal' => Lang::trans('mng.currentHighlights'),
+                        'link' => NULL
+                    ],
                 ]);
                 break;
-            default :
+            default:
                 return breadCrumbs::genBreadCrumbs([
-                            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
-                            ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
-                            ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
-                            ['literal' => Lang::trans('mng.allHighlights'),
-                                'link' => NULL],
+                    ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+                    ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
+                    ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
+                    [
+                        'literal' => Lang::trans('mng.allHighlights'),
+                        'link' => NULL
+                    ],
                 ]);
         }
     }
 
-    public function renderHighlightEditContent($highlights_id) {
+    public function renderHighlightEditContent($highlights_id)
+    {
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
 
         if (is_numeric($highlights_id))
-                $item = $this->fetchSingleHighlight($highlights_id);
+            $item = $this->fetchSingleHighlight($highlights_id);
         else {
             $form = new form('highlights');
             $item = $form->genEmptyRecord();
@@ -198,5 +234,4 @@ class highlights {
         $renderer->viewData = ['item' => $item];
         return $renderer->render();
     }
-
 }
