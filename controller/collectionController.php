@@ -44,7 +44,9 @@ class collectionController extends baseController
             $this->registry->template->content = $this->collection->renderCollectionLandingPage();
         }
         $this->registry->template->companies = $this->collection->renderCompaniesList($currentGroup);
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
+        // if (isset($_GET['searchString']))
+        $this->registry->template->searchStr = isset($_GET['searchString']) ? trim(filter_input(INPUT_GET, 'searchString')) : null;
+        // else 
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('collection');
         $this->registry->template->show('/envelope/bottom');
@@ -130,7 +132,7 @@ class collectionController extends baseController
         $this->registry->template->pageTitle = Lang::trans('nav.companies');
         $renderer = new template_renderer(__SITE_PATH . '/includes/' . Lang::getLocale() . '/info.html');
         $this->registry->template->info = $renderer->render();
-        $this->registry->template->searchStr = trim(filter_input(INPUT_GET, 'searchString'));
+        $this->registry->template->searchStr = !isset($_GET['searchString']) or util::IsNullOrEmptyString($_GET['searchString']) ? null : trim(filter_input(INPUT_GET, 'searchString'));
         $this->registry->template->companies = $this->collection->renderCompaniesList($collection_group_id);
         $listClass = new list_items($list);
         $this->registry->template->content = $listClass->getCurrentCompPage();

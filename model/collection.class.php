@@ -82,9 +82,10 @@ class collection
         $lang = ucfirst(Lang::getLocale());
         // debug::dump($lang,'lang at ' . util::getCaller());
         $pdo = db::getInstance();
-        if (util::IsNullOrEmptyString($title)) {
-            $mgroupWhere = null;
-        } else {
+        $mgroupWhere = null;
+        if (!util::IsNullOrEmptyString($title)) {
+        //     $mgroupWhere = null;
+        // } else {
             $mgroupWhere = "`mGroup` = :title AND ";
         }
         $sql = <<<EOF
@@ -96,11 +97,18 @@ class collection
                 AND `display` = 1
             ORDER BY `company{$lang}`
             EOF;
+        // Debug::dump($sql, util::getCaller());
+        $stmt = $pdo->prepare($sql);
+        if (!util::IsNullOrEmptyString($mgroupWhere))
+            $stmt->bindParam(':title', $title);
+
         try {
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':title' => $title]);
+
+            $stmt->execute();
+            // $stmt->execute([':title' => $title]);
         } catch (Exception $ex) {
             Debug::dump($stmt->errorInfo(), 'error in ' . util::getCaller());
+            Debug::dump($ex->getMessage(), util::getCaller());
             return NULL;
         }
         $companies = $stmt->fetchAll();
@@ -235,7 +243,7 @@ class collection
     {
         $retData = [];
         $ext = ucfirst(Lang::getLocale());
-        
+
         foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
             $key) {
             if (!util::IsNullOrEmptyString($item[$key])) {
@@ -523,7 +531,7 @@ class collection
         $wherwStr = "`company{$lang}`= :company AND `display` = 1";
         $data = [':company' => $company];
         if (!util::IsNullOrEmptyString($collection_group_id)) {
-            $wherwStr .= " AND `mGroup` = :mGroup AND `display` = 1" ;
+            $wherwStr .= " AND `mGroup` = :mGroup AND `display` = 1";
             $data[':mGroup'] = $collection_group_id;
         }
         // $sql = "SELECT * FROM `items` WHERE `company{$lang}`= :company";
