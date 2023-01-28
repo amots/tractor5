@@ -25,8 +25,8 @@ class mng
         User::checkAuthorization();
         $hide = 'd-none';
         $table = [
-            'ms_auto' => Lang::getLocale() == 'he' ? 'ms-auto-left'
-                : 'ms-auto',
+            // 'ms_auto' => Lang::getLocale() == 'he' ? 'ms-auto-left'
+            //     : 'ms-auto',
             'hide1' => $_SESSION['permission'] & User::permission_content ? NULL
                 : $hide,
             'hide2' => $_SESSION['permission'] & User::permission_inventory ? NULL

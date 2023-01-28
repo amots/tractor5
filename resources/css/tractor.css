@@ -352,8 +352,10 @@ body.mceContentBody, .mce-content-body {
     padding: 4px;
 }
 
-.rtl .ms-auto-left {
-    margin-right: auto !important;
+
+.rtl .ms-auto {
+    margin-right: auto!important;
+    margin-left: unset!important;
 }
 
 /**
