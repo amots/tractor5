@@ -4,17 +4,21 @@ class db {
     /*     * * Declare instance ** */
 
     private static $instance = NULL;
-
     /**
      *
      * the constructor is set to private so
      * so nobody can create a new instance using new
      *
      */
-    private function __construct() {
-        /*         * * maybe set the db name here later ** */
-    }
+    static $defFile = __SITE_PATH . '/private/db_config.php';
 
+    private function __construct() {
+    
+    }
+    public static function getDbName() {
+        require_once self::$defFile;
+        return DBconfig::basename;
+    }
     /**
      *
      * Return DB instance or create intitial connection
@@ -25,9 +29,10 @@ class db {
      *
      */
     public static function getInstance() {
-
+        
         if (!self::$instance) {
-            include __PRIVATE_PATH . '/db_config.php';
+            
+            require_once self::$defFile;
             $dsn = 'mysql:host=' . DBconfig::host . ';dbname=' . DBconfig::basename . ';port=' . DBconfig::port . ';connect_timeout=15';
             $user = DBconfig::user;
             $password = DBconfig::password;
@@ -40,10 +45,11 @@ class db {
             ];
             try {
                 self::$instance = new PDO($dsn, $user, $password, $opt);
-                self::$instance->dbname = DBconfig::basename;
+                // self::$instance->dbname = DBconfig::basename;
             } catch (PDOException $err) {
                 if ($registry->debug) {
-                    Debug::dump($err->getMessage(), "connection failed in " . __METHOD__);
+                    // util::var_dump_pre($err->getMessage(), "connection failed in " . __METHOD__);
+                    Debug::dump($err->getMessage(), "connection failed in " . util::getCaller());
                 }
                 return NULL;
             }

@@ -31,6 +31,7 @@ switch ($_SERVER['HTTP_HOST']) {
     default:
 //        $privatePath = "/hsphere/local/home/amots-linux/private";
         $privatePath = "/home/tractororg/etc/private";
+        $privatePath =__SITE_PATH . "/private";
 }
 
 define('__PRIVATE_PATH', $privatePath);

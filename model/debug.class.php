@@ -63,7 +63,12 @@ class Debug {
             'object' => '/object\((?P<class>[a-z_\\\]+)\)\#(?P<id>\d+) \((?P<count>\d+)\)/i',
         );
         foreach ($maps as $function => $pattern) {
-            $output = preg_replace_callback($pattern, array('self', '_process' . ucfirst($function)), $output);
+             /**
+             * 2023-04-20 Amots
+             * Fixed warning: Use of "self" in callables is deprecated
+             */
+            // $output = preg_replace_callback($pattern, array('self', '_process' . ucfirst($function)), $output);
+            $output = preg_replace_callback($pattern, array('Debug', '_process' . ucfirst($function)), $output);
         }
 
         $header = '';

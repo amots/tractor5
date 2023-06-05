@@ -265,7 +265,7 @@ class collection
             $sth->execute(array(':requestID' => $requestID));
         } catch (Exception $ex) {
             Debug::dump(
-                $stmt->errorInfo(),
+                $sth->errorInfo(),
                 'error in ' . __METHOD__ . ' line ' . __LINE__
             );
         }

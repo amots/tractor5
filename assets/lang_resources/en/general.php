@@ -14,4 +14,5 @@ return [
     '404' =>'page not found',
     'admin' => 'Site admin',
     'rip' => 'RIP',
+    'credit' => 'Credit',
 ];

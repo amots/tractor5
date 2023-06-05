@@ -31,11 +31,26 @@ class item_pic
     {
         if (!isset($pics) or util::is_array_empty($pics)) return NULL;
         $picsArray = [];
+        $figCaption = [];
         foreach ($pics as $key => $pic) {
+            $caption =  $pic['caption' . ucfirst(Lang::getLocale())];
+            if (!util::IsNullOrEmptyString($caption)) {
+                $figCaption[] = $pic['caption' . ucfirst(Lang::getLocale())];
+            }
+            $credit = $pic['credit' . ucfirst(Lang::getLocale())];
+            // Debug::dump($credit, util::getCaller());
+            if (!util::IsNullOrEmptyString($credit)) {
+                $figCaption[]  = Lang::trans('general.credit') . ": " .
+                    $pic['credit' . ucfirst(Lang::getLocale())];
+            }
+            // Debug::dump($pics, util::getCaller());
+            // Debug::dump($figCaption, util::getCaller());
+            $caption = join('<br />', $figCaption);
             $picsArray[] = <<<EOF
                 <figure class="figure">
                     <img src="/assets/media/pics/items/{$pic['path']}" 
-                        class="img-fluid" alt="{$title}" />
+                        class="figure-img img-fluid rounded" alt="{$title}" title="{$title}"/>
+                    <figcaption class="figure-caption">{$caption}</figcaption>
                 </figure>
                 EOF;
         }
