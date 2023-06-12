@@ -337,8 +337,9 @@ class ownership
         $pdo = db::getInstance();
         $sqlStr = "SELECT * FROM `ownership` WHERE `item_id` = :item_id ORDER by `transaction_year` DESC,`transaction_month`DESC,`transaction_day`DESC LIMIT 1";
         $stmt = $pdo->prepare($sqlStr);
+        $id = intval($item_id);
         try {
-            $stmt->bindParam(':item_id', intval($item_id), PDO::PARAM_INT);
+            $stmt->bindParam(':item_id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $exc) {
             Debug::dump(
