@@ -15,6 +15,8 @@ class inventoryController extends baseController
     private $user;
     private $inventory;
     private $mng;
+    private $permission;
+    private $renderer;
 
     public function __construct($registry)
     {
