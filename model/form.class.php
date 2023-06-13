@@ -46,7 +46,6 @@ class form
 
         $sql = "SELECT * FROM information_schema.columns WHERE `table_schema` = :database and `table_name` =:table";
         $pdo = db::getInstance();
-        // $stmt = $this->pdo->prepare($sql);
         $stmt = $pdo->prepare($sql);
         try {
             $stmt->execute(['table' => $this->table, 'database' =>  $this->dbName]);
@@ -55,7 +54,6 @@ class form
             Debug::dump($stmt->errorInfo(), 'sqlinfo form::getFields');
         }
         $results = $stmt->fetchAll();
-        // Debug::dump($results, 'Fields at ' . util::getCaller());
         return $results;
     }
 
@@ -202,9 +200,7 @@ class form
     public function genEmptyRecord()
     {
         $record = [];
-        // Debug::dump($this->dataStruct,'Data structure '. util::getCaller());
         foreach ($this->dataStruct as $key => $item) {
-            //            Debug::dump($item,'struct item in ' . __METHOD__ . ' line ' . __LINE__);
             if (util::IsNullOrEmptyString($item['EXTRA'])) {
                 $record[$item['COLUMN_NAME']] = $item['COLUMN_DEFAULT'];
             }

@@ -45,10 +45,8 @@ class db {
             ];
             try {
                 self::$instance = new PDO($dsn, $user, $password, $opt);
-                // self::$instance->dbname = DBconfig::basename;
             } catch (PDOException $err) {
                 if ($registry->debug) {
-                    // util::var_dump_pre($err->getMessage(), "connection failed in " . __METHOD__);
                     Debug::dump($err->getMessage(), "connection failed in " . util::getCaller());
                 }
                 return NULL;

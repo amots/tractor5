@@ -14,6 +14,7 @@ class mngController extends baseController
     private $errors = [];
     private $messages = [];
     private $mng;
+    private $permission;
 
     public function __construct($registry)
     {
