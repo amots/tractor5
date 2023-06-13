@@ -19,9 +19,12 @@ class form
     {
         $this->pdo = db::getInstance();
         $this->table = $table;
+        $this->dbName = db::getDbName();
         $this->dataStruct = $this->getFields();
         $this->keys = $this->getKeys();
-        $this->dbName = $this->pdo->dbname;
+        // $this->dbName = $this->pdo->dbname;
+        // Debug::dump($this->dbName, 'Db at ' . util::getCaller());
+            // Debug::dump($this->table, 'Table at ' . util::getCaller());
     }
 
     private function getKeys()
@@ -29,7 +32,7 @@ class form
         $sql = "select * from information_schema.KEY_COLUMN_USAGE where KEY_COLUMN_USAGE.CONSTRAINT_SCHEMA = :database and KEY_COLUMN_USAGE.TABLE_NAME = :table and  not REFERENCED_TABLE_SCHEMA  is NULL";
         $stmt = $this->pdo->prepare($sql);
         try {
-            $stmt->execute(['table' => $this->table, 'database' => $this->pdo->dbname]);
+            $stmt->execute(['table' => $this->table, 'database' => $this->dbName]);
         } catch (Exception $exc) {
             Debug::dump($exc->getTraceAsString(), 'trace form::getFields');
             Debug::dump($stmt->errorInfo(), 'sqlinfo form::getFields');
@@ -42,14 +45,17 @@ class form
     {
 
         $sql = "SELECT * FROM information_schema.columns WHERE `table_schema` = :database and `table_name` =:table";
-        $stmt = $this->pdo->prepare($sql);
+        $pdo = db::getInstance();
+        // $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         try {
-            $stmt->execute(['table' => $this->table, 'database' => $this->pdo->dbname]);
+            $stmt->execute(['table' => $this->table, 'database' =>  $this->dbName]);
         } catch (Exception $exc) {
             Debug::dump($exc->getTraceAsString(), 'trace form::getFields');
             Debug::dump($stmt->errorInfo(), 'sqlinfo form::getFields');
         }
         $results = $stmt->fetchAll();
+        // Debug::dump($results, 'Fields at ' . util::getCaller());
         return $results;
     }
 
@@ -196,6 +202,7 @@ class form
     public function genEmptyRecord()
     {
         $record = [];
+        // Debug::dump($this->dataStruct,'Data structure '. util::getCaller());
         foreach ($this->dataStruct as $key => $item) {
             //            Debug::dump($item,'struct item in ' . __METHOD__ . ' line ' . __LINE__);
             if (util::IsNullOrEmptyString($item['EXTRA'])) {

@@ -243,7 +243,6 @@ class collection
     {
         $retData = [];
         $ext = ucfirst(Lang::getLocale());
-
         foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
             $key) {
             if (!util::IsNullOrEmptyString($item[$key])) {
@@ -316,11 +315,15 @@ class collection
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
         if ($item_id) {
+            // Debug::dump('Item found', util::getCaller());
             $item = $this->getItem($item_id);
         } else {
+            // Debug::dump('No item', util::getCaller());
             $form = new form('items');
+            // Debug::dump($form, 'Form at ' . util::getCaller());
             $item = $form->genEmptyRecord();
             $item['item_id'] = null;
+            // Debug::dump($item, 'Expecting an empty item here at ' . util::getCaller());
         }
         $item['title'] = $this->renderTitle($item);
         $item['csrf_token'] = $token;

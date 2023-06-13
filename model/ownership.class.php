@@ -47,8 +47,6 @@ class ownership
     public function renderOwnRecordsList($item_id)
     {
         $records = $this->getAllOwnRecordItem($item_id);
-        //    Debug::dump($records, 'records ' . __METHOD__ . ' line ' . __LINE__);
-
         $title = $this->renderTitle($item_id);
         $plus = list_items::$plus_square;
         $recordsList = $this->renderOwnershipRecords($records);
@@ -216,10 +214,10 @@ class ownership
             if (isset($formatedItem[$id])) {
                 if ($acc[$id]['time'] > $time) {
                     break;
-                } 
+                }
             }
             $acc[$id] = [
-                'time' =>$time,
+                'time' => $time,
                 'date' => date('Y-m-d', $time),
                 'y' => $item['transaction_year'],
                 'm' => $item['transaction_month'],
@@ -247,7 +245,7 @@ class ownership
         ) . '</tr>' . '</tbody>' . $table_post;
         return $content;
     }
-    
+
     private function generateEmptyOwnItem($item_id)
     {
         $form = new form('ownership');
@@ -263,26 +261,7 @@ class ownership
         return $emptyItem;
     }
 
-    /*
-      private function getFields() {
-      $pdo = db::getInstance();
-      //        $sqlStr = "SELECT * FROM information_schema.columns WHERE `table_schema` = 'tractoro_tractor' and `table_name` ='ownership'";
-      $sql = "SELECT * FROM information_schema.columns WHERE `table_schema` = :database and `table_name` =:table";
-      $stmt = $pdo->prepare($sql);
-      try {
-      $stmt->execute(['table' => $this->table, 'database' => $pdo->dbname]);
-      } catch (Exception $exc) {
-      //            Debug::dump($exc->getTraceAsString(),
-      //                    'trace  in' . __METHOD__ . ' line ' . __LINE__);
-      Debug::dump(
-      $stmt->errorInfo(),
-      'sqlinfo  in' . __METHOD__ . ' line ' . __LINE__
-      );
-      }
-      $results = $stmt->fetchAll();
-      return $results;
-      }
-     */
+
 
     private function getAllOwnRecordItem($item_id)
     {
@@ -334,6 +313,9 @@ class ownership
 
     static public function renderOwnershipString($item_id)
     {
+        if (util::IsNullOrEmptyString($item_id)) {
+            return null;
+        }
         $pdo = db::getInstance();
         $sqlStr = "SELECT * FROM `ownership` WHERE `item_id` = :item_id ORDER by `transaction_year` DESC,`transaction_month`DESC,`transaction_day`DESC LIMIT 1";
         $stmt = $pdo->prepare($sqlStr);
@@ -350,8 +332,6 @@ class ownership
             $this['errors'][] = $exc->getMessage();
         }
         $item = $stmt->fetch();
-        //    Debug::dump($item, 'ownership item in ' . __METHOD__ . ' line ' . __LINE__);
-        //    return util::renderIncompeteDate($item['transaction_year'], $item['transaction_month'], $item['transaction_day']);
         return $item['owner'];
     }
 }
