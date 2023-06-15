@@ -68,6 +68,30 @@ class collectionController extends baseController
                 $item['model' . ucfirst(Lang::getLocale())]
             ]
         );
+        $this->registry->template->headerStuff = <<<EOF
+        <script type="text/javascript" src="/resources/js/ezoom.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".ezoom").each(function() {
+                        ezoom.onInit($(this), 
+                            {
+                                hideControlBtn: false,
+                                onClose: function (result) {
+                                    console.log(result);
+                            },
+                                onRotate: function (result) {
+                                    console.log(result);
+                            },
+                        });
+                    });
+                });
+            </script>
+            <style>
+                .ezoom {
+                    cursor: pointer;
+            }
+            </style>
+        EOF;
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('nav.theCollection'), 'link' => '/collection'],

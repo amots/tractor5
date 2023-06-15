@@ -47,9 +47,9 @@ class item_pic
             // Debug::dump($figCaption, util::getCaller());
             $caption = join('<br />', $figCaption);
             $picsArray[] = <<<EOF
-                <figure class="figure">
+                <figure class="figure">                    
                     <img src="/assets/media/pics/items/{$pic['path']}" 
-                        class="figure-img img-fluid rounded" alt="{$title}" title="{$title}"/>
+                        class="ezoom figure-img img-fluid rounded" alt="{$title}" title="{$title}"/>
                     <figcaption class="figure-caption">{$caption}</figcaption>
                 </figure>
                 EOF;
