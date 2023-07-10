@@ -31,20 +31,19 @@ class item_pic
     {
         if (!isset($pics) or util::is_array_empty($pics)) return NULL;
         $picsArray = [];
-        $figCaption = [];
         foreach ($pics as $key => $pic) {
+            $figCaption = [];
             $caption =  $pic['caption' . ucfirst(Lang::getLocale())];
             if (!util::IsNullOrEmptyString($caption)) {
                 $figCaption[] = $pic['caption' . ucfirst(Lang::getLocale())];
             }
             $credit = $pic['credit' . ucfirst(Lang::getLocale())];
-            // Debug::dump($credit, util::getCaller());
+
             if (!util::IsNullOrEmptyString($credit)) {
                 $figCaption[]  = Lang::trans('general.credit') . ": " .
                     $pic['credit' . ucfirst(Lang::getLocale())];
             }
-            // Debug::dump($pics, util::getCaller());
-            // Debug::dump($figCaption, util::getCaller());
+           
             $caption = join('<br />', $figCaption);
             $picsArray[] = <<<EOF
                 <figure class="figure">                    
@@ -59,7 +58,6 @@ class item_pic
 
     public function registerItemPic($item_id, $path)
     {
-        //        Debug::dump($_REQUEST, 'request in ' . __METHOD__ . 'line ' . __LINE__);
         $sqlStr = "INSERT INTO `pictures` (item_id,path) VALUES (:item_id, :path);";
         $pdo = db::getInstance();
         $stmt = $pdo->prepare($sqlStr);
@@ -77,9 +75,7 @@ class item_pic
         $cols = 3;
         $rendered = [];
         $pics = $this->getItemPics($item_id, $token);
-        //        Debug::dump($pics,'pics in ' . __METHOD__ . ' line ' . __LINE__);
         $renderer = new template_renderer(__SITE_PATH . '/includes/mng/editItemPicForm.html');
-        //        $rendered[] = $renderer->render();
 
         foreach ($pics as $pic) {
             $renderer->viewData = [
@@ -87,22 +83,7 @@ class item_pic
             ];
             $rendered[] = $renderer->render();
         }
-        //                Debug::dump($rendered,'rendered in ' . __METHOD__ . ' line ' . __LINE__);
-        /*
 
-          $picsCols = util::balanceArrays($rendered, $cols);
-          //        Debug::dump($picsCols,'pics cols in ' . __METHOD__ . ' line ' . __LINE__);
-          $colStr = [];
-          foreach ($picsCols as $key => $pic_col) {
-          $colStr[] = '<div>' . join('</div><div>', $pic_col) . '</div>';
-          }
-          $col_width = 12 / $cols;
-          $divClass = 'class="col-md-4"';
-
-          return '<div class="row">' . "<div {$divClass}>" . join("</div><div {$divClass}>",
-          $colStr) . '</div></div>';
-
-         */
         return join('', $rendered);
     }
 }

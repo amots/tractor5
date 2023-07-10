@@ -192,7 +192,7 @@ class inventoryController extends baseController
         $form = new form('pictures');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = "picture record {$foןrm->last_id} for item {$item_id} wassaved alright";
+            $_SESSION['messages'] = "picture record {$foןrm->last_id} for item {$item_id} was saved alright";
         } else {
             $_SESSION['errors'] = $result;
         }
