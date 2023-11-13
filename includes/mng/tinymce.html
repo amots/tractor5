@@ -6,14 +6,14 @@ referrerpolicy="origin"></script> -->
       selector: "#body_he",
       inline: true,
 
-      plugins: "link image code directionality charmap emoticons",
+      plugins: "link image code directionality charmap emoticons autosave",
       directionality: 'rtl',
       language: 'he_IL',
       toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
 
       content_css: '/resources/css/tractor.css',
       height: 300,
-
+      autosave_ask_before_unload: true,
       visualblocks_default_state: true,
       end_container_on_empty_block: true
   });
@@ -23,10 +23,11 @@ referrerpolicy="origin"></script> -->
       selector: "#body_en",
       directionality: 'ltr',
       inline: true,
-      plugins: "link image code directionality charmap emoticons",
+      plugins: "link image code directionality charmap emoticons autosave",
       toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
       content_css: '/resources/css/tractor.css',
       height: 300,
+      autosave_ask_before_unload: true,
       visualblocks_default_state: true,
       end_container_on_empty_block: true
   });
