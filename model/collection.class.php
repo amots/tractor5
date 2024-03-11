@@ -245,7 +245,7 @@ class collection
         $ext = ucfirst(Lang::getLocale());
         foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
             $key) {
-            if (!util::IsNullOrEmptyString($item[$key])) {
+            if (isset($item[$key]) and !util::IsNullOrEmptyString($item[$key])) {
                 $retData[] = trim($item[$key]);
             }
         }
