@@ -15,6 +15,7 @@ class quality
         'reusedPictures' => ['literal' => 'תמונות בשימוש כפול', 'callback' => 'renderReusedPictures'],
         'orphandPictures' => ['literal' => 'תמונות שלא בשימוש', 'callback' => 'renderOrphanPictures'],
         'nonMatchingFields' => ['literal' => 'שדות לא תואמים', 'callback' => 'renderMisMatchedFields'],
+        'dumpItemsList' => ['literal' => 'הורדת רשימת פריטים', 'callback' => 'dumpItemsList'],
     ];
 
     public function __construct()
@@ -219,7 +220,7 @@ class quality
     private function renderMisMatchedFields()
     {
         $fields2compare = [
-            ['title' => 'כותר', 'field1' => 'caption_he', 'field2' => 'caption_en'], 
+            ['title' => 'כותר', 'field1' => 'caption_he', 'field2' => 'caption_en'],
             ['title' => 'יצרן', 'field1' => 'companyHe', 'field2' => 'companyEn'],
             ['title' => 'דגם', 'field1' => 'modelHe', 'field2' => 'modelEn'],
         ];
@@ -273,5 +274,133 @@ class quality
             EOF;
         $post = "</tbody></table>";
         return $pre . join('', $list) . $post;
+    }
+    private function dumpItemsList()
+    {
+        // Debug::dump($this->request, util::getCaller());
+        $pdo = db::getInstance();
+        $sqlStr = <<<EOF
+            SELECT
+                items.`item_id`,
+                `registration`,
+                `caption_he`,
+                `companyHe`,
+                `modelHe`,
+                `year`,
+                `sourceHe`,
+                ownership.owner,
+                ownership.transaction_year,
+                ownership.ownership_id
+            FROM
+                `items`
+            LEFT JOIN ownership ON ownership.item_id = items.item_id
+            ORDER BY
+                items.item_id,
+                ownership.ownership_id
+            ;
+            EOF;
+        $pdo = db::getInstance();
+        $stmt = $pdo->prepare($sqlStr);
+        try {
+            $stmt->execute();
+        } catch (\Throwable $th) {
+            Debug::dump($th->getMessage() . 'error at ' . util::getCaller());
+        }
+        $results = $stmt->fetchAll();
+        $cleanData = self::clearDoubleOwnerships($results);
+
+        // Debug::dump(count($cleanData), util::getCaller());
+        $keysToDelete = ['ownership_id'];
+        foreach ($cleanData as $key => $r) {
+            $cleanData[$key]['description'] = self::renderSimpleTitle($r);
+            self::unlinkFields($cleanData[$key], [
+                'ownership_id', 'modelHe', 'sourceHe', 'caption_he', 'companyHe','year',
+            ]);
+            
+        }
+        array_unshift($cleanData, [
+            'item_id' => 'אינדקס',
+            'registration' => 'קוד רישום',
+            'owner' => 'בעלים',
+            'transaction_year' => 'שנת רישום',
+            'description' => 'פריט',
+        ]);
+        // Debug::dump($cleanData, util::getCaller());
+        self::array_to_csv_download($cleanData);
+        exit();
+    }
+    private function clearDoubleOwnerships($table)
+    {
+        $prevKey = null;
+        foreach ($table as $key => $r) {
+            if (is_null($prevKey)) {
+                $prevKey = $key;
+            } else {
+                // debug::dump([$prevKey, $key], util::getCaller());
+                if ($r['item_id'] == $table[$prevKey]['item_id']) {
+                    if ($r['transaction_year'] == $table[$prevKey]['transaction_year']) {
+                        Debug::dump('Same year ' . $r['registration'], util::getCaller());
+                        if ($r['ownership_id'] > $table[$prevKey]['ownership_id']) {
+                            unset($table[$prevKey]);
+                        } else {
+                            unset($table[$key]);
+                        }
+                    } else {
+                        // Debug::dump('different years ' . $r['registration'], util::getCaller());
+                        if ($r['transaction_year'] > $table[$prevKey]['transaction_year']) {
+                            unset($table[$prevKey]);
+                        } else {
+                            unset($table[$key]);
+                        }
+                    }
+                    // Debug::dump([$key, $table[$prevKey]['transaction_year'],$r['transaction_year'], $table[$prevKey]['ownership_id'],$r['ownership_id']], util::getCaller());
+                }
+                $prevKey = $key;
+            }
+        }
+
+        return $table;
+    }
+    private function array_to_csv_download($array, $filename = "items.csv", $delimiter = ",")
+    {
+        // open raw memory as file so no temp files needed, you might run out of memory though
+        $f = fopen('php://memory', 'w');
+        // loop over the input array
+        foreach ($array as $line) {
+            // generate csv lines from the inner arrays
+            fputcsv($f, $line, $delimiter);
+        }
+        // reset the file pointer to the start of the file
+        fseek($f, 0);
+        // tell the browser it's going to be a csv file
+        header('Content-Encoding: UTF-8');
+        header('Content-type: text/csv; charset=UTF-8');
+        // tell the browser we want to save it instead of displaying it
+        header('Content-Disposition: attachment; filename=' . $filename);
+        echo "\xEF\xBB\xBF"; // UTF-8 BOM
+        // make php send the generated csv lines to the browser
+        fpassthru($f);
+    }
+    private function renderSimpleTitle($item)
+    {
+        $retData = [];
+        $ext = ucfirst(Lang::getLocale());
+        foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
+            $key) {
+            if (isset($item[$key]) and !util::IsNullOrEmptyString($item[$key])) {
+                $retData[] = trim($item[$key]);
+            }
+        }
+        // $textStr = '<bdi>' . join("</bdi>, <bdi>", $retData) . '</bdi>';
+        $textStr = join(",", $retData);
+        return $textStr;
+    }
+    private function unlinkFields(&$arr, $fields)
+    {
+        foreach ($fields as $keyToDelete) {
+            if (array_key_exists($keyToDelete, $arr)) {
+                unset($arr[$keyToDelete]);
+            }
+        }
     }
 }
