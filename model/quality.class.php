@@ -16,6 +16,7 @@ class quality
         'orphandPictures' => ['literal' => 'תמונות שלא בשימוש', 'callback' => 'renderOrphanPictures'],
         'nonMatchingFields' => ['literal' => 'שדות לא תואמים', 'callback' => 'renderMisMatchedFields'],
         'dumpItemsList' => ['literal' => 'הורדת רשימת פריטים', 'callback' => 'dumpItemsList'],
+        'dumpOwnership' => ['literal' => 'הצגת רשומות בעלות', 'callback' => 'renderOwnershipList']
     ];
 
     public function __construct()
@@ -314,9 +315,13 @@ class quality
         foreach ($cleanData as $key => $r) {
             $cleanData[$key]['description'] = self::renderSimpleTitle($r);
             self::unlinkFields($cleanData[$key], [
-                'ownership_id', 'modelHe', 'sourceHe', 'caption_he', 'companyHe','year',
+                'ownership_id',
+                'modelHe',
+                'sourceHe',
+                'caption_he',
+                'companyHe',
+                'year',
             ]);
-            
         }
         array_unshift($cleanData, [
             'item_id' => 'אינדקס',
@@ -361,6 +366,68 @@ class quality
 
         return $table;
     }
+    private function renderOwnershipList()
+    {
+        $pdo = db::getInstance();
+        $sqlStr = <<<EOF
+            SELECT
+                ownership.item_id AS 'itemId',
+                items.registration,
+                ownership.owner,
+                ownership.transaction_year AS 'transaction year',
+                items.companyHe AS 'manufecturer',
+                items.modelHe AS 'model',
+                items.year AS 'production year',
+                items.sourceHe AS 'from'
+            FROM
+                `ownership`
+            JOIN items ON ownership.item_id = items.item_id
+            WHERE
+                items.mGroup = 1
+            ORDER BY
+                `ownership`.`item_id` ASC
+            /*LIMIT 3*/;
+            EOF;
+        $pdo = db::getInstance();
+        $stmt = $pdo->prepare($sqlStr);
+        try {
+            $stmt->execute();
+        } catch (\Throwable $th) {
+            Debug::dump($th->getMessage() . 'error at ' . util::getCaller());
+        }
+        $results = $stmt->fetchAll();
+        // Debug::dump($results, 'Ownership at ' . util::getCaller());
+        $list = [];
+        foreach ($results as $item) {
+            $list[] = <<<EOF
+            <tr>
+                <td class="rtl">{$item['itemId']}</td>
+                <td class="rtl">{$item['registration']}</td>
+                <td class="rtl">{$item['owner']}</td>
+                <td class="rtl">{$item['transaction year']}</td>
+                <td class="rtl">{$item['manufecturer']}</td>
+                <td class="rtl">{$item['model']}</td>
+                <td class="rtl">{$item['production year']}</td>
+                <td class="rtl">{$item['from']}</td>
+            </tr>
+            EOF;
+        }
+        $pre = <<<EOF
+        <table id="list2Sort" class="table table-sm table-hover table-responsive tablesorter">
+            <thead><tr>
+                <th>אינדקס</th>
+                <th>קוד מוטבע</th>
+                <th>בעלים</th>
+                <th>שנת רישום בעלות</th>
+                <th>יצרן</th>
+                <th>דגם</th>
+                <th>שנת יצור</th>
+                <th>מהיכן הגיע</th>
+            </tr></thead><tbody>
+        EOF;
+    $post = "</tbody></table>";
+        return  $pre . join('', $list) . $post;
+    }
     private function array_to_csv_download($array, $filename = "items.csv", $delimiter = ",")
     {
         // open raw memory as file so no temp files needed, you might run out of memory though
@@ -385,8 +452,10 @@ class quality
     {
         $retData = [];
         $ext = ucfirst(Lang::getLocale());
-        foreach (['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
-            $key) {
+        foreach (
+            ['caption_' . Lang::getLocale(), 'company' . $ext, 'model' . $ext, 'year', 'source' . $ext] as
+            $key
+        ) {
             if (isset($item[$key]) and !util::IsNullOrEmptyString($item[$key])) {
                 $retData[] = trim($item[$key]);
             }
