@@ -378,12 +378,12 @@ class quality
                 items.companyHe AS 'manufecturer',
                 items.modelHe AS 'model',
                 items.year AS 'production year',
-                items.sourceHe AS 'from'
+                items.sourceHe AS 'from' 
             FROM
                 `ownership`
             JOIN items ON ownership.item_id = items.item_id
             WHERE
-                items.mGroup = 1
+                items.mGroup = 1 AND IFNULL(items.archive, 0) = 0  
             ORDER BY
                 `ownership`.`item_id` ASC
             /*LIMIT 3*/;
