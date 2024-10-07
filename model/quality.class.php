@@ -14,9 +14,9 @@ class quality
         'noPics' => ['literal' => 'פריט ללא תמונה', 'callback' => 'renderNoPicsTable'],
         'reusedPictures' => ['literal' => 'תמונות בשימוש כפול', 'callback' => 'renderReusedPictures'],
         'orphandPictures' => ['literal' => 'תמונות שלא בשימוש', 'callback' => 'renderOrphanPictures'],
-        'nonMatchingFields' => ['literal' => 'שדות לא תואמים', 'callback' => 'renderMisMatchedFields'],
+        'nonMatchingFields' => ['literal' => 'שדות לא תואמים בין שפות', 'callback' => 'renderMisMatchedFields'],
         'dumpItemsList' => ['literal' => 'הורדת רשימת פריטים', 'callback' => 'dumpItemsList'],
-        'dumpOwnership' => ['literal' => 'הצגת רשומות בעלות', 'callback' => 'renderOwnershipList']
+        'dumpOwnership' => ['literal' => 'הצגת רשומות בעלות', 'callback' => 'renderOwnershipList'],
     ];
 
     public function __construct()
@@ -224,6 +224,8 @@ class quality
             ['title' => 'כותר', 'field1' => 'caption_he', 'field2' => 'caption_en'],
             ['title' => 'יצרן', 'field1' => 'companyHe', 'field2' => 'companyEn'],
             ['title' => 'דגם', 'field1' => 'modelHe', 'field2' => 'modelEn'],
+            ['title' =>'מקור', 'field1' =>'sourceHe', 'field2'=>'sourceEn'],
+            ['title' =>'פירוט', 'field1' =>'PageHe', 'field2'=>'PageEn'],
         ];
         $list = [];
         foreach ($fields2compare as $r) {
@@ -243,7 +245,7 @@ class quality
             WHERE
                 (
                     `{$r['field1']}` IS NULL OR `{$r['field1']}` = ''
-                ) ^(
+                ) ^ (
                     `{$r['field2']}` is NULL OR `{$r['field2']}` = ''
                 ) and (`display` = 1)
             EOF;
@@ -265,13 +267,14 @@ class quality
             $list[] = <<<EOF
                 <tr>
                 <td><a href="/inventory/editItem/{$record['item_id']}">ערוך</td>
-                <td>{$record['item_id']}</td><td>{$title}</td>
+                <td>{$record['item_id']}</td>
+                <td>{$title}</td>
                 </tr>
                 EOF;
         }
         $pre = <<<EOF
             <table id="list2Sort" class="table table-sm table-hover table-responsive tablesorter">
-                <thead><tr><th>מספר</th><th>כותר</th></tr></thead><tbody>
+                <thead><tr><th></th><th>מספר</th><th>כותר</th></tr></thead><tbody>
             EOF;
         $post = "</tbody></table>";
         return $pre . join('', $list) . $post;
@@ -425,7 +428,7 @@ class quality
                 <th>מהיכן הגיע</th>
             </tr></thead><tbody>
         EOF;
-    $post = "</tbody></table>";
+        $post = "</tbody></table>";
         return  $pre . join('', $list) . $post;
     }
     private function array_to_csv_download($array, $filename = "items.csv", $delimiter = ",")
