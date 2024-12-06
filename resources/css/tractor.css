@@ -13,7 +13,11 @@
 @font-face {
     font-family: 'Alef';
     src: url("Alef/Alef-Webfont/Alef-bold.eot");
-    src: url("Alef/Alef-Webfont/Alef-bold.eot?#iefix") format("embedded-opentype"), url("Alef/Alef-Webfont/Alef-bold.woff") format("woff"), url("Alef/Alef-Webfont/Alef-bold.ttf") format("truetype"), url("Alef/Alef-Webfont/Alef-bold.svg#alefbold") format("svg");
+    src:
+        url("Alef/Alef-Webfont/Alef-bold.eot?#iefix") format("embedded-opentype"),
+        url("Alef/Alef-Webfont/Alef-bold.woff") format("woff"),
+        url("Alef/Alef-Webfont/Alef-bold.ttf") format("truetype"),
+        url("Alef/Alef-Webfont/Alef-bold.svg#alefbold") format("svg");
     font-weight: bold;
     font-style: normal;
 }
@@ -21,7 +25,11 @@
 @font-face {
     font-family: 'Alef';
     src: url("Alef/Alef-Webfont/Alef-regular.eot");
-    src: url("Alef/Alef-Webfont/Alef-regular.eot?#iefix") format("embedded-opentype"), url("Alef/Alef-Webfont/Alef-regular.woff") format("woff"), url("Alef/Alef-Webfont/Alef-regular.ttf") format("truetype"), url("Alef/Alef-Webfont/Alef-regular.svg#alefregular") format("svg");
+    src:
+        url("Alef/Alef-Webfont/Alef-regular.eot?#iefix") format("embedded-opentype"),
+        url("Alef/Alef-Webfont/Alef-regular.woff") format("woff"),
+        url("Alef/Alef-Webfont/Alef-regular.ttf") format("truetype"), 
+        url("Alef/Alef-Webfont/Alef-regular.svg#alefregular") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -57,7 +65,8 @@ body {
     background-size: cover;
 }
 
-a:not([class]), a:not([href]):not([class]):hover {
+a:not([class]),
+a:not([href]):not([class]):hover {
     color: inherit;
     text-decoration: none;
 }
@@ -159,19 +168,63 @@ a:not([class]), a:not([href]):not([class]):hover {
     Created on : Mar 3, 2017, 8:54:20 PM
     Author     : amots
 */
-.rtl .col-sm-1, .rtl .col-sm-2, .rtl .col-sm-3, .rtl .col-sm-4, .rtl .col-sm-5, .rtl .col-sm-6, .rtl .col-sm-7, .rtl .col-sm-8, .rtl .col-sm-9, .rtl .col-sm-10, .rtl .col-sm-11, .rtl .col-sm-12 {
+.rtl .col-sm-1,
+.rtl .col-sm-2,
+.rtl .col-sm-3,
+.rtl .col-sm-4,
+.rtl .col-sm-5,
+.rtl .col-sm-6,
+.rtl .col-sm-7,
+.rtl .col-sm-8,
+.rtl .col-sm-9,
+.rtl .col-sm-10,
+.rtl .col-sm-11,
+.rtl .col-sm-12 {
     float: right;
 }
 
-.rtl .col-xs-1, .rtl .col-xs-2, .rtl .col-xs-3, .rtl .col-xs-4, .rtl .col-xs-5, .rtl .col-xs-6, .rtl .col-xs-7, .rtl .col-xs-8, .rtl .col-xs-9, .rtl .col-xs-10, .rtl .col-xs-11, .rtl .col-xs-12 {
+.rtl .col-xs-1,
+.rtl .col-xs-2,
+.rtl .col-xs-3,
+.rtl .col-xs-4,
+.rtl .col-xs-5,
+.rtl .col-xs-6,
+.rtl .col-xs-7,
+.rtl .col-xs-8,
+.rtl .col-xs-9,
+.rtl .col-xs-10,
+.rtl .col-xs-11,
+.rtl .col-xs-12 {
     float: right;
 }
 
-.rtl .col-md-1, .rtl .col-md-2, .rtl .col-md-3, .rtl .col-md-4, .rtl .col-md-5, .rtl .col-md-6, .rtl .col-md-7, .rtl .col-md-8, .rtl .col-md-9, .rtl .col-md-10, .rtl .col-md-11, .rtl .col-md-12 {
+.rtl .col-md-1,
+.rtl .col-md-2,
+.rtl .col-md-3,
+.rtl .col-md-4,
+.rtl .col-md-5,
+.rtl .col-md-6,
+.rtl .col-md-7,
+.rtl .col-md-8,
+.rtl .col-md-9,
+.rtl .col-md-10,
+.rtl .col-md-11,
+.rtl .col-md-12 {
     float: right;
 }
 
-.rtl .col-lg-1, .rtl .col-lg-2, .rtl .col-lg-3, .rtl .col-lg-4, .rtl .col-lg-5, .rtl .col-lg-6, .rtl .col-lg-7, .rtl .col-lg-8, .rtl .col-lg-9, .rtl .col-lg-10, .rtl .col-lg-11, .rtl .col-lg-12 {
+.rtl .col-lg-1,
+.rtl .col-lg-2,
+.rtl .col-lg-3,
+.rtl .col-lg-4,
+.rtl .col-lg-5,
+.rtl .col-lg-6,
+.rtl .col-lg-7,
+.rtl .col-lg-8,
+.rtl .col-lg-9,
+.rtl .col-lg-10,
+.rtl .col-lg-11,
+.rtl .col-lg-12 {
     float: right;
 }
 
@@ -232,7 +285,11 @@ a:not([class]), a:not([href]):not([class]):hover {
     /* Webkit */
 }
 
-a, h1, h2, h3, h4 {
+a,
+h1,
+h2,
+h3,
+h4 {
     color: #A94716 !important;
 }
 
@@ -305,7 +362,8 @@ body {
 }
 
 /*# sourceMappingURL=tractor.css.map */
-body.mceContentBody, .mce-content-body {
+body.mceContentBody,
+.mce-content-body {
     margin: 8px;
     font-size: 14px;
     font-family: Arial;
@@ -354,8 +412,8 @@ body.mceContentBody, .mce-content-body {
 
 
 .rtl .ms-auto {
-    margin-right: auto!important;
-    margin-left: unset!important;
+    margin-right: auto !important;
+    margin-left: unset !important;
 }
 
 /**
@@ -381,16 +439,19 @@ body.mceContentBody, .mce-content-body {
 .hide-md-2 {
     width: unset;
 }
+
 .hidden-mobile {
     display: none;
-  }
+}
+
 /*  X-Small devices (portrait phones, less than 576px)
 // No media query for `xs` since this is the default in Bootstrap */
 
- /* Small devices (landscape phones, 576px and up) */
+/* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
- .hide-md-2 {
-        width: 16.6666666667%;;
+    .hide-md-2 {
+        width: 16.6666666667%;
+        ;
     }
 }
 
@@ -398,21 +459,15 @@ body.mceContentBody, .mce-content-body {
 @media (min-width: 768px) {
     .hidden-mobile {
         display: block;
-      }
-   
+    }
+
 }
 
- /* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-    
-}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {}
 
- /* X-Large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
-    
-}
+/* X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {}
 
- /* XX-Large devices (larger desktops, 1400px and up) */
-@media (min-width: 1400px) {
-    
-}
+/* XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {}
