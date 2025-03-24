@@ -10,6 +10,11 @@ class ownershipController extends baseController
 
     private $user;
     private $mng;
+    var $errors;
+    var $messages;
+    var $rt;
+    var $permission;
+    var $renderer;
 
     public function __construct($registry)
     {
