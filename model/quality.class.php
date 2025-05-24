@@ -7,7 +7,6 @@
 class quality
 {
     private $rt;
-    public $errors = [];
     public $messages = [];
     private $request = null;
     private $menu = [
@@ -15,6 +14,7 @@ class quality
         'reusedPictures' => ['literal' => 'תמונות בשימוש כפול', 'callback' => 'renderReusedPictures'],
         'orphandPictures' => ['literal' => 'תמונות שלא בשימוש', 'callback' => 'renderOrphanPictures'],
         'nonMatchingFields' => ['literal' => 'שדות לא תואמים בין שפות', 'callback' => 'renderMisMatchedFields'],
+        'dumpTextSizeRatio' => ['literal' => 'פערים בהיקף טקסט', 'callback' => 'renderTextSizeRatio'],
         'dumpItemsList' => ['literal' => 'הורדת רשימת פריטים', 'callback' => 'dumpItemsList'],
         'dumpOwnership' => ['literal' => 'הצגת רשומות בעלות', 'callback' => 'renderOwnershipList'],
     ];
@@ -47,6 +47,7 @@ class quality
     }
     public function renderQualityPage()
     {
+        // $this->registry->template->qualityMenu = $this->request['literal'];
         if ($this->request) {
             $funcName = $this->menu[$this->request]['callback'];
             if (method_exists($this, $funcName)) {
@@ -124,8 +125,8 @@ class quality
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            $_SESSION['errors'][] = $ex->getTraceAsString();
-            $_SESSION['errors'][] = $stmt->errorInfo();
+            $this->messages[] = [2, $ex->getTraceAsString()];
+            $this->messages[] = [2, $stmt->errorInfo()];
         }
         $records = $stmt->fetchAll();
         return $records;
@@ -158,8 +159,9 @@ class quality
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            $_SESSION['errors'][] = $ex->getTraceAsString();
-            $_SESSION['errors'][] = $stmt->errorInfo();
+
+            $this->messages[] = [2, $ex->getTraceAsString()];
+            $this->messages[] = [2, $stmt->errorInfo()];
         }
         $records = $stmt->fetchAll();
         return $records;
@@ -218,14 +220,67 @@ class quality
         }
         return $diff;
     }
+    private function renderTextSizeRatio()
+    {
+        $ratio = 3;
+        $list = $this->getSizeMisMatchedFields($ratio);
+        $this->messages[] = [0,"Found ".sizeof($list)];
+        return $this->renderList($list);
+    }
+    private function getSizeMisMatchedFields($ratio)
+    {
+        $pdo = db::getInstance();
+        $sqlStr = <<<EOF
+                SELECT
+                    *,
+                    LENGTH (`PageHe`) AS length_he,
+                    LENGTH (`PageEn`) AS length_en,
+                    LENGTH (`PageHe`) / LENGTH (`PageEn`) AS ratio
+                FROM
+                    `items`
+                WHERE
+                    (
+                        (
+                            LENGTH (`PageHe`) IS NULL
+                            OR LENGTH (`PageHe`) = ''
+                        ) XOR (
+                            LENGTH (`PageEn`) IS NULL
+                            OR LENGTH (`PageEn`) = ''
+                        )
+                    )
+                    OR (
+                        NOT (
+                            LENGTH (`PageHe`) IS NULL
+                            OR LENGTH (`PageHe`) = ''
+                        )
+                        AND NOT (
+                            LENGTH (`PageEn`) IS NULL
+                            OR LENGTH (`PageEn`) = ''
+                        )
+                        AND NOT LENGTH (`PageHe`) / LENGTH (`PageEn`) BETWEEN 1 / $ratio AND $ratio
+                    )
+                EOF;
+        // debug::dump($sqlStr, 'sqlStr at ' . util::getCaller());
+        $stmt = $pdo->prepare($sqlStr);
+        try {
+            $stmt->execute();
+        } catch (Exception $ex) {
+
+            $this->messages[] = [2, $ex->getTraceAsString()];
+            $this->messages[] = [2, $stmt->errorInfo()];
+        }
+        $records = $stmt->fetchAll();
+        // debug::dump($records, 'records at ' . util::getCaller());
+        return $records;
+    }
     private function renderMisMatchedFields()
     {
         $fields2compare = [
             ['title' => 'כותר', 'field1' => 'caption_he', 'field2' => 'caption_en'],
             ['title' => 'יצרן', 'field1' => 'companyHe', 'field2' => 'companyEn'],
             ['title' => 'דגם', 'field1' => 'modelHe', 'field2' => 'modelEn'],
-            ['title' =>'מקור', 'field1' =>'sourceHe', 'field2'=>'sourceEn'],
-            ['title' =>'פירוט', 'field1' =>'PageHe', 'field2'=>'PageEn'],
+            ['title' => 'מקור', 'field1' => 'sourceHe', 'field2' => 'sourceEn'],
+            ['title' => 'פירוט', 'field1' => 'PageHe', 'field2' => 'PageEn'],
         ];
         $list = [];
         foreach ($fields2compare as $r) {
@@ -253,8 +308,9 @@ class quality
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            $_SESSION['errors'][] = $ex->getTraceAsString();
-            $_SESSION['errors'][] = $stmt->errorInfo();
+            
+            $this->messages[] = [2, $ex->getTraceAsString()];
+            $this->messages[] = [2, $stmt->errorInfo()];
         }
         $records = $stmt->fetchAll();
         return $records;

@@ -65,7 +65,7 @@ class User extends Password
             $_SESSION['permission'] = $row['permission'];
             return true;
         } else {
-            $_SESSION['errors'][] = 'failed to verify password';
+            $_SESSION['messages'][] = [2,'failed to verify password'];
             return FALSE;
         };
     }
@@ -81,7 +81,7 @@ class User extends Password
             return intval($_SESSION['permission']);
         } else {
             return 0;
-            $_SESSION['errors'][] = 'User must be authorized to access';
+            $_SESSION['messages'][] = [1,'User must be authorized to access'];
             header('Location: /login');
             exit();
         }
@@ -90,7 +90,7 @@ class User extends Password
     {
         $permission = self::permission();
         if ($permission and (($level == 0) or ($permission & $level))) return;
-        $_SESSION['errors'][] = 'User must be authorized to access';
+        $_SESSION['messages'][] = [1,'User must be authorized to access'];
         header('Location: /login');
         exit();
     }
@@ -128,7 +128,7 @@ class User extends Password
                 $user['memberID'] = null;
                 $new = true;
             } else {
-                $_SESSION['errors'] = 'Failed to verify token';
+                $_SESSION['messages'] = [2,'Failed to verify token'];
                 header('location: /mng/user');
             }
         } else {
@@ -164,7 +164,8 @@ class User extends Password
             'memberID' => $user['memberID'],
             'csrf_token' => $token,
             'userPermission' => $user['permission'],
-            'activeCheck' => (strtoupper($user['active']) == 'YES') ? 'checked' : NULL,
+            // 'activeCheck' => (strtoupper($user['active']) == 'YES') ? 'checked' : NULL,
+            'activeCheck' => (strtoupper($user['active']??'')=='YES') ? 'checked' : NULL,
             'active' => $user['active'],
             'email' => $user['email'],
             'username' => $user['username'],

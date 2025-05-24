@@ -111,7 +111,7 @@ class util
         $simplified = self::simplifyArray($multidim_array);
         foreach ($simplified as $key => $value) {
             if (self::IsNullOrEmptyString($value)) {
-               unset($simplified[$key]);
+                unset($simplified[$key]);
             }
         }
         return empty($simplified);
@@ -134,7 +134,7 @@ class util
     {
         $data = [];
         $messages = self::simplifyArray($messages);
-        foreach ($messages as $key => $value) {
+        foreach ($messages as  $value) {
             if (!self::IsNullOrEmptyString($value))
                 $data[] = <<<EOF
                     <div class="alert alert-info p-0" role="alert">{$value}</div>
@@ -143,6 +143,42 @@ class util
         return join(' ', $data);
     }
 
+    static function rendeWarning($messages)
+    {
+        $data = [];
+        $messages = self::simplifyArray($messages);
+        foreach ($messages as $key => $value) {
+            if (!self::IsNullOrEmptyString($value))
+                $data[] = <<<EOF
+                    <div class="alert alert-warning p-0 ltr" role="alert">{$value}</div>
+                    EOF;
+        }
+        return join(' ', $data);
+    }
+    static function renderAnnouncements($registry, $messages)
+    {
+        $registry->template->errors = self::renderErrors(self::messageSubset($messages, 2));
+        $registry->template->warnings = self::rendeWarning(self::messageSubset($messages, 1));
+        $registry->template->messages = self::renderMessages(self::messageSubset($messages, 0));
+    }
+    static function messageSubset($a, $key)
+    {
+        // debug::dump([$a, $key], "$a, $key ".self::getCaller());
+        /**
+         * 0 - ok
+         * 1 - notification
+         * 2 - error
+         */
+        $results = [];
+        $keys = self::simplifyArray($key);
+        foreach ($a as $tuple) {
+            foreach ($keys as $k) {
+                if (isset($tuple[0]) and $tuple[0] == $k)
+                    $results[] = $tuple[1];
+            }
+        }
+        return $results;
+    }
     static function balanceArrays($source, $n)
     {
         $new = [];
@@ -244,9 +280,18 @@ class util
     static function monthName($num)
     {
         $month = [
-            1 => 'ינואר', 2 => 'פברואר', 3 => 'מרץ', 4 => 'אפריל', 5 => 'מאי',
-            6 => 'יוני', 7 => 'יולי', 8 => 'אוגוסט', 9 => 'ספטמבר', 10 => 'אוקטובר',
-            11 => 'נובמבר', 12 =>
+            1 => 'ינואר',
+            2 => 'פברואר',
+            3 => 'מרץ',
+            4 => 'אפריל',
+            5 => 'מאי',
+            6 => 'יוני',
+            7 => 'יולי',
+            8 => 'אוגוסט',
+            9 => 'ספטמבר',
+            10 => 'אוקטובר',
+            11 => 'נובמבר',
+            12 =>
             'דצמבר'
         ];
         if ($num > 0 and $num <= 12) {

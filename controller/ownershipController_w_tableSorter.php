@@ -7,11 +7,12 @@
  */
 class ownershipController extends baseController
 {
-    private $rt;
-    var $errors = [];
-    var $messages = [];
+
     private $user;
     private $mng;
+    var $errors;
+    var $messages;
+    var $rt;
     var $permission;
     var $renderer;
 
@@ -105,28 +106,14 @@ class ownershipController extends baseController
                     ['literal' => Lang::trans('mng.ownershipAll'), 'link' => NULL]
                 );
                 $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs($baseBread);
-                /* $renderer = new template_renderer(
+                $renderer = new template_renderer(
                     __SITE_PATH . '/includes/tableSortSetUp.html',
                     [
                         'tableID' => 'allOwnerships',
                         'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
                     ]
-                ); */
-                // $this->registry->template->headerStuff = $renderer->render();
-                $this->registry->template->headerStuff = <<<EOF
-                    <script src="/resources/DataTables-2/datatables.js"></script>
-                    <script>
-                        $(document).ready(function ()
-                        {
-                            new DataTable('#allOwnerships',{
-                            "language" : {
-                                    'url' : '/resources/DataTables-2/plug-ins/he.json',
-                                    },
-                            });
-                        }
-                        );
-                    </script>
-                    EOF;
+                );
+                $this->registry->template->headerStuff = $renderer->render();
                 $this->registry->template->content = $ownObj->listAllOwnershipItems();
             } else { /* no params show search */
                 $ownership_id = NULL;

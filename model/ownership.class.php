@@ -10,8 +10,13 @@ class ownership
 {
 
     private $searchData = [
-        'item_id', 'PageHe', 'registration', 'vin', 'engine_number',
-        'sn', 'companyHe'
+        'item_id',
+        'PageHe',
+        'registration',
+        'vin',
+        'engine_number',
+        'sn',
+        'companyHe'
     ];
     private $table = 'ownership';
     private $registry;
@@ -123,8 +128,14 @@ class ownership
             }
         }
         $elements2get = [
-            'item_id', 'caption_he', 'companyHe', 'modelHe', 'sourceHe', 'registration',
-            'year', 'PageHe'
+            'item_id',
+            'caption_he',
+            'companyHe',
+            'modelHe',
+            'sourceHe',
+            'registration',
+            'year',
+            'PageHe'
         ];
         $elementsStr = '`' . join('`,`', $elements2get) . '`';
         $sql = "SELECT {$elementsStr} FROM items WHERE {$column} LIKE '%{$searchStr}%';";
@@ -152,10 +163,12 @@ class ownership
         $pdo = db::getInstance();
         $sqlStr = "SELECT * FROM `ownership` WHERE `ownership_id` = :ownership_id LIMIT 1";
         $stmt = $pdo->prepare($sqlStr);
+        $ownership_id_val = intval($ownership_id);
         try {
             $stmt->bindParam(
                 ':ownership_id',
-                intval($ownership_id),
+                $ownership_id_val,
+                // intval($ownership_id),
                 PDO::PARAM_INT
             );
             $stmt->execute();
@@ -181,7 +194,7 @@ class ownership
             FROM
                 `ownership`
             JOIN `items` ON items.item_id = ownership.item_id
-            ORDER BY `item_id`
+            ORDER BY `item_id` 
             EOT;
 
         $stmt = $pdo->prepare($sqlStr);
@@ -196,33 +209,83 @@ class ownership
             $this['errors'][] = $exc->getMessage();
         }
         $items = $stmt->fetchAll();
-        return $this->renderListAll($items);
+        $sievedItems = $this->sieveCurrentOwnerships($items);
+        return $this->renderListAll($sievedItems);
+    }
+    private function sieveCurrentOwnerships($items)
+    {
+        // Debug::dump($items, 'Items in ' . util::getCaller());
+        // Debug::dump(date('Y-m-d', mktime(0, 0, 0, 0, 0, 1900)), util::getCaller());
+        $detected = [];
+        $returnItems = [];
+        foreach ($items as $key => $item) {
+            $UnixTimestamp =  mktime(0, 0, 0, $item['transaction_month'] ?? 0, $item['transaction_day'] ?? 0, $item['transaction_year'] ?? 1900);
+            $detected[$item['item_id']][] = [ // group all items with same id
+                // 'id' => $item['item_id'],
+                'time' => $UnixTimestamp,
+                // 'ownership_id' => $item['ownership_id'],
+                // 'date' => date('Y-m-d', $UnixTimestamp),
+                'item' =>$item,
+            ];
+            // $returnItems[] = $item;
+        }
+        // Debug::dump($detected, 'detected in ' . util::getCaller());
+        foreach ($detected as $key=>$dItem) { // sort the gouped items. most recent is the last (end) element
+            if (count($dItem) > 1) {
+                usort($dItem, function ($a, $b) {
+                    return  $a['time'] <=> $b['time'];
+                });
+                $detected[$key] = $dItem;
+            }
+            // Debug::dump($dItem, 'dItem in ' . util::getCaller());
+        }
+        // Debug::dump($detected, 'detected in ' . util::getCaller());
+        foreach ($detected as $dItem){
+            if (count($dItem) > 1) {
+                $returnItems[] = end($dItem)['item'];
+            } else {
+                $returnItems[] = $dItem[0]['item'];
+            }
+        }
+        // Debug::dump($returnItems, 'returnItems in ' . util::getCaller());
+        return $returnItems;
     }
     private function renderListAll($items)
     {
         $headerItems = ['פריט', 'רישום', 'שם פריט', 'ברשות', 'מאז'];
-
+        // Debug::dump(sizeof($items), util::getCaller());
         $table_pre = '<table id="allOwnerships" class="table table-sm table-hover table-responsive tablesorter tablesorter-default">';
         $table_post = '</table>';
-
         $thead = '<thead><tr><th>' . join('</th><th>', $headerItems) . '</th>' . '</tr></thead>';
         $formatedItem = [];
-        $acc = [];
+        // $acc = [];
         foreach ($items as $key => $item) {
             $id = $item['item_id'];
-            $time = mktime(0, 0, 0, $item['transaction_month'], $item['transaction_day'], $item['transaction_year']);
-            if (isset($formatedItem[$id])) {
+            // $time = mktime(
+            //     0,
+            //     0,
+            //     0,
+            //     $item['transaction_month'],
+            //     $item['transaction_day'],
+            //     $item['transaction_year']
+            // );
+            /* if (isset($formatedItem[$id])) {
                 if ($acc[$id]['time'] > $time) {
-                    break;
+                    // break;
                 }
-            }
-            $acc[$id] = [
-                'time' => $time,
-                'date' => date('Y-m-d', $time),
-                'y' => $item['transaction_year'],
-                'm' => $item['transaction_month'],
-                'd' => $item['transaction_day']
-            ];
+            } */
+            // if (isset($formatedItem[$id])) {
+            //     if ($acc[$id]['time'] > $time) {
+            // continue;
+            // } 
+            // }
+            // $acc[$id] = [
+            //     'time' => $time,
+            //     'date' => date('Y-m-d', $time),
+            //     'y' => $item['transaction_year'],
+            //     'm' => $item['transaction_month'],
+            //     'd' => $item['transaction_day']
+            // ];
             $name = collection::renderTitle($item);
             $since = util::renderIncompeteDate(
                 $item['transaction_year'],
@@ -233,9 +296,9 @@ class ownership
                 <a href="/collection/item/{$id}" target=_blank>{$name}</a>
                 EOF;
             $ownershipEditLink = <<<EOF
-                <a href="/ownership/{$id}">$this->editIcon {$id}</a>
+                <a href="/ownership/{$id}" target="_blank">$this->editIcon {$id}</a>
                 EOF;
-            $formatedItem[$id] = <<<EOF
+            $formatedItem[] = <<<EOF
                 <td>{$ownershipEditLink}</td><td>{$item['registration']}</td><td>{$itemLink}</td><td>{$item['owner']}</td><td>{$since}</td>
                 EOF;
         }
@@ -260,8 +323,6 @@ class ownership
        //        Debug::dump($emptyItem, ' fields in '.__METHOD__ . ' line ' . __LINE__); */
         return $emptyItem;
     }
-
-
 
     private function getAllOwnRecordItem($item_id)
     {
@@ -324,14 +385,16 @@ class ownership
             $stmt->bindParam(':item_id', $id, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $exc) {
-            Debug::dump(
-                $stmt->errorInfo(),
-                'error in ' . __METHOD__ . ' line ' . __LINE__
-            );
-            $this['errors'][] = $stmt->errorInfo();
-            $this['errors'][] = $exc->getMessage();
+            // Debug::dump(
+            //     $stmt->errorInfo(),
+            //     'error in ' . __METHOD__ . ' line ' . __LINE__
+            // );
+            // $this->errors[] = $stmt->errorInfo();
+            // $this->errors[] = $exc->getMessage();
         }
         $item = $stmt->fetch();
-        return $item['owner'];
+        if (isset($item['owner'])){
+        return $item['owner'];}
+        
     }
 }

@@ -1,3 +1,11 @@
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".jumbotron").addClass('d-none');
+  });
+</script>
+
+
+
 <div class="mx-3">
   <?= $breadCrumbs ?>
   <?= $mngNavBar ?>
@@ -5,11 +13,16 @@
 <div class="container-fluid">
   <div class="row mx-1">
     <div class="col">
-      <div id="messages" class="text-center"><?= $messages ?></div>
-      <div id="errors" class="text-center"><?= $errors ?></div>
+      <div id="messages" class="text-center">
+        <?= $messages ?>
+      </div>
+      <div id="errors" class="text-center">
+        <?= $errors ?>
+      </div>
     </div>
 
   </div>
-  <div class="row mx-1"><?= $content ?></div>
+  <div class="row mx-1">
+    <?= $content ?>
+  </div>
 </div>
-

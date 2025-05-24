@@ -9,7 +9,7 @@ class loginController extends baseController
 {
 
     private $user;
-
+    var $rt;
     function __construct($registry)
     {
         //        Debug::dump($_SESSION, 'session in ' . __METHOD__ . ' line ' . __LINE__);

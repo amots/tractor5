@@ -61,29 +61,16 @@ class inventoryController extends baseController
             });
             </script>
             EOF;
-        // $renderer = new template_renderer(
-        //     __SITE_PATH . '/includes/tableSortSetUp.html',
-        //     [
-        //         'tableID' => 'list2Sort',
-        //         'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
-        //     ]
-        // );
+        $renderer = new template_renderer(
+            __SITE_PATH . '/includes/tableSortSetUp.html',
+            [
+                'tableID' => 'list2Sort',
+                'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
+            ]
+        );
 
-        // $this->registry->template->headerStuff = $itemScript . $renderer->render();
-        $this->registry->template->headerStuff = <<<EOF
-        <script src="/resources/DataTables-2/datatables.js"></script>
-        <script>
-            $(document).ready(function ()
-            {
-                new DataTable('#list2Sort',{
-                "language" : {
-                        'url' : '/resources/DataTables-2/plug-ins/he.json',
-                        },
-                });
-            }
-            );
-        </script>
-        EOF;
+        $this->registry->template->headerStuff = $itemScript . $renderer->render();
+
         $this->registry->template->content = $this->renderIndexContent();
         $this->renderTemplateAnnouncements();
         $this->registry->template->show('/envelope/head');
@@ -164,9 +151,9 @@ class inventoryController extends baseController
         $form = new form('items');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'][] = [0,"record {$form->last_id} save alright"];
+            $_SESSION['messages'] = "record {$form->last_id} save alright";
         } else {
-            $_SESSION['messages'][] = [2,$result];
+            $_SESSION['errors'] = $result;
         }
         header('location: /inventory/editItem/' . $form->last_id);
     }
@@ -205,9 +192,9 @@ class inventoryController extends baseController
         $form = new form('pictures');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'][] = [0,"picture record {$form->last_id} for item {$item_id} was saved alright"];
+            $_SESSION['messages'] = "picture record {$form->last_id} for item {$item_id} was saved alright";
         } else {
-            $_SESSION['messages'] = [2,print_r($result,true)];
+            $_SESSION['errors'] = $result;
         }
         header('location: /inventory/editPics/' . $item_id);
     }
@@ -219,15 +206,15 @@ class inventoryController extends baseController
         if (util::validatePostToken('token', 'csrf_token')) {
             $response = upload::handleUpload(__SITE_PATH . '/assets/media/pics/items');
             if ($response['success']) {
-                $_SESSION['messages'][] = [0,$response['response']];
+                $_SESSION['messages'][] = $response['response'];
                 $itemPics->registerItemPic($item_id, $response['fileName']);
-                $_SESSION['messages'][] = [0,$itemPics->errors];
+                $_SESSION['messages'][] = $itemPics->errors;
             } else {
-                $_SESSION['messages'][] = [2,'Failed to upload file'];
-                $_SESSION['messages'][] = [2,$response['response']];
+                $_SESSION['messages'][] = 'Failed to upload file';
+                $_SESSION['messages'][] = $response['response'];
             }
         } else {
-            $_SESSION['errors'][] = 'Token Failed in ' . __METHOD__ . ' line ' . __LINE__;
+            $_SESSION['messages'][] = 'Token Failed in ' . __METHOD__ . ' line ' . __LINE__;
         }
         unset($_SESSION['csrf_token']);
         header('location: /inventory/editPics/' . $item_id);

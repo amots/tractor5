@@ -1,10 +1,10 @@
 <?php
 
-    /**
-     * Description of mngController
-     *
-     * @author amots
-     */
+/**
+ * Description of mngController
+ *
+ * @author amots
+ */
 class mngController extends baseController
 {
 
@@ -12,15 +12,16 @@ class mngController extends baseController
     private $rt;
     private $renderer;
     private $errors = [];
-    private $messages = [];
+    private $messages =[];
     private $mng;
     private $permission;
 
     public function __construct($registry)
     {
         parent::__construct($registry);
-        $this->messages[] = isset($_SESSION['messages']) ?
-            $_SESSION['messages'] : NULL;
+         if (isset($_SESSION['messages'])) {
+            $this->messages = $_SESSION['messages'];
+        }
         $this->errors[] = isset($_SESSION['errors']) ?
             $_SESSION['errors'] : NULL;
         unset($_SESSION['messages']);
@@ -41,7 +42,7 @@ class mngController extends baseController
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => NULL],
         ]);
-        $this->renderTemplateAnnouncements();
+         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->content = NULL; //'<pre>' . print_r($_SESSION, true) . '</pre>';
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
@@ -107,7 +108,8 @@ class mngController extends baseController
             $this->registry->template->content = $formatedList;
         } else {
             $this->registry->template->content = NULL;
-        }
+        } 
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/content');
         $this->registry->template->show('/envelope/bottom');
@@ -116,7 +118,7 @@ class mngController extends baseController
     public function editArticle()
     {
         User::checkAuthorization(User::permission_administrator);
-        if (isset($_POST['action']) and $_POST['action'] == 'storeArticle'){
+        if (isset($_POST['action']) and $_POST['action'] == 'storeArticle') {
             $this->articleUpdate();
         }
         $indexAt = 2;
@@ -140,7 +142,7 @@ class mngController extends baseController
         $essay = new essay();
         $this->registry->template->content = $essay->renderArticleEditContent($article_id);
         $this->errors[] = $essay->get_errors();
-        $this->renderTemplateAnnouncements();
+         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -174,10 +176,11 @@ class mngController extends baseController
             ['literal' => $pageTitle, 'link' => NULL],
         ]);
 
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $highlight->renderHighlightEditContent($highlights_id);
+         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -207,10 +210,11 @@ class mngController extends baseController
             ['literal' => Lang::trans('mng.announcements'), 'link' => '/mng/content/announcementsList'],
             ['literal' => $pageTitle, 'link' => NULL],
         ]);
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $announcement->renderEditAnnouncementContent($news_id);
+         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -221,7 +225,7 @@ class mngController extends baseController
 
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
         // Debug::dump($_POST, 'post in ' . util::getCaller());
-        $returnId = filter_input(INPUT_POST,'article_id',FILTER_VALIDATE_INT);
+        $returnId = filter_input(INPUT_POST, 'article_id', FILTER_VALIDATE_INT);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
             $this->errors[] = 'Failed to validate token';
@@ -234,7 +238,7 @@ class mngController extends baseController
 
         if (util::is_array_empty($this->errors)) {
             // Debug::dump("record {$form->last_id} save alright", 'in ' . util::getCaller());
-            $_SESSION['messages'] = "record {$form->last_id} save alright";
+            $_SESSION['messages'] = [0,"record {$form->last_id} save alright"];
             // $returnId = $form->last_id;
         } else {
             // Debug::dump("Errors found", 'in ' . util::getCaller());
@@ -257,7 +261,7 @@ class mngController extends baseController
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
             //            $this->messages[] = "record {$form->last_id} save alright";
-            $_SESSION['messages'] = "record {$form->last_id} save alright";
+            $this->messages[] = [0,"record {$form->last_id} save alright"];
         } else {
             //            $this->errors[] = $result;
             $_SESSION['errors'] = $result;
@@ -277,9 +281,9 @@ class mngController extends baseController
         $form = new form('news');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = "record {$form->last_id} save alright";
+            $_SESSION['messages'] =[0, "record {$form->last_id} save alright"];
         } else {
-            $_SESSION['errors'] = $result;
+            $_SESSION['errors'] = [2,$result];
         }
         header('location: /mng/editAnnouncemet/' . $form->last_id);
     }
@@ -321,11 +325,12 @@ class mngController extends baseController
             ['literal' => Lang::trans('mng.briefs'), 'link' => '/mng/content/briefsList'],
             ['literal' => $pageTitle, 'link' => NULL],
         ]);
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
         $this->registry->template->pageTitle = $pageTitle;
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $brief->renderEditBrief($briefs_id);
+         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -335,25 +340,27 @@ class mngController extends baseController
 
     public function quality()
     {
-        User::checkAuthorization(User::permission_inventory);   
+        User::checkAuthorization(User::permission_inventory);
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
             ['literal' => Lang::trans('mng.quality'), 'link' => NULL],
         ]);
         $this->registry->template->pageTitle = Lang::trans('mng.quality');
-        $renderer = new template_renderer(__SITE_PATH . '/includes/tableSortSetUp.html',
-                [
-            'tableID' => 'list2Sort',
-            'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
-        ]);
+        $renderer = new template_renderer(
+            __SITE_PATH . '/includes/tableSortSetUp.html',
+            [
+                'tableID' => 'list2Sort',
+                'options' => "sortList:[[0,0]],headers: {'.noSort': {sorter: false}}",
+            ]
+        );
         $this->registry->template->headerStuff = $renderer->render();
         $qualityModel = new quality();
         $this->registry->template->qualityMenu = $qualityModel->renderQualityMenu();
         $this->registry->template->content = $qualityModel->renderQualityPage();
+        $this->messages = array_merge($this->messages, $qualityModel->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
 
-        $this->renderTemplateAnnouncements();
-        
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/quality');
         $this->registry->template->show('/envelope/bottom');
@@ -370,7 +377,7 @@ class mngController extends baseController
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
         ];
         if (isset($this->rt[$indexAt]) and !util::IsNullOrEmptyString($this->rt[$indexAt])) {
-            $userName = filter_var($this->rt[$indexAt], FILTER_SANITIZE_STRING);
+            $userName = filter_var($this->rt[$indexAt], FILTER_VALIDATE_INT);
             $content = $this->user->renderEditUserPermission($userName);
             $baseCrumb[] = ['literal' => lang::trans('mng.user'), 'link' => '/mng/user'];
             $baseCrumb[] = ['literal' => $userName, 'link' => NULL];
@@ -384,7 +391,8 @@ class mngController extends baseController
 
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs($baseCrumb);
         $this->registry->template->content = $content;
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -400,15 +408,14 @@ class mngController extends baseController
         unset($_SESSION['csrf_token']);
         $form = new form('members');
         $convertedData = [];
-        foreach($_POST as $key=>$value) {
+        foreach ($_POST as $key => $value) {
             $cValue = ($key == 'password') ? password_hash($value, PASSWORD_BCRYPT) : $_POST[$key];
             $convertedData[$key] = $cValue;
-
         }
-       
+
         $result = $form->storeData($convertedData);
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = "record {$form->last_id} save alright";
+            $_SESSION['messages'] = [0,"record {$form->last_id} save alright"];
         } else {
             $_SESSION['errors'] = $result;
         }
