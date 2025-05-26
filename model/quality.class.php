@@ -222,16 +222,51 @@ class quality
     }
     private function renderTextSizeRatio()
     {
-        $ratio = 3;
-        $list = $this->getSizeMisMatchedFields($ratio);
-        $this->messages[] = [0,"Found ".sizeof($list)];
-        return $this->renderList($list);
+        $wordRatio = 3;
+        $lenRatio = 5;
+        // util::var_dump_pre($_GET, util::getCaller());
+        $rt = explode('/', $_GET['rt']);
+        // util::var_dump_pre($rt, util::getCaller());
+        $wordRatio = filter_input(INPUT_GET, 'word', FILTER_VALIDATE_INT) ?? $wordRatio;
+        $lenRatio = filter_input(INPUT_GET, 'len', FILTER_VALIDATE_INT) ?? $lenRatio;
+        // $this->messages[] = [0, "word ratio: {$wordRatio}. Length raio: {$lenRatio}"];
+        $list = $this->getSizeMisMatchedFields($lenRatio);
+        $list2return = $this->evaluateSizeMisMatch($list, $wordRatio);
+        $this->messages[] = [0, "Found: " . sizeof($list2return)];
+        usort($list2return, function ($a, $b) {
+            return  $a['word_ratio'] <=> $b['word_ratio'];
+        });
+        $renderer = new template_renderer(__SITE_PATH . '/includes/mng/wordRatioInput.html');
+        $renderer->viewData = ['lenRatio'=>$lenRatio,'wordRatio'=>$wordRatio];
+        return $renderer->render() . $this->renderList($list2return);
     }
-    private function getSizeMisMatchedFields($ratio)
+    private function evaluateSizeMisMatch($list, $wordRatio)
+    {
+        // debug::dump($list, util::getCaller());
+        $wList = [];
+        foreach ($list as $item) {
+            $words_he = util::IsNullOrEmptyString($item["PageHe"]) ? 0 : str_word_count($item["PageHe"]);
+            // $tmp["length_en"] = $item["length_en"];
+            $words_en = util::IsNullOrEmptyString($item["PageEn"]) ? 0 : str_word_count($item["PageEn"]);
+            try {
+                $item['word_ratio'] = $words_he / $words_en;
+            } catch (DivisionByZeroError $e) {
+                $item['word_ratio'] =  null;
+            }
+            if (!$item['word_ratio'] or (($item['word_ratio'] > $wordRatio) or ($item['word_ratio'] < 1 / $wordRatio))) {
+                $wList[] = $item;
+            }
+        }
+
+        // debug::dump(print_r($wList, true), 'wList at ' . util::getCaller());
+        return $wList;
+    }
+
+    private function getSizeMisMatchedFields($lenRatio)
     {
         $pdo = db::getInstance();
         $sqlStr = <<<EOF
-                SELECT
+        SELECT
                     *,
                     LENGTH (`PageHe`) AS length_he,
                     LENGTH (`PageEn`) AS length_en,
@@ -257,9 +292,10 @@ class quality
                             LENGTH (`PageEn`) IS NULL
                             OR LENGTH (`PageEn`) = ''
                         )
-                        AND NOT LENGTH (`PageHe`) / LENGTH (`PageEn`) BETWEEN 1 / $ratio AND $ratio
+                        AND NOT LENGTH (`PageHe`) / LENGTH (`PageEn`) BETWEEN 1 / $lenRatio AND $lenRatio
                     )
-                EOF;
+        EOF;
+
         // debug::dump($sqlStr, 'sqlStr at ' . util::getCaller());
         $stmt = $pdo->prepare($sqlStr);
         try {
@@ -308,7 +344,7 @@ class quality
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            
+
             $this->messages[] = [2, $ex->getTraceAsString()];
             $this->messages[] = [2, $stmt->errorInfo()];
         }

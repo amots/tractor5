@@ -54,7 +54,7 @@ class search
             return NULL;
         }
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'][] = [2,'failed to validate token'];
+            $_SESSION['messages'][] = [2,'failed to validate token'];
             header('location: ' . $_SERVER['REQUEST_URI']);
         }
         unset($_SESSION['csrf_token']);

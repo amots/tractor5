@@ -66,7 +66,7 @@ class item_pic
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            $_SESSION['errors'][] = [2,print_r($ex->getMessage(),true)];
+            $_SESSION['messages'][] = [2,print_r($ex->getMessage(),true)];
         }
     }
 

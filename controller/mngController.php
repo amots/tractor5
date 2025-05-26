@@ -12,17 +12,17 @@ class mngController extends baseController
     private $rt;
     private $renderer;
     private $errors = [];
-    private $messages =[];
+    private $messages = [];
     private $mng;
     private $permission;
 
     public function __construct($registry)
     {
         parent::__construct($registry);
-         if (isset($_SESSION['messages'])) {
+        if (isset($_SESSION['messages'])) {
             $this->messages = $_SESSION['messages'];
         }
-        $this->errors[] = isset($_SESSION['errors']) ?
+        $this->errors = isset($_SESSION['errors']) ?
             $_SESSION['errors'] : NULL;
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
@@ -42,7 +42,7 @@ class mngController extends baseController
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => NULL],
         ]);
-         util::renderAnnouncements($this->registry, $this->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->content = NULL; //'<pre>' . print_r($_SESSION, true) . '</pre>';
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
@@ -108,7 +108,7 @@ class mngController extends baseController
             $this->registry->template->content = $formatedList;
         } else {
             $this->registry->template->content = NULL;
-        } 
+        }
         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/content');
@@ -142,7 +142,7 @@ class mngController extends baseController
         $essay = new essay();
         $this->registry->template->content = $essay->renderArticleEditContent($article_id);
         $this->errors[] = $essay->get_errors();
-         util::renderAnnouncements($this->registry, $this->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -180,7 +180,7 @@ class mngController extends baseController
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $highlight->renderHighlightEditContent($highlights_id);
-         util::renderAnnouncements($this->registry, $this->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -214,7 +214,7 @@ class mngController extends baseController
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $announcement->renderEditAnnouncementContent($news_id);
-         util::renderAnnouncements($this->registry, $this->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -238,11 +238,11 @@ class mngController extends baseController
 
         if (util::is_array_empty($this->errors)) {
             // Debug::dump("record {$form->last_id} save alright", 'in ' . util::getCaller());
-            $_SESSION['messages'] = [0,"record {$form->last_id} save alright"];
+            $_SESSION['messages'] = [0, "record {$form->last_id} save alright"];
             // $returnId = $form->last_id;
         } else {
             // Debug::dump("Errors found", 'in ' . util::getCaller());
-            $_SESSION['errors'] = $this->errors;
+            $_SESSION['messages'] = [2, $this->errors];
         }
         // Debug::dump($returnId, 'return id in ' . util::getCaller());
         // exit;
@@ -261,10 +261,10 @@ class mngController extends baseController
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
             //            $this->messages[] = "record {$form->last_id} save alright";
-            $this->messages[] = [0,"record {$form->last_id} save alright"];
+            $this->messages[] = [0, "record {$form->last_id} save alright"];
         } else {
             //            $this->errors[] = $result;
-            $_SESSION['errors'] = $result;
+            $_SESSION['messages'] = [2, $result];
         }
         //        $this->renderTemplateAnnouncements();
         header('location: /mng/editHighlight/' . $form->last_id);
@@ -274,16 +274,16 @@ class mngController extends baseController
     {
         //        Debug::dump($_POST,'post in ' . __METHOD__ . ' line ' . __LINE__);
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'] = 'Failed to validate token';
+            $_SESSION['messages'] = [2, 'Failed to validate token'];
             return;
         }
         unset($_SESSION['csrf_token']);
         $form = new form('news');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] =[0, "record {$form->last_id} save alright"];
+            $_SESSION['messages'] = [0, "record {$form->last_id} save alright"];
         } else {
-            $_SESSION['errors'] = [2,$result];
+            $_SESSION['messages'] = [2, $result];
         }
         header('location: /mng/editAnnouncemet/' . $form->last_id);
     }
@@ -330,7 +330,7 @@ class mngController extends baseController
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/tinymce.html");
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $brief->renderEditBrief($briefs_id);
-         util::renderAnnouncements($this->registry, $this->messages);
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -341,6 +341,10 @@ class mngController extends baseController
     public function quality()
     {
         User::checkAuthorization(User::permission_inventory);
+        // util::var_dump_pre($_GET, util::getCaller());
+        // $rt = explode('/',$_GET['rt']);
+        // util::var_dump_pre($rt, util::getCaller());
+    
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
@@ -401,7 +405,7 @@ class mngController extends baseController
     private function userUpdate()
     {
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'] = 'Failed to validate token ' . util::getCaller();
+            $_SESSION['messages'] = [2, 'Failed to validate token ' . util::getCaller()];
             header('location: /mng/user/');
             exit();
         }
@@ -415,19 +419,19 @@ class mngController extends baseController
 
         $result = $form->storeData($convertedData);
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = [0,"record {$form->last_id} save alright"];
+            $_SESSION['messages'] = [0, "record {$form->last_id} save alright"];
         } else {
-            $_SESSION['errors'] = $result;
+            $_SESSION['messages'] = [2, $result];
         }
         header('location: /mng/user/');
         exit();
     }
 
-    private function renderTemplateAnnouncements()
+  /*   private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);
-    }
+    } */
 
     public function hash()
     {

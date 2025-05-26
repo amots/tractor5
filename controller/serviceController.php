@@ -18,10 +18,10 @@ class serviceController extends baseController
     public function __construct($registry)
     {
         parent::__construct($registry);
-        $this->messages[] = isset($_SESSION['messages']) ?
-            $_SESSION['messages'] : NULL;
-        $this->errors[] = isset($_SESSION['errors']) ?
-            $_SESSION['errors'] : NULL;
+        $this->messages = isset($_SESSION['messages']) ?
+            $_SESSION['messages'] : [];
+        $this->errors = isset($_SESSION['errors']) ?
+            $_SESSION['errors'] : [];
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
         $this->user = new User();
@@ -45,7 +45,8 @@ class serviceController extends baseController
         $this->registry->template->onHoldList = $this->service->renderOnHoldListBoard();
         //        $this->registry->template->errors = util::renderErrors($this->errors);
         //        $this->registry->template->messages = util::renderMessages($this->messages);
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('service/dashboard');
         $this->registry->template->show('/envelope/bottom');
@@ -68,7 +69,8 @@ class serviceController extends baseController
         // $this->registry->template->content = $this->service->renderServiceSearchPage();
         $this->errors[] = $this->service->errors;
         $this->messages[] = $this->service->messages;
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('service/serviceSearch');
         $this->registry->template->show('/envelope/bottom');
@@ -118,7 +120,8 @@ class serviceController extends baseController
         );
         $this->messages[] = $this->service->messages;
         $this->errors[] = $this->service->errors;
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('service/serviceSearch');
         $this->registry->template->show('/envelope/bottom');
@@ -131,7 +134,7 @@ class serviceController extends baseController
         $item_id = filter_input(INPUT_POST, 'item_id');
         $service_id = filter_input(INPUT_POST, 'service_id');
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $storeErrors[] = $_SESSION['errors'][] = 'Failed to validate csrf token';
+            $storeErrors[] = $_SESSION['messages'][] = [2,'Failed to validate csrf token'];
         } else {
             $form = new form('service');
             $storeErrors[] = $form->storePostedData();
@@ -140,10 +143,10 @@ class serviceController extends baseController
         unset($_SESSION['csrf_token']);
 
         if (util::is_array_empty($storeErrors)) {
-            $_SESSION['messages'][] = "Record {$service_id} stored OK";
+            $_SESSION['messages'][] = [0,"Record {$service_id} stored OK"];
         } else {
-            $_SESSION['errors'][] = "Failed to store {$service_id}";
-            $_SESSION['errors'][] = $storeErrors;
+            $_SESSION['messages'][] = [2,"Failed to store {$service_id}"];
+            $_SESSION['messages'][] = [2,$storeErrors];
         }
 
         $newUrl = "/service/editService/{$item_id}/{$service_id}";
@@ -168,16 +171,17 @@ class serviceController extends baseController
         );
         $this->registry->template->headerStuff = $renderer->render();
         $this->registry->template->content = $this->service->renderListAllPage();
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('service/serviceList');
         $this->registry->template->show('/envelope/bottom');
     }
-    private function renderTemplateAnnouncements()
+   /*  private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);
-    }
+    } */
 
     /*  private function setMenuPermissions()
     {

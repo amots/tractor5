@@ -309,6 +309,18 @@ class util
         return "{$class}::{$caller} line {$line}";
     }
 
+    static function var_dump_pre($mixed = null, $str = null)
+    {
+        $var = print_r($mixed, true);
+        $out = <<<EOF
+            <div class="ltr">
+                <h4>{$str}</h4>
+                <pre>{$var}</pre>
+            </div>
+            EOF;
+        echo $out;
+        return null;
+    }
     static function printR($data, $txt = NULL)
     {
         $dbt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);

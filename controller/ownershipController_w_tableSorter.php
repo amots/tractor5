@@ -19,9 +19,9 @@ class ownershipController extends baseController
     public function __construct($registry)
     {
         parent::__construct($registry);
-        $this->messages[] = isset($_SESSION['messages']) ?
-            $_SESSION['messages'] : NULL;
-        $this->errors[] = isset($_SESSION['errors']) ?
+        $this->messages = isset($_SESSION['messages']) ?
+            $_SESSION['messages'] : [];
+        $this->errors = isset($_SESSION['errors']) ?
             $_SESSION['errors'] : NULL;
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
@@ -128,7 +128,8 @@ class ownershipController extends baseController
                 $this->registry->template->content = $listAllAnchor . $searchPage;
             }
         }
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -147,14 +148,14 @@ class ownershipController extends baseController
         if (util::is_array_empty($result)) {
             $_SESSION['messages'][] = [0,"record {$form->last_id} save alright"];
         } else {
-            $_SESSION['messages'] = [2,print_r($result,true)];
+            $_SESSION['messages'][] = [2,print_r($result,true)];
         }
         header("location: {$caller}/{$form->last_id}");
     }
 
-    private function renderTemplateAnnouncements()
+  /*   private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);
-    }
+    } */
 }

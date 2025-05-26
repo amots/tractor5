@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        let lenRatio;
+        let wordRatio;
+        $('#sendValues').on('click', function(){
+            lenRatio = $('#lenRatio').val();
+            wordRatio = $('#wordRatio').val();
+            // console.log(`lenRatio ${lenRatio} `)
+            window.location.replace(`/mng/quality/dumpTextSizeRatio?word=${wordRatio}&len=${lenRatio}`);
+        });
+    });
+</script>
+<style>
+    .form-floating>label {right:0; left: auto;}
+</style>
+<div>
+    <form class="row">
+        <div class="form-floating col-2">
+            <input type="number" class="form-control" id="wordRatio"
+                value="<?= $wordRatio ?>">
+            <label for="wordRatio">יחס מספר מילים</label>
+        </div>
+
+        <div class="form-floating col-2">
+            <input type="number" class="form-control" id="lenRatio"
+                value="<?= $lenRatio ?>">
+            <label for="lenRatio">יחס מספר אותיות</label>
+        </div>
+        <div class="form-floating col-1">
+            <button id="sendValues" type="button" class="btn btn-outline-primary">שלח</button>
+        </div>
+    </form>
+</div>

@@ -10,14 +10,20 @@ class loginController extends baseController
 
     private $user;
     var $rt;
+    private $messages = [];
     function __construct($registry)
     {
-        //        Debug::dump($_SESSION, 'session in ' . __METHOD__ . ' line ' . __LINE__);
+        // Debug::dump($_SESSION, 'session in ' . __METHOD__ . ' line ' . __LINE__);
         parent::__construct($registry);
-        $this->registry->template->message = isset($_SESSION['messages']) ?
-            util::renderMessages($_SESSION['messages']) : NULL;
-        $this->registry->template->error = isset($_SESSION['errors']) ?
-            util::renderErrors($_SESSION['errors']) : NULL;
+        if (isset($_SESSION['messages'])) {
+            $this->messages = $_SESSION['messages'];
+        }
+        // $this->registry->template->message = isset($_SESSION['messages']) ?
+        // util::renderMessages($_SESSION['messages']) : NULL;
+        // util::renderAnnouncements($this->registry, ($_SESSION['messages'])) : null ;
+
+        // $this->registry->template->error = isset($_SESSION['errors']) ?
+        //     util::renderErrors($_SESSION['errors']) : NULL;
         $this->user = new User();
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
@@ -55,7 +61,7 @@ class loginController extends baseController
             'token',
             'csrf_token'
         )) {
-            $_SESSION['errors'][] = 'invalid csrf';
+            $_SESSION['messages'][] = [2, 'invalid csrf'];
             header('location: /mng/login');
             exit();
         }
@@ -78,9 +84,11 @@ class loginController extends baseController
 
     private function renderLogin()
     {
+        // debug::dump($this->messages, 'messages at ' . util::getCaller());
         $token = util::RandomToken();
         $_SESSION['csrf_token'] = $token;
         $this->registry->template->csrf_token = $token;
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/login');
         $this->registry->template->show('/envelope/bottom');

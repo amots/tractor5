@@ -4,10 +4,22 @@
   <div class="row">
     <div class=" col-md-3"></div>
     <div class="col-xs-12 col-md-6">
+<div class="row mx-1">
+    <div class="col">
+      <div id="messages" class="text-center">
+        <?= $messages ?>
+      </div>
+      <div id="warnings" class="text-center">
+        <?= $warnings ?>
+      </div>
+      <div id="errors" class="text-center">
+        <?= $errors ?>
+      </div>
+    </div>
+  </div>
 
-
-      <div id="messages"><?= $message ?></div>
-      <div id="errors"><?= $error ?></div>
+      <!-- <div id="messages"><?= $message ?></div>
+      <div id="errors"><?= $error ?></div> -->
       <div class="m-5">
         <form role="form" name="login" method="post" action="/login">
           <input type="hidden" name="token" id="token" value="<?= $csrf_token ?>" />

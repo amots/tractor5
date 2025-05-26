@@ -98,7 +98,7 @@ class ownership
     private function searchResults()
     {
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'][] = 'failed to validate token';
+            $_SESSION['messages'][] = [2,'failed to validate token'];
             header('location: /ownership');
         }
         unset($_SESSION['csrf_token']);

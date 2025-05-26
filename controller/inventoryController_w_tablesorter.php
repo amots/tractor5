@@ -21,9 +21,9 @@ class inventoryController extends baseController
     public function __construct($registry)
     {
         parent::__construct($registry);
-        $this->messages[] = isset($_SESSION['messages']) ?
-            $_SESSION['messages'] : NULL;
-        $this->errors[] = isset($_SESSION['errors']) ?
+        $this->messages = isset($_SESSION['messages']) ?
+            $_SESSION['messages'] : [];
+        $this->errors = isset($_SESSION['errors']) ?
             $_SESSION['errors'] : NULL;
         unset($_SESSION['messages']);
         unset($_SESSION['errors']);
@@ -72,7 +72,8 @@ class inventoryController extends baseController
         $this->registry->template->headerStuff = $itemScript . $renderer->render();
 
         $this->registry->template->content = $this->renderIndexContent();
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -104,7 +105,8 @@ class inventoryController extends baseController
         $searchPage = $searchClass->renderSearchPage();
         // $this->registry->template->content = $searchPage . $this->inventory->renderInventorySearchPage();
         $this->registry->template->content = $inventoryNav . $searchPage;
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         // $this->registry->template->show('/service/serviceSearch');
         $this->registry->template->show('/mng/mng');
@@ -134,7 +136,8 @@ class inventoryController extends baseController
         //    $content = '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
         $content = $collection->renderEditItem($item_id);
         $this->registry->template->content = $content;
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');
@@ -151,9 +154,9 @@ class inventoryController extends baseController
         $form = new form('items');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = "record {$form->last_id} save alright";
+            $_SESSION['messages'][] = [0, "record {$form->last_id} save alright"];
         } else {
-            $_SESSION['errors'] = $result;
+            $_SESSION['messages'][] = [2, $result];
         }
         header('location: /inventory/editItem/' . $form->last_id);
     }
@@ -174,7 +177,8 @@ class inventoryController extends baseController
         $collection = new collection();
         $this->registry->template->content = $collection->renderEditItemPics($item_id);
         //    '<div class="text-center">TODO: in ' . __METHOD__ . ' line ' . __LINE__ . "</div>";
-        $this->renderTemplateAnnouncements();
+        // $this->renderTemplateAnnouncements();
+        util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
         $this->registry->template->show('/envelope/bottom');;
@@ -192,9 +196,9 @@ class inventoryController extends baseController
         $form = new form('pictures');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = "picture record {$form->last_id} for item {$item_id} was saved alright";
+            $_SESSION['messages'][] = [0, "picture record {$form->last_id} for item {$item_id} was saved alright"];
         } else {
-            $_SESSION['errors'] = $result;
+            $_SESSION['messages'] = [2, $result];
         }
         header('location: /inventory/editPics/' . $item_id);
     }
@@ -206,26 +210,26 @@ class inventoryController extends baseController
         if (util::validatePostToken('token', 'csrf_token')) {
             $response = upload::handleUpload(__SITE_PATH . '/assets/media/pics/items');
             if ($response['success']) {
-                $_SESSION['messages'][] = $response['response'];
+                $_SESSION['messages'][] = [0, $response['response']];
                 $itemPics->registerItemPic($item_id, $response['fileName']);
-                $_SESSION['messages'][] = $itemPics->errors;
+                $_SESSION['messages'][] = [0, $itemPics->errors];
             } else {
-                $_SESSION['messages'][] = 'Failed to upload file';
-                $_SESSION['messages'][] = $response['response'];
+                $_SESSION['messages'][] = [1, 'Failed to upload file'];
+                $_SESSION['messages'][] = [1, $response['response']];
             }
         } else {
-            $_SESSION['messages'][] = 'Token Failed in ' . __METHOD__ . ' line ' . __LINE__;
+            $_SESSION['messages'][] = [2, 'Token Failed in ' . __METHOD__ . ' line ' . __LINE__];
         }
         unset($_SESSION['csrf_token']);
         header('location: /inventory/editPics/' . $item_id);
     }
 
 
-    private function renderTemplateAnnouncements()
+    /* private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);
-    }
+    } */
 
     private function renderIndexContent()
     {

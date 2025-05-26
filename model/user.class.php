@@ -128,7 +128,7 @@ class User extends Password
                 $user['memberID'] = null;
                 $new = true;
             } else {
-                $_SESSION['messages'] = [2,'Failed to verify token'];
+                $_SESSION['messages'][] = [2,'Failed to verify token'];
                 header('location: /mng/user');
             }
         } else {

@@ -329,7 +329,7 @@ body {
 }
 
 .rtl {
-    direction: rtl;
+    direction: rtl !important;
 }
 
 .bgRight {

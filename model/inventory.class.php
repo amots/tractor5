@@ -139,7 +139,7 @@ class inventory
             return NULL;
         }
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'][] = 'failed to validate token';
+            $_SESSION['messages'][] = 'failed to validate token';
             header('location: /inventory');
         }
         unset($_SESSION['csrf_token']);

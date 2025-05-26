@@ -134,7 +134,7 @@ class service
             return NULL;
         }
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $_SESSION['errors'][] = 'failed to validate token';
+            $_SESSION['messages'][] = [2,'failed to validate token'];
             header('location: /service');
         }
         unset($_SESSION['csrf_token']);
@@ -376,7 +376,7 @@ class service
         try {
             $stmt->execute();
         } catch (Exception $ex) {
-            $_SESSION['errors'][] = $stmt->errorInfo();
+            $_SESSION['messages'][] = [2,$stmt->errorInfo()];
             Debug::dump(
                 $stmt->errorInfo(),
                 'error in ' . __METHOD__ . ' line ' . __LINE__
