@@ -147,6 +147,7 @@ class inventoryController extends baseController
     {
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
             $this->errors[] = 'Failed to validate token';
+            $_SESSION['messages'][] = [2,'Failed to validate token'];
             return;
         }
         unset($_SESSION['csrf_token']);

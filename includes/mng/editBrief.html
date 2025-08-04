@@ -1,43 +1,49 @@
 <!-- <script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js"
     referrerpolicy="origin"></script> -->
-<script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>    
+<script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>
 <script type="text/javascript">
-    tinymce.init({
-        selector: "#content_he",
+    options = {
         inline: true,
-
-        plugins: "link image code directionality charmap emoticons autosave",
-        directionality: 'rtl',
-        language: 'he_IL',
-        toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
-
+        plugins: "link image code directionality charmap emoticons searchreplace autosave",
+        toolbar: "undo redo | styleselect | bold italic | searchreplace  code  link  paste | forecolor backcolor | ltr rtl | charmap emoticons",
         content_css: '/resources/css/tractor.css',
         height: 300,
+        relative_urls: false,
+        remove_script_host: true,
+        paste_as_text: true,
+        image_title: true,
+        image_caption: true,
+        autosave_ask_before_unload: true,
+        end_container_on_empty_block: true,
+        image_class_list: [
+            { 'title': 'img-fluid', 'value': 'img-fluid' },
+            { 'tile': 'none', 'value': '' },
+        ],
+        style_formats: [
+            {
+                title: 'Inlines', items: [
+                    { title: 'cite', inline: 'cite' },
+                    { title: 'bdi', inline: 'bdi' },
+                    { title: 'Unordered List', block: 'ul' },
+                    { title: 'List item', inline: 'li' },
+                ]
+            },
+        ],
         autosave_ask_before_unload: true,
         visualblocks_default_state: true,
-        end_container_on_empty_block: true
-    });
+        end_container_on_empty_block: true,
+    }
+    tinymce.init(Object.assign({ selector: "#content_he", directionality: 'rtl', language: 'he_IL', }, options));
+   tinymce.init(Object.assign({ selector: "#content_en", directionality: 'ltr', }, options));
+    
 </script>
-<script type="text/javascript">
-    tinymce.init({
-        selector: "#content_en",
-        directionality: 'ltr',
-        inline: true,
-        plugins: "link image code directionality charmap emoticons autosave",
-        toolbar: "undo redo | styleselect | bold italic | wordcount  code  link   paste | forecolor backcolor | ltr rtl | charmap emoticons",
-        content_css: '/resources/css/tractor.css',
-        height: 300,
-        autosave_ask_before_unload: true,
-        visualblocks_default_state: true,
-        end_container_on_empty_block: true
-    });
-</script>
-<style>
+
+<!-- <style>
     .ltr .mce-content-body,
     .ltr body.mceContentBody {
         direction: ltr;
     }
-</style>
+</style> -->
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="col-md-12">
@@ -53,7 +59,7 @@
                                     <div class="col-sm-6">
                                         <label for="title_he" class="col-sm-2 control-label">כותר</label>
                                         <input type="text" name="title_he" id="title_he" class="form-control"
-                                            placeholder="כותר" value="<?= $item['title_he'] ?>" />
+                                            placeholder="כותר" value="<?= htmlspecialchars($item['title_he']) ?>" />
 
                                         <div id="content_he" class="form-control mx-0" placeholder="תוכן">
                                             <?= $item['content_he'] ?>
@@ -63,7 +69,7 @@
                                     <div class="col-sm-6 ltr">
                                         <label for="title_en" class="col-sm-2 control-label">title</label>
                                         <input type="text" name="title_en" id="title_en" class="form-control"
-                                            placeholder="title" value="<?= $item['title_en'] ?>" />
+                                            placeholder="title" value="<?= htmlspecialchars($item['title_en']) ?>" />
                                         <div id="content_en" class="form-control mx-0" placeholder="content">
                                             <?= $item['content_en'] ?>
                                         </div>

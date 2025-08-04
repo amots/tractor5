@@ -16,7 +16,7 @@
           <input type="text" 
             class="form-control" 
             placeholder="<?= lang::trans('nav.searchString') ?>" 
-            name="searchString" value="<?= $searchStr ?>" />
+            name="searchString" value="<?= htmlspecialchars($searchStr) ?>" />
           <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
             <?= lang::trans('nav.search') ?>
           </button>

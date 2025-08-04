@@ -228,10 +228,10 @@ class mngController extends baseController
         $returnId = filter_input(INPUT_POST, 'article_id', FILTER_VALIDATE_INT);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $this->errors[] = 'Failed to validate token';
+            $this->messages[] = [2,'Failed to validate token'];
         } else {
             $form = new form('articles');
-            $this->errors[] = $form->storePostedData();
+            $this->messages[] = [0,$form->storePostedData()];
         }
         unset($_SESSION['csrf_token']);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
