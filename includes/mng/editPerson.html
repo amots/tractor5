@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    options = {
+        inline: true,
+        plugins: "link image code directionality charmap emoticons searchreplace autosave",
+        toolbar: "undo redo | styleselect | bold italic | searchreplace  code  link  paste | forecolor backcolor | ltr rtl | charmap emoticons",
+        content_css: '/resources/css/tractor.css',
+        height: 300,
+        relative_urls: false,
+        remove_script_host: true,
+        paste_as_text: true,
+        image_title: true,
+        image_caption: true,
+        autosave_ask_before_unload: true,
+        end_container_on_empty_block: true,
+        image_class_list: [
+            { 'title': 'img-fluid', 'value': 'img-fluid' },
+            { 'tile': 'none', 'value': '' },
+        ],
+        style_formats: [
+            {
+                title: 'Inlines', items: [
+                    { title: 'cite', inline: 'cite' },
+                    { title: 'bdi', inline: 'bdi' },
+                ]
+            },
+        ],
+        autosave_ask_before_unload: true,
+        visualblocks_default_state: true,
+        end_container_on_empty_block: true,
+    }
+    tinymce.init(Object.assign({ selector: "#about_he", directionality: 'rtl', }, options));
+    tinymce.init(Object.assign({ selector: "#about_en", directionality: 'ltr', }, options));
+</script>
+<script>
+    $(document).ready(function () {
+        /** grouping  */
+        var storedGrouping = $('input[name="grouping"]');
+        var grouping = storedGrouping.val();
+        var groups = grouping.split(",");
+        groups.forEach(g => {
+            console.log(`group ${g}`);
+            $(`select option[value='${g}']`).attr("selected", "selected");
+        });
+        $('#grouping').change(function () {
+            var selectedValues = $(this).val(); // Returns an array of selected values
+            storedGrouping.val(selectedValues.join(","));
+        });
+        /** display */
+        var storedDisplay = $('input[name="display"]');
+        $('#display').prop('checked', (storedDisplay.val() == 1));
+        $('#display').change(function () {
+            storedDisplay.val(($('#display').prop('checked')) ? 1 : 0);
+        })
+        /** deceased */
+        var storedDeceased = $('input[name="deceased"]');
+        $('#deceased').prop('checked', (storedDeceased.val() == 1));
+        $('#deceased').change(function () {
+            storedDeceased.val(($('#deceased').prop('checked')) ? 1 : 0);
+        })
+    });
+</script>
+<div class="row">
+    <h4>
+        <?= $person['personName'] ?>
+    </h4>
+    <form action="" method="POST" class="row g-3" role="form">
+        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $person['csrf_token'] ?>" />
+        <input type="hidden" name="people_id" value="<?= $person['people_id'] ?>" />
+        <input type="hidden" name="action" value="storePerson" />
+        <input type="hidden" name="grouping" value="<?= $person['grouping'] ?>" />
+        <input type="hidden" name="display" value="<?= $person['display'] ?>" />
+        <input type="hidden" name="deceased" value="<?= $person['deceased'] ?>" />
+        <div class="row">
+            <div class="col-3" id="affiliations">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- [grouping] => volunteer [image_path] => [display] => 1 [deceased] => 0 -->
+                        <?= $person['selectGrouping'] ?>
+                        <div class="form-check form-switch ltr">
+                            <input class="form-check-input" type="checkbox" role="switch" id="display">
+                            <label class="form-check-label" for="display">
+                                <?= lang::trans('people.display') ?>
+                            </label>
+                        </div>
+                        <div class="form-check form-switch ltr">
+                            <input class="form-check-input" type="checkbox" role="switch" id="deceased">
+                            <label class="form-check-label" for="deceased">
+                                <?= lang::trans('people.deceased') ?>
+                            </label>
+                        </div>
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="form-floating">
+                                    <input type="text" name="image_path" id="image_path" class="form-control save ltr"
+                                        value="<?= htmlspecialchars($person['image_path']) ?>" />
+                                    <label for="image_path">
+                                        <?= lang::trans('people.picture') ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6" id="heb">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="sur_name_he" id="sur_name_he"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['sur_name_he']) ?>" />
+                                                <label for="sur_name_he">
+                                                    <?= lang::trans('people.surname','he') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="last_name_he" id="last_name_he"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['last_name_he']) ?>" />
+                                                <label for="last_name_he">
+                                                    <?= lang::trans('people.lastname','he') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="title_he" id="title_he"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['title_he']??'') ?>" />
+                                                <label for="title_he">
+                                                    <?= lang::trans('people.title','he') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="home_town_he" id="home_town_he"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['home_town_he']??'') ?>" />
+                                                <label for="home_town_he">
+                                                    <?= lang::trans('people.hometown','he') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="role_he" id="role_he" class="form-control save"
+                                                    value="<?= htmlspecialchars($person['role_he']??'') ?>" />
+                                                <label for="role_he">
+                                                    <?= lang::trans('people.role','he') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="about_he" class="form-control mx-0"
+                                        placeholder="<?= lang::trans('people.about','he') ?>">
+                                        <?= $person['about_he'] ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6" id="en">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="sur_name_en" id="sur_name_en"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['sur_name_en']) ?>" />
+                                                <label for="sur_name_en">
+                                                    <?= lang::trans('people.surname','en') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="last_name_en" id="last_name_en"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['last_name_en']) ?>" />
+                                                <label for="last_name_en">
+                                                    <?= lang::trans('people.lastname','en') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="title_en" id="title_en"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['title_en']??'') ?>" />
+                                                <label for="title_en">
+                                                    <?= lang::trans('people.title','en') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="home_town_en" id="home_town_en"
+                                                    class="form-control save"
+                                                    value="<?= htmlspecialchars($person['home_town_en']??'') ?>" />
+                                                <label for="home_town_en">
+                                                    <?= lang::trans('people.hometown','en') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row align-items-center">
+                                            <div class="form-floating">
+                                                <input type="text" name="role_en" id="role_en" class="form-control save"
+                                                    value="<?= htmlspecialchars($person['role_en']??'') ?>" />
+                                                <label for="role_en">
+                                                    <?= lang::trans('people.role','en') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="about_en" class="form-control mx-0"
+                                        placeholder="<?= lang::trans('people.about','en') ?>">
+                                        <?= $person['about_en'] ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary wymupdate">Submit</button>
+
+    </form>
+</div>

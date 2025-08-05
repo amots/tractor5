@@ -6,16 +6,19 @@
  * @author amots
  * @since 2020-03-17
  */
-class people {
+class people
+{
 
     private $locale;
     static $picPath = '/assets/media/pics/people/';
-
-    public function __construct() {
-        $this->locale = Lang::getLocale(); 
+    public $messages = [];
+    public function __construct()
+    {
+        $this->locale = Lang::getLocale();
     }
 
-    public function renderActiveVolunteers() {
+    public function renderActiveVolunteers()
+    {
         $data = $this->getActiveVolunteers();
         $names = [];
         foreach ($data as $key => $individual) {
@@ -26,7 +29,8 @@ class people {
         return join(', ', $names);
     }
 
-    public function renderAllVolunteers() {
+    public function renderAllVolunteers()
+    {
         $data = $this->getAllVolunteers();
         $names = [];
         foreach ($data as $key => $individual) {
@@ -37,18 +41,47 @@ class people {
         return join(', ', $names);
     }
 
-    public function renderVolunteersPage() {
+    public function renderVolunteersPage()
+    {
         $data = $this->getActiveVolunteers();
         return $this->formatPeopleList($data, 2, 'volunteers');
-
     }
 
-    public function renderFoundersPage() {
+    public function renderFoundersPage()
+    {
         $data = $this->getFounders();
         return $this->formatPeopleList($data, 1, 'founders');
     }
 
-    private function getActiveVolunteers() {
+    public function renderPeopleList4Edit()
+    {
+
+        $list = $this->getAllPeople();
+        // util::var_dump_pre($list, 'Peolple list ' . util::getCaller());
+        return $this->renderList($list, true);
+        // return "TODO " . util::getCaller();
+    }
+
+    public function renderEditPerson($people_id)
+    {
+        $token = util::RandomToken();
+        $_SESSION['csrf_token'] = $token;
+        $lan = Lang::getLocale();
+        if (is_numeric($people_id)) {
+            $person = self::getPerson($people_id);
+            $person['personName'] = join(' ', [$person['sur_name_' . $lan], $person['last_name_' . $lan]],);
+        } else {
+            $person['personName'] = Lang::trans('people.newPerson');
+        }
+        $person['selectGrouping']  = self::renderGroupingSelect($person['grouping']);
+        $person['csrf_token'] = $token;
+        $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editPerson.html");
+        $renderer->viewData = ['person' => $person,];
+        return $renderer->render();
+    }
+
+    private function getActiveVolunteers()
+    {
         $pdo = db::getInstance();
         $keyOn = 'volunteer';
         $keyOff = 'founder';
@@ -72,7 +105,8 @@ class people {
         return $stmt->fetchAll();
     }
 
-    private function getAllVolunteers() {
+    private function getAllVolunteers()
+    {
         $pdo = db::getInstance();
         $key = 'memory';
         $sqlStr = <<<EOF
@@ -93,7 +127,8 @@ class people {
         return $stmt->fetchAll();
     }
 
-    private function getFounders() {
+    private function getFounders()
+    {
         $pdo = db::getInstance();
         $key = 'founder';
         $sqlStr = <<<EOF
@@ -114,7 +149,8 @@ class people {
         return $stmt->fetchAll();
     }
 
-    private function formatPeopleList($data, $columns,$id) {
+    private function formatPeopleList($data, $columns, $id)
+    {
         $peoplePanel = [];
         $rip = Lang::trans('general.rip');
         foreach ($data as $key => $individual) {
@@ -128,19 +164,21 @@ class people {
             $nameParts[] = <<<EOF
                 <span class="head4">{$surname} {$lastname}</span>
                 EOF;
-                
+
             if (!util::IsNullOrEmptyString($homeTown)) {
                 $nameParts[] = $homeTown;
             }
             $nameStr = join(', ', $nameParts);
             $about = $individual["about_{$this->locale}"];
-            if (util::IsNullOrEmptyString($individual['image_path']) or
-                    ! file_exists(__SITE_PATH . self::$picPath . $individual['image_path'])) {
+            if (
+                util::IsNullOrEmptyString($individual['image_path']) or
+                ! file_exists(__SITE_PATH . self::$picPath . $individual['image_path'])
+            ) {
                 $imgPath = self::$picPath . 'anon.jpg';
             } else {
                 $imgPath = self::$picPath . $individual['image_path'];
             }
-            $colVal = 12/$columns;
+            $colVal = 12 / $columns;
             $peoplePanel[] = <<<EOF
                 <div class="d-flex align-items-center col-{$colVal}">
                     <div class="flex-shrink-0">
@@ -156,7 +194,7 @@ class people {
                 EOF;
         }
         $gridDir = Lang::getLocale() == 'he' ? 'false' : 'true';
-        $content = join(' ',$peoplePanel);
+        $content = join(' ', $peoplePanel);
         return <<<EOF
             <div class="row grid" id="$id"
             data-masonry='{"percentPosition": true,"originLeft": {$gridDir}}' 
@@ -164,7 +202,85 @@ class people {
                 {$content}
             </div>
             EOF;
-       
     }
 
+    private function getAllPeople()
+    {
+        $pdo = db::getInstance();
+        $sqlStr = "SELECT * FROM `people`";
+        $stmt = $pdo->prepare($sqlStr);
+        try {
+            $stmt->execute();
+        } catch (Exception $ex) {
+            $this->messages[] = [2, util::simplifyArray($stmt->errorInfo())];
+            Debug::dump($ex->getTraceAsString());
+            Debug::dump(util::simplifyArray($stmt->errorInfo()));
+        }
+        return $stmt->fetchAll();
+    }
+    private function renderList($list, $edit = false)
+    {
+        $ret = [];
+        foreach ($list as $key => $item) {
+
+            $title = join(
+                ' ',
+                [
+                    $item['sur_name_' . Lang::getLocale()],
+                    $item['last_name_' . Lang::getLocale()],
+                ]
+            );
+            if (!util::IsNullOrEmptyString($item['home_town_' . Lang::getLocale()])) {
+                $title = join(", ", [$title, $item['home_town_' . Lang::getLocale()]]);
+            }
+            if ($edit) {
+                $icon = list_items::$biPencilSquare;
+                $line = <<<EOT
+                    <a href="/mng/editPerson/{$item['people_id']}">{$icon}
+                    {$title}</a>
+                    EOT;
+            } else {
+                $line = <<<EOT
+                    <a href="/briefs/show/{$item['people_id']}">{$title}</a>
+                    EOT;
+            }
+            $ret[] = <<<EOF
+                <li class="list-group-item">{$line}</li>
+                EOF;
+        }
+        $container = ['pre' => '<ul class="list-group list-group-flush">', 'post' => '</ul>'];
+        return $container['pre'] . implode('', $ret) . $container['post'];
+        // return "TODO " . util::getCaller();
+    }
+
+    private function getPerson($people_id)
+    {
+        $pdo = db::getInstance();
+        $sqlStr = "SELECT * FROM `people` WHERE `people_id` = $people_id LIMIT 1";
+        $stmt = $pdo->prepare($sqlStr);
+        try {
+            $stmt->execute();
+        } catch (Exception $ex) {
+            $this->messages[] = [2, util::simplifyArray($stmt->errorInfo())];
+        }
+        return $stmt->fetch();
+    }
+
+    private function renderGroupingSelect($grouping)
+    {
+        // util::var_dump_pre($grouping,'grouping '.util::getCaller());
+        $form = new form('people');
+        $gropings = $form->get_set_values('grouping');
+        // util::var_dump_pre($gropings, 'groupings ' . util::getCaller());
+        $selects[] =  '';
+        foreach ($gropings as $g) {
+            $glocale = Lang::trans("people.{$g}");
+            $selects[] = <<<EOF
+                <option value="{$g}">{$glocale}</option>
+                EOF;
+        }
+        $pre = '<select id="grouping" class="form-select" multiple>';
+        $post = '</select>';
+        return $pre.join('',$selects).$post;
+    }
 }

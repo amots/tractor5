@@ -98,6 +98,10 @@ class mngController extends baseController
                     $briefs = new briefs();
                     $formatedList = $briefs->renderBriefsList4Edit();
                     break;
+                case 'peopleList':
+                    $people = new people();
+                    $formatedList = $people->renderPeopleList4Edit();
+                    break;
                 default:
                     $this->registry->template->content = '<pre>' . print_r(
                         $_SESSION,
@@ -228,10 +232,10 @@ class mngController extends baseController
         $returnId = filter_input(INPUT_POST, 'article_id', FILTER_VALIDATE_INT);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $this->messages[] = [2,'Failed to validate token'];
+            $this->messages[] = [2, 'Failed to validate token'];
         } else {
             $form = new form('articles');
-            $this->messages[] = [0,$form->storePostedData()];
+            $this->messages[] = [0, $form->storePostedData()];
         }
         unset($_SESSION['csrf_token']);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
@@ -344,7 +348,7 @@ class mngController extends baseController
         // util::var_dump_pre($_GET, util::getCaller());
         // $rt = explode('/',$_GET['rt']);
         // util::var_dump_pre($rt, util::getCaller());
-    
+
         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
@@ -402,6 +406,50 @@ class mngController extends baseController
         $this->registry->template->show('/envelope/bottom');
     }
 
+    public function editPerson()
+    {
+        if (
+            isset($_POST['action'])
+            and ($_POST['action'] == 'storePerson')
+        ) {
+            if (!util::validatePostToken('csrf_token', 'csrf_token')) {
+                $this->messages[] = [2,'Verification Error'];
+            } else {
+                $form = new form('people');
+                $results = $form->storePostedData();
+                // util::var_dump_pre($results,'Store results '.util::getCaller());
+                if (util::is_array_empty($results)) {
+                    $this->messages[] = [0,"Record {$form->last_id} Saved OK"];
+                } else {
+                    $this->messages[] = [2,$results];
+                }
+            }
+            unset($_SESSION['csrf_token']);
+        }
+        $indexAt = 2;
+        if (isset($this->rt[$indexAt]) and is_numeric($this->rt[$indexAt])) {
+            $people_id = strval($this->rt[$indexAt]);
+            $people_id_literal = join(' ', [Lang::trans('mng.edit'), $people_id]);
+        } else {
+            $people_id = null;
+            $people_id_literal = Lang::trans('mng.newPerson');
+        }
+        $people = new people();
+        $pageTitle = $this->registry->template->pageTitle = $people_id_literal;
+         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
+            ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
+            ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
+            ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
+            ['literal' => Lang::trans('people.people'), 'link' => '/mng/content/peopleList'],
+            ['literal' => $pageTitle, 'link' => NULL],
+        ]);
+        // $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editPerson.html");
+         $this->registry->template->content = $people->renderEditPerson($people_id);
+        util::renderAnnouncements($this->registry, $this->messages);
+        $this->registry->template->show('/envelope/head');
+        $this->registry->template->show('/mng/mng');
+        $this->registry->template->show('/envelope/bottom');
+    }
     private function userUpdate()
     {
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
@@ -427,7 +475,7 @@ class mngController extends baseController
         exit();
     }
 
-  /*   private function renderTemplateAnnouncements()
+    /*   private function renderTemplateAnnouncements()
     {
         $this->registry->template->errors = util::renderErrors($this->errors);
         $this->registry->template->messages = util::renderMessages($this->messages);

@@ -3,41 +3,41 @@ referrerpolicy="origin"></script> -->
 <!DOCTYPE html>
 <script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>
 <script type="text/javascript">
-   options = {
-        inline: true,
-        plugins: "link image code directionality charmap emoticons searchreplace autosave",
-        toolbar: "undo redo | styleselect | bold italic | searchreplace  code  link  paste | forecolor backcolor | ltr rtl | charmap emoticons",
-        content_css: '/resources/css/tractor.css',
-        height: 300,
-        relative_urls: false,
-        remove_script_host: true,
-        paste_as_text: true,
-        image_title: true,
-        image_caption: true,
-        autosave_ask_before_unload: true,
-        end_container_on_empty_block: true,
-        image_class_list: [
-            { 'title': 'img-fluid', 'value': 'img-fluid' },
-            { 'tile': 'none', 'value': '' },
-        ],
-        style_formats: [
-            {
-                title: 'Inlines', items: [
-                    { title: 'cite', inline: 'cite' },
-                    { title: 'bdi', inline: 'bdi' },
-                    { title: 'Unordered List', block: 'ul' },
-                    { title: 'List item', inline: 'li' },
-                ]
-            },
-        ],
-        autosave_ask_before_unload: true,
-        visualblocks_default_state: true,
-        end_container_on_empty_block: true,
-    }
-    tinymce.init(Object.assign({ selector: "#PageHe", directionality: 'rtl', language: 'he_IL', }, options));
-   tinymce.init(Object.assign({ selector: "#PageEn", directionality: 'ltr', }, options));
-    
-  
+  options = {
+    inline: true,
+    plugins: "link image code directionality charmap emoticons searchreplace autosave",
+    toolbar: "undo redo | styleselect | bold italic | searchreplace  code  link  paste | forecolor backcolor | ltr rtl | charmap emoticons",
+    content_css: '/resources/css/tractor.css',
+    height: 300,
+    relative_urls: false,
+    remove_script_host: true,
+    paste_as_text: true,
+    image_title: true,
+    image_caption: true,
+    autosave_ask_before_unload: true,
+    end_container_on_empty_block: true,
+    image_class_list: [
+      { 'title': 'img-fluid', 'value': 'img-fluid' },
+      { 'tile': 'none', 'value': '' },
+    ],
+    style_formats: [
+      {
+        title: 'Inlines', items: [
+          { title: 'cite', inline: 'cite' },
+          { title: 'bdi', inline: 'bdi' },
+          { title: 'Unordered List', block: 'ul' },
+          { title: 'List item', inline: 'li' },
+        ]
+      },
+    ],
+    autosave_ask_before_unload: true,
+    visualblocks_default_state: true,
+    end_container_on_empty_block: true,
+  }
+  tinymce.init(Object.assign({ selector: "#PageHe", directionality: 'rtl', language: 'he_IL', }, options));
+  tinymce.init(Object.assign({ selector: "#PageEn", directionality: 'ltr', }, options));
+
+
 </script>
 
 <script>
@@ -140,8 +140,8 @@ referrerpolicy="origin"></script> -->
 
             <div class="form-group">
               <label for="vin">מספר רישוי</label>
-              <input type="text" name="license_number" id="license_number" class="form-control ltr text-left" placeholder="מספר רישוי"
-                value="<?= $item['license_number'] ?>" />
+              <input type="text" name="license_number" id="license_number" class="form-control ltr text-left"
+                placeholder="מספר רישוי" value="<?= $item['license_number'] ?>" />
             </div>
 
           </div>
@@ -293,11 +293,13 @@ referrerpolicy="origin"></script> -->
               <div class="form-group">
                 <div class="col-sm-6 px-2">
                   <label for="sourceHe" class="col-md-2 control-label">מקור</label>
-                  <input type="text" name="sourceHe" class="form-control" value="<?= htmlspecialchars($item['sourceHe']) ?>" />
+                  <input type="text" name="sourceHe" class="form-control"
+                    value="<?= htmlspecialchars($item['sourceHe']) ?>" />
                 </div>
                 <div class="col-sm-6 px-2">
                   <label for="sourceEn" class="col-md-2 control-label">source</label>
-                  <input type="text" name="sourceEn" class="form-control ltr" value="<?= htmlspecialchars($item['sourceEn']) ?>" />
+                  <input type="text" name="sourceEn" class="form-control ltr"
+                    value="<?= htmlspecialchars($item['sourceEn']) ?>" />
                 </div>
               </div>
             </div>

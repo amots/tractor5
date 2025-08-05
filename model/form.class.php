@@ -59,7 +59,7 @@ class form
 
     public function storePostedData()
     {
-        $this->storeData($_POST);
+        return $this->storeData($_POST);
     }
 
 
@@ -107,6 +107,7 @@ class form
             } catch (Exception $exc) {
                 $errors[] = "failed to store data";
                 $errors[] = $exc->getMessage();
+                $errors[] = $sqlStr;
             }
 
             $temp_last_id = (util::is_array_empty($index)) ? $this->pdo->lastInsertId()
@@ -131,13 +132,16 @@ class form
         foreach ($data as $key => $value) {
             switch (strtoupper($coldefs[$key]['DATA_TYPE'])) {
                 case 'INT':
-                    $stmt->bindValue(':' . $key, strval($value), PDO::PARAM_INT);
+                    $result = $stmt->bindValue(':' . $key, strval($value), PDO::PARAM_INT);
+                    if (!$result) util::var_dump_pre([$key, $value],util::getCaller());
                     break;
                 case 'TINYINT':
-                    $stmt->bindValue(':' . $key, strval($value), PDO::PARAM_BOOL);
+                    $result = $stmt->bindValue(':' . $key, strval($value), PDO::PARAM_BOOL);
+                     if (!$result) util::var_dump_pre([$key, $value],util::getCaller());
                     break;
                 default:
-                    $stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
+                    $result = $stmt->bindValue(':' . $key, $value, PDO::PARAM_STR); 
+                    if (!$result) util::var_dump_pre([$key, $value],util::getCaller());
             }
         }
     }
@@ -161,7 +165,7 @@ class form
         $sqlArray[] = "SET";
         $list = [];
         foreach ($data as $key => $val) {
-            $list[] = sprintf("%s=:%s", $key, $key);
+            $list[] = sprintf("`%s`=:%s", $key, $key);
         }
         $sqlArray[] = implode(',', $list);
         $sqlArray[] = $new ? NULL : sprintf(
@@ -232,5 +236,27 @@ class form
             $trimmedvals[] = $value;
         }
         return $trimmedvals;
+    }
+    public function get_set_values($column)
+    {
+        $sql = "SHOW COLUMNS FROM `{$this->table}` LIKE '{$column}'";
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+        } catch (Exception $ex) {
+            Debug::dump( $stmt->errorInfo(), 'error in ' . __METHOD__ . ' line ' . __LINE__ );
+        }
+        $result = $stmt->fetch();
+        if ($result) {
+            $type = $result['Type'];
+            if (preg_match("/^set\((.+)\)$/i", $type, $matches)) {
+                $values = str_getcsv($matches[1], ',', "'",'\\');
+                return $values;
+            } else {
+                util::var_dump_pre("Column '$column' is not of type SET." , util::getCaller()) ;
+            }
+        } else {
+            util::var_dump_pre ("Column not found or query failed.", util::getCaller());
+        }
     }
 }
