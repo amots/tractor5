@@ -42,9 +42,34 @@ class util
         return $response;
     }
 
+    static function shortenHebrewText($text, $maxLength = 50)
+    { // from chatgpt
+        // Ensure UTF-8 encoding
+        $text = trim($text ?? '');
+
+        // If the text is already short enough
+        if (mb_strlen($text, 'UTF-8') <= $maxLength) {
+            return $text;
+        }
+
+        // Cut off at max length
+        $shortText = mb_substr($text, 0, $maxLength, 'UTF-8');
+
+        // Find last space (word boundary)
+        $lastSpace = mb_strrpos($shortText, ' ', 0, 'UTF-8');
+
+        if ($lastSpace !== false) {
+            $shortText = mb_substr($shortText, 0, $lastSpace, 'UTF-8');
+        }
+
+        return $shortText . '…'; // optional: append ellipsis
+    }
+
     static function shorten_string($string, $max = 50)
     {
-        $workStr = strip_tags($string);
+        $workStr = strip_tags($string ?? '');
+        // if (util::IsNullOrEmptyString($workStr)) return '';
+        // debug::dump($workStr,'workstring '. util::getCaller());
         $tok = strtok($workStr, ' ');
         $workStr = '';
         while ($tok !== false && mb_strlen($workStr) < $max) {

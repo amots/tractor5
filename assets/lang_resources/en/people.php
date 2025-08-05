@@ -18,4 +18,6 @@ return [
     'hometown'=>'Hometown',
     'about'=>'About',
     'picture'=>'Picture path',
+    'fullname'=>'Full name',
+    'grouping'=>'Group',
 ];

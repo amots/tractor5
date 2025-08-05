@@ -19,4 +19,6 @@ return [
     'hometown'=>'מגורים',
     'about'=>'אודות',
     'picture'=>'תמונה',
+    'fullname'=>'שם מלא',
+    'grouping'=>'קבוצה',
 ];

@@ -100,6 +100,20 @@ class mngController extends baseController
                     break;
                 case 'peopleList':
                     $people = new people();
+                    $this->registry->template->headerStuff = <<<EOF
+                        <script src="/resources/DataTables-2/datatables.js"></script>
+                        <script>
+                            $(document).ready(function ()
+                            {
+                                new DataTable('#list2Sort',{
+                                "language" : {
+                                        'url' : '/resources/DataTables-2/plug-ins/he.json',
+                                        },
+                                });
+                            }
+                            );
+                        </script>
+                        EOF;
                     $formatedList = $people->renderPeopleList4Edit();
                     break;
                 default:

@@ -15,4 +15,6 @@ return [
     'admin' => 'Site admin',
     'rip' => 'RIP',
     'credit' => 'Credit',
+    'yes' => 'yes',
+    'no' => 'no',
 ];

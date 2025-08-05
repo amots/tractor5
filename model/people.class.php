@@ -218,7 +218,76 @@ class people
         }
         return $stmt->fetchAll();
     }
-    private function renderList($list, $edit = false)
+    private function renderList($list, $edit = true)
+    {
+        $icon = list_items::$biPencilSquare;
+        $lng = Lang::getLocale();
+        $ret = [];
+        $titles = [
+            'name' => Lang::trans('people.fullname'),
+            'home_town' => Lang::trans('people.hometown'),
+            'title'=>Lang::trans('people.title'),
+            'role'=>Lang::trans('people.role'),
+            'grouping' =>Lang::trans('people.grouping'),
+            'display'=>Lang::trans('people.display'),
+            'deceased'=>Lang::trans('people.deceased'),
+            'picture'=>Lang::trans('people.picture'),
+            'about' =>Lang::trans('people.about'),
+        ];
+        $ret[] = <<<EOF
+            <thead>
+                <tr>
+                    <th>{$titles['name']}</th>
+                    <th>{$titles['home_town']}</th>
+                    <th>{$titles['title']}</th>
+                    <th>{$titles['role']}</th>
+                    <th>{$titles['grouping']}</th>
+                    <th>{$titles['display']}</th>
+                    <th>{$titles['deceased']}</th>
+                    <th>{$titles['picture']}</th>
+                    <th>{$titles['about']}</th>
+                </tr>
+            </thead>
+            EOF;
+            $ret[]="</tbody>";
+        foreach ($list as $record) {
+            $fullname = join(' ', [$record['sur_name_' . Lang::getLocale()], $record['last_name_' . Lang::getLocale()],]);
+            $groups = [];
+            foreach (explode(',',$record['grouping']) as $g) {
+                $groups[] = Lang::trans('people.'.$g);
+            }
+            $grouping = join(', ',$groups);
+            $about = util::shortenHebrewText($record['about_'.$lng],40);
+            $image_path = util::shortenHebrewText($record['image_path'],12);
+            $deceased = $record['deceased'] ?Lang::trans('people.deceased') :'';
+            $display = $record['display'] ?'': Lang::trans('general.no');
+            if ($edit) {
+                $fullname = <<<EOF
+                    <a href="/mng/editPerson/{$record['people_id']}">{$icon}
+                    {$fullname}</a> 
+                    EOF;
+            }
+            $ret[] = <<<EOF
+                <tr>
+                    <td>{$fullname}</td>
+                    <td>{$record['home_town_' . $lng]}</td>
+                    <td>{$record['title_' . $lng]}</td>
+                    <td>{$record['role_' . $lng]}</td>
+                    <td>{$grouping}</td>
+                    <td>{$display}</td>
+                    <td>{$deceased}</td>
+                    <td>{$image_path}</td>
+                    <td>{$about}</td>
+                </tr>
+                EOF;
+        }
+        $pre = <<<EOF
+            <table id="list2Sort" class="table table-sm table-hover table-responsive tablesorter">
+            EOF;
+        $post = '</tbody></table>';
+        return $pre . join('', $ret) . $post;
+    }
+    private function renderList_deprecated($list, $edit = false)
     {
         $ret = [];
         foreach ($list as $key => $item) {
@@ -281,6 +350,6 @@ class people
         }
         $pre = '<select id="grouping" class="form-select" multiple>';
         $post = '</select>';
-        return $pre.join('',$selects).$post;
+        return $pre . join('', $selects) . $post;
     }
 }
