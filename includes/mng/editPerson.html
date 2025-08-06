@@ -61,6 +61,21 @@
         })
     });
 </script>
+<style>
+    .rtl .form-check .form-check-input {
+        float: none;
+    }
+
+    .rtl .form-check-label {
+        float: left;
+        margin-right: 1.8rem;
+    }
+
+    .ltr .mce-content-body,
+    .ltr body.mceContentBody {
+        direction: ltr;
+    }
+</style>
 <div class="row">
     <h4>
         <?= $person['personName']??'' ?>
@@ -105,9 +120,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-9" id="Personal_detailes">
                 <div class="row">
-                    <div class="col-6" id="heb">
+                    <div class="col-6" id="heb_information">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -182,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6" id="en">
+                    <div class="col-6 ltr" id="en_information">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -236,7 +251,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 ltr">
                                         <div class="row align-items-center">
                                             <div class="form-floating">
                                                 <input type="text" name="role_en" id="role_en" class="form-control save"
@@ -248,11 +263,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div id="about_en" class="form-control mx-0"
-                                        placeholder="<?= lang::trans('people.about','en') ?>">
-                                        <?= $person['about_en'] ?>
-                                    </div>
+                                <div id="about_en" class="form-control mx-0"
+                                    placeholder="<?= lang::trans('people.about','en') ?>">
+                                    <?= $person['about_en'] ?>
                                 </div>
                             </div>
                         </div>

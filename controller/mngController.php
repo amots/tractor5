@@ -458,7 +458,7 @@ class mngController extends baseController
             ['literal' => Lang::trans('people.people'), 'link' => '/mng/content/peopleList'],
             ['literal' => $pageTitle, 'link' => NULL],
         ]);
-        // $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editPerson.html");
+        $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editPerson.html");
          $this->registry->template->content = $people->renderEditPerson($people_id);
         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
