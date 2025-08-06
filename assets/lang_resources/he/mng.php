@@ -34,4 +34,5 @@ return [
     'listAll' => 'כל הרשומות',
     'archive' => 'ארכיון',
     'newItem'=>'פריט חדש',
+    'newPerson'=>'אדם חדש',
 ];

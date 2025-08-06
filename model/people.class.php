@@ -74,7 +74,7 @@ class people
             $form = new form('people');
             $person['personName'] = Lang::trans('people.newPerson');
             $person = $form->genEmptyRecord();
-            // $person['personName'] = '';
+             $person['personName'] = Lang::trans('mng.newPerson');
         }
         $person['selectGrouping']  = self::renderGroupingSelect($person['grouping']);
         $person['csrf_token'] = $token;

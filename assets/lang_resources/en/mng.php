@@ -32,4 +32,5 @@ return [
     'listAll' => 'List all records',
     'archive' => 'Archive',
     'newItem'=>'New Item',
+    'newPerson'=>'New person',
 ];
