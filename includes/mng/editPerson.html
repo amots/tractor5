@@ -63,11 +63,11 @@
 </script>
 <div class="row">
     <h4>
-        <?= $person['personName'] ?>
+        <?= $person['personName']??'' ?>
     </h4>
     <form action="" method="POST" class="row g-3" role="form">
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $person['csrf_token'] ?>" />
-        <input type="hidden" name="people_id" value="<?= $person['people_id'] ?>" />
+        <input type="hidden" name="people_id" value="<?= $person['people_id']??null ?>" />
         <input type="hidden" name="action" value="storePerson" />
         <input type="hidden" name="grouping" value="<?= $person['grouping'] ?>" />
         <input type="hidden" name="display" value="<?= $person['display'] ?>" />
@@ -95,7 +95,7 @@
                             <div class="row align-items-center">
                                 <div class="form-floating">
                                     <input type="text" name="image_path" id="image_path" class="form-control save ltr"
-                                        value="<?= htmlspecialchars($person['image_path']) ?>" />
+                                        value="<?= htmlspecialchars($person['image_path']??'') ?>" />
                                     <label for="image_path">
                                         <?= lang::trans('people.picture') ?>
                                     </label>
@@ -116,7 +116,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="sur_name_he" id="sur_name_he"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['sur_name_he']) ?>" />
+                                                    value="<?= htmlspecialchars($person['sur_name_he']??'') ?>" />
                                                 <label for="sur_name_he">
                                                     <?= lang::trans('people.surname','he') ?>
                                                 </label>
@@ -128,7 +128,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="last_name_he" id="last_name_he"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['last_name_he']) ?>" />
+                                                    value="<?= htmlspecialchars($person['last_name_he']??'') ?>" />
                                                 <label for="last_name_he">
                                                     <?= lang::trans('people.lastname','he') ?>
                                                 </label>
@@ -191,7 +191,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="sur_name_en" id="sur_name_en"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['sur_name_en']) ?>" />
+                                                    value="<?= htmlspecialchars($person['sur_name_en']??'') ?>" />
                                                 <label for="sur_name_en">
                                                     <?= lang::trans('people.surname','en') ?>
                                                 </label>
@@ -203,7 +203,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="last_name_en" id="last_name_en"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['last_name_en']) ?>" />
+                                                    value="<?= htmlspecialchars($person['last_name_en']??'') ?>" />
                                                 <label for="last_name_en">
                                                     <?= lang::trans('people.lastname','en') ?>
                                                 </label>

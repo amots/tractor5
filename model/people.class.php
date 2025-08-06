@@ -71,7 +71,10 @@ class people
             $person = self::getPerson($people_id);
             $person['personName'] = join(' ', [$person['sur_name_' . $lan], $person['last_name_' . $lan]],);
         } else {
+            $form = new form('people');
             $person['personName'] = Lang::trans('people.newPerson');
+            $person = $form->genEmptyRecord();
+            // $person['personName'] = '';
         }
         $person['selectGrouping']  = self::renderGroupingSelect($person['grouping']);
         $person['csrf_token'] = $token;

@@ -109,6 +109,7 @@ class mngController extends baseController
                                 "language" : {
                                         'url' : '/resources/DataTables-2/plug-ins/he.json',
                                         },
+                                "pageLength": 100
                                 });
                             }
                             );
