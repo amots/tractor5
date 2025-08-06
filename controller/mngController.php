@@ -440,6 +440,8 @@ class mngController extends baseController
                 }
             }
             unset($_SESSION['csrf_token']);
+            $_SESSION['messages'] = $this->messages;
+            header('location: /mng/editPerson/' . $form->last_id);
         }
         $indexAt = 2;
         if (isset($this->rt[$indexAt]) and is_numeric($this->rt[$indexAt])) {

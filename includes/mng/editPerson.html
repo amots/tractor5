@@ -131,7 +131,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="sur_name_he" id="sur_name_he"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['sur_name_he']??'') ?>" />
+                                                    value="<?= htmlspecialchars($person['sur_name_he']??'') ?>" required />
                                                 <label for="sur_name_he">
                                                     <?= lang::trans('people.surname','he') ?>
                                                 </label>
@@ -143,7 +143,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="last_name_he" id="last_name_he"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['last_name_he']??'') ?>" />
+                                                    value="<?= htmlspecialchars($person['last_name_he']??'') ?>" required  />
                                                 <label for="last_name_he">
                                                     <?= lang::trans('people.lastname','he') ?>
                                                 </label>
@@ -206,7 +206,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="sur_name_en" id="sur_name_en"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['sur_name_en']??'') ?>" />
+                                                    value="<?= htmlspecialchars($person['sur_name_en']??'') ?>" required />
                                                 <label for="sur_name_en">
                                                     <?= lang::trans('people.surname','en') ?>
                                                 </label>
@@ -218,7 +218,7 @@
                                             <div class="form-floating">
                                                 <input type="text" name="last_name_en" id="last_name_en"
                                                     class="form-control save"
-                                                    value="<?= htmlspecialchars($person['last_name_en']??'') ?>" />
+                                                    value="<?= htmlspecialchars($person['last_name_en']??'') ?>" required />
                                                 <label for="last_name_en">
                                                     <?= lang::trans('people.lastname','en') ?>
                                                 </label>
