@@ -333,7 +333,8 @@ class quality
             WHERE 
                 ((`{$r['field1']}` = '' OR `{$r['field1']}` IS NULL) AND (`{$r['field2']}` != '' AND `{$r['field2']}` IS NOT NULL))
                 OR
-                ((`{$r['field1']}` != '' AND `{$r['field1']}` IS NOT NULL) AND (`{$r['field2']}` = '' OR `{$r['field2']}` IS NULL));
+                ((`{$r['field1']}` != '' AND `{$r['field1']}` IS NOT NULL) AND (`{$r['field2']}` = '' OR `{$r['field2']}` IS NULL))
+                AND (`display` = 1)
             EOF;
         $pdo = db::getInstance();
       /*   $sqlStr = <<<EOF
