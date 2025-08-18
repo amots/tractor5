@@ -327,8 +327,16 @@ class quality
     }
     private function getMisMatchedFields($r)
     {
+          $sqlStr = <<<EOF
+            SELECT *
+            FROM  `items`
+            WHERE 
+                ((`{$r['field1']}` = '' OR `{$r['field1']}` IS NULL) AND (`{$r['field2']}` != '' AND `{$r['field2']}` IS NOT NULL))
+                OR
+                ((`{$r['field1']}` != '' AND `{$r['field1']}` IS NOT NULL) AND (`{$r['field2']}` = '' OR `{$r['field2']}` IS NULL));
+            EOF;
         $pdo = db::getInstance();
-        $sqlStr = <<<EOF
+      /*   $sqlStr = <<<EOF
             SELECT
                 *
             FROM
@@ -339,7 +347,7 @@ class quality
                 ) ^ (
                     `{$r['field2']}` is NULL OR `{$r['field2']}` = ''
                 ) and (`display` = 1)
-            EOF;
+            EOF; */
         $stmt = $pdo->prepare($sqlStr);
         try {
             $stmt->execute();
