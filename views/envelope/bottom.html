@@ -1,5 +1,5 @@
 <hr />
-<footer>
+<!-- <footer>
     <div class="row">
         <div class="col-sm-5 mx-auto text-center">
             &#9400; <bdi>2003</bdi>&nbsp;
@@ -9,8 +9,31 @@
             <a href="mailto: tractor.museum@gmail.com"><?= lang::trans('general.admin') ?></a>
         </div>
     </div>
-    <!-- &#9400; <bdi><?= util::auto_copyright(2003) ?></bdi>&nbsp;<?= Lang::trans('general.tractor_collection') ?> -->
-
+</footer> -->
+<footer class="bg-white fixed-bottom" style="z-index: 10; opacity: .8; background-color: #ddd">
+    <div class="row bg-light text-center text-lg-star pb-1" style="border-top: 1px solid #b5b5b5;">
+        <div class="col-sm-4 mx-auto text-center">
+            &#9400; <bdi>2003</bdi>&nbsp;
+            <?= Lang::trans('general.tractor_collection') ?>
+        </div>
+        <div class="col-sm-4 mx-auto text-center">
+            <?php 
+            $reference = new DateTime("2023-10-07");
+            $now = new DateTime("now");
+            $interval = $reference->diff($now);
+            $daysInOctober = $interval->days +1;
+            if ( Lang::getLocale() == 'he'){
+                echo <<<OCT
+                <span class="px-5 pb-1" style="background-color: yellow;"> {$daysInOctober}  באוקטובר</span>
+                OCT;
+            }
+            ?>
+            <!-- <span class="px-5 pb-1" style="background-color: yellow;"><?= $daysInOctober ?> באוקטובר</span> -->
+        </div>
+        <div class="col-sm-4 mx-auto text-center">
+            <a href="mailto: tractor.museum@gmail.com"><?= lang::trans('general.admin') ?></a>
+        </div>
+    </div>
 </footer>
 <script src="/resources/js/popper.min.js"></script>
 <script src="/resources/bootstrap-5.0.0-beta2-dist/js/bootstrap.min.js"></script>

@@ -222,8 +222,8 @@ class quality
     }
     private function renderTextSizeRatio()
     {
-        $wordRatio = 3;
-        $lenRatio = 5;
+        $wordRatio = 2;
+        $lenRatio = 4;
         // util::var_dump_pre($_GET, util::getCaller());
         $rt = explode('/', $_GET['rt']);
         // util::var_dump_pre($rt, util::getCaller());

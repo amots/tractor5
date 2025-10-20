@@ -6,7 +6,7 @@ referrerpolicy="origin"></script> -->
   options = {
     inline: true,
     plugins: "link image code directionality charmap emoticons searchreplace autosave",
-    toolbar: "undo redo | styleselect | bold italic | searchreplace  code  link  paste | forecolor backcolor | ltr rtl | charmap emoticons",
+    toolbar: "removeformat | undo redo | styleselect | bold italic | searchreplace  code  link | ltr rtl | charmap",
     content_css: '/resources/css/tractor.css',
     height: 300,
     relative_urls: false,
@@ -25,6 +25,7 @@ referrerpolicy="origin"></script> -->
         title: 'Inlines', items: [
           { title: 'cite', inline: 'cite' },
           { title: 'bdi', inline: 'bdi' },
+          { title: 'Left-to-Right span', inline: 'span', attributes: { dir: 'ltr' } },
           { title: 'Unordered List', block: 'ul' },
           { title: 'List item', inline: 'li' },
         ]
@@ -178,12 +179,12 @@ referrerpolicy="origin"></script> -->
             <div class="form-group">
               <label for="companyHe" class="control-label">יצרן</label>
               <input type="text" name="companyHe" id="companyHe" class="form-control" placeholder="שם יצרן"
-                value="<?= htmlspecialchars($item['companyHe']) ?>" />
+                value="<?= htmlspecialchars($item['companyHe'] ?? '') ?>" />
             </div>
             <div class="form-group">
               <label for="modelHe" class="control-label">דגם</label>
               <input type="text" name="modelHe" id="modelHe" class="form-control" placeholder="דגם"
-                value="<?= htmlspecialchars($item['modelHe']) ?>" />
+                value="<?= htmlspecialchars($item['modelHe'] ?? '') ?>" />
 
             </div>
           </div>
@@ -196,14 +197,14 @@ referrerpolicy="origin"></script> -->
             <div class="form-group">
               <label for="companyEn" class="control-label">Manufecturer</label>
               <input type="text" name="companyEn" id="companyEn" class="form-control ltr" placeholder="Manufecturer"
-                value="<?= htmlspecialchars($item['companyEn']) ?>" />
+                value="<?= htmlspecialchars($item['companyEn'] ?? '') ?>" />
 
             </div>
 
             <div class="form-group">
               <label for="modelEn" class="control-label">Model</label>
               <input type="text" name="modelEn" id="modelEn" class="form-control ltr" placeholder="Model"
-                value="<?= htmlspecialchars($item['modelEn']) ?>" />
+                value="<?= htmlspecialchars($item['modelEn'] ?? '') ?>" />
             </div>
           </div>
           <div class="col-sm-4">
