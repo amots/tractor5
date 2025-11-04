@@ -119,9 +119,12 @@ class ownershipController extends baseController
                         $(document).ready(function ()
                         {
                             new DataTable('#allOwnerships',{
-                            "language" : {
-                                    'url' : '/resources/DataTables-2/plug-ins/he.json',
-                                    },
+                            language : {
+                                    url : '/resources/DataTables-2/plug-ins/he.json',
+                            },
+                            paging: true,
+                            lengthMenu: [10, 25, 50, { label: 'הכל', value: -1 }],
+                            pageLength: -1,
                             });
                         }
                         );

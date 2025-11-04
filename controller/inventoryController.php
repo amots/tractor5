@@ -76,10 +76,11 @@ class inventoryController extends baseController
             $(document).ready(function ()
             {
                 new DataTable('#list2Sort',{
-                paging: false,
-                "language" : {
-                        'url' : '/resources/DataTables-2/plug-ins/he.json',
-                        },
+                    paging: true,
+                    pageLength: 100,
+                    "language" : {
+                            'url' : '/resources/DataTables-2/plug-ins/he.json',
+                            },
                 });
             }
             );

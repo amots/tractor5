@@ -106,10 +106,11 @@ class mngController extends baseController
                             $(document).ready(function ()
                             {
                                 new DataTable('#list2Sort',{
-                                "language" : {
+                                language : {
                                         'url' : '/resources/DataTables-2/plug-ins/he.json',
                                         },
-                                "pageLength": 100
+                                paging: true,
+                                pageLength: 100,
                                 });
                             }
                             );
