@@ -77,7 +77,8 @@ class inventoryController extends baseController
             {
                 new DataTable('#list2Sort',{
                     paging: true,
-                    pageLength: 100,
+                    lengthMenu: [10, 25, 50, 100, { label: 'הכל', value: -1 }],
+                    pageLength: -1,
                     "language" : {
                             'url' : '/resources/DataTables-2/plug-ins/he.json',
                             },
