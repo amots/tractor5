@@ -7,3 +7,4 @@ controller/testController.php
 views/test.html
 .DS_Store
 tractor5.code-workspace
+/log

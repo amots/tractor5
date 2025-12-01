@@ -24,7 +24,7 @@
                 <div class="mx-1">
                   <label for="title_he" class="control-label">כותר</label>
                   <input type="text" name="title_he" id="companyHe" required
-                         class="form-control" placeholder="כותר" value="<?= htmlspecialchars($item['title_he']) ?>" />
+                         class="form-control" placeholder="כותר" value="<?= htmlspecialchars($item['title_he'] ?? '') ?>" />
                 </div>
               </div>
 
@@ -32,7 +32,7 @@
                 <div class="mx-1">
                   <label for="title_en" class="control-label">Title</label>
                   <input type="text" name="title_en" id="title_en" required
-                         class="form-control ltr" placeholder="Title" value="<?= htmlspecialchars($item['title_en']) ?>" />
+                         class="form-control ltr" placeholder="Title" value="<?= htmlspecialchars($item['title_en'] ?? '') ?>" />
 
                 </div>
               </div>
