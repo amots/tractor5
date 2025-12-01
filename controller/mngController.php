@@ -251,20 +251,21 @@ class mngController extends baseController
             $this->messages[] = [2, 'Failed to validate token'];
         } else {
             $form = new form('articles');
-            $this->messages[] = [0, $form->storePostedData()];
+            $_SESSION['messages'][] = [0, $form->storePostedData()];
         }
         unset($_SESSION['csrf_token']);
         // Debug::dump($this->errors, 'errors in ' . util::getCaller());
 
         if (util::is_array_empty($this->errors)) {
             // Debug::dump("record {$form->last_id} save alright", 'in ' . util::getCaller());
-            $_SESSION['messages'] = [0, "record {$form->last_id} save alright"];
+            $_SESSION['messages'][] = [0, "record {$form->last_id} save alright"];
             // $returnId = $form->last_id;
         } else {
             // Debug::dump("Errors found", 'in ' . util::getCaller());
-            $_SESSION['messages'] = [2, $this->errors];
+            $_SESSION['messages'][] = [2, $this->errors];
         }
         // Debug::dump($returnId, 'return id in ' . util::getCaller());
+        // util::var_dump_pre($result, util::getCaller());
         // exit;
         header('location: /mng/editArticle/' . $returnId);
     }
@@ -281,10 +282,10 @@ class mngController extends baseController
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
             //            $this->messages[] = "record {$form->last_id} save alright";
-            $this->messages[] = [0, "record {$form->last_id} save alright"];
+            $_SESSION['messages'][] = $this->messages[] = [0, "record {$form->last_id} save alright"];
         } else {
             //            $this->errors[] = $result;
-            $_SESSION['messages'] = [2, $result];
+            $_SESSION['messages'][] = [2, $result];
         }
         //        $this->renderTemplateAnnouncements();
         header('location: /mng/editHighlight/' . $form->last_id);
@@ -301,10 +302,13 @@ class mngController extends baseController
         $form = new form('news');
         $result = $form->storePostedData();
         if (util::is_array_empty($result)) {
-            $_SESSION['messages'] = [0, "record {$form->last_id} save alright"];
+            $message =$_SESSION['messages'][] = [0, "record {$form->last_id} save alright"];
         } else {
-            $_SESSION['messages'] = [2, $result];
+            $message = $_SESSION['messages'][] = [2, $result];
         }
+        // util::var_dump_pre($result, util::getCaller());
+        // util::var_dump_pre($message, util::getCaller());
+        // exit();
         header('location: /mng/editAnnouncemet/' . $form->last_id);
     }
 
@@ -322,9 +326,9 @@ class mngController extends baseController
                 $form = new form('briefs');
                 $results = $form->storePostedData();
                 if (util::is_array_empty($results)) {
-                    $this->messages[] = "Record {$form->last_id} Saved OK";
+                    $this->messages[] = [0, "Record {$form->last_id} Saved OK"];
                 } else {
-                    $this->errors[] = $results;
+                    $this->messages[]= $this->errors[] = [2, $results];
                 }
             }
             unset($_SESSION['csrf_token']);
@@ -429,15 +433,15 @@ class mngController extends baseController
             and ($_POST['action'] == 'storePerson')
         ) {
             if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-                $this->messages[] = [2,'Verification Error'];
+                $this->messages[] = [2, 'Verification Error'];
             } else {
                 $form = new form('people');
                 $results = $form->storePostedData();
                 // util::var_dump_pre($results,'Store results '.util::getCaller());
                 if (util::is_array_empty($results)) {
-                    $this->messages[] = [0,"Record {$form->last_id} Saved OK"];
+                    $this->messages[] = [0, "Record {$form->last_id} Saved OK"];
                 } else {
-                    $this->messages[] = [2,$results];
+                    $this->messages[] = [2, $results];
                 }
             }
             unset($_SESSION['csrf_token']);
@@ -454,7 +458,7 @@ class mngController extends baseController
         }
         $people = new people();
         $pageTitle = $this->registry->template->pageTitle = $people_id_literal;
-         $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
+        $this->registry->template->breadCrumbs = breadCrumbs::genBreadCrumbs([
             ['literal' => Lang::trans('nav.homePage'), 'link' => '/'],
             ['literal' => Lang::trans('mng.mng'), 'link' => '/mng'],
             ['literal' => Lang::trans('mng.content'), 'link' => '/mng/content'],
@@ -462,7 +466,7 @@ class mngController extends baseController
             ['literal' => $pageTitle, 'link' => NULL],
         ]);
         $renderer = new template_renderer(__SITE_PATH . "/includes/mng/editPerson.html");
-         $this->registry->template->content = $people->renderEditPerson($people_id);
+        $this->registry->template->content = $people->renderEditPerson($people_id);
         util::renderAnnouncements($this->registry, $this->messages);
         $this->registry->template->show('/envelope/head');
         $this->registry->template->show('/mng/mng');
