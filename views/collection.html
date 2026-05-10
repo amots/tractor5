@@ -13,17 +13,17 @@
     <div class="col-md-7">
       <form action="/collection/search" method="GET">
         <div class="input-group mb-3">
-          <input type="text" 
-            class="form-control" 
-            placeholder="<?= lang::trans('nav.searchString') ?>" 
-            name="searchString" value="<?= htmlspecialchars($searchStr) ?>" />
+          <input type="text"
+            class="form-control"
+            placeholder="<?= lang::trans('nav.searchString') ?>"
+            name="searchString" value="<?= htmlspecialchars($searchStr ?? '') ?>" />
           <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
             <?= lang::trans('nav.search') ?>
           </button>
         </div>
       </form>
-      
-      <?= $content ?>
+
+      <?= $content ?? '' ?>
     </div>
     <div class="col-md-3">
       <aside>
