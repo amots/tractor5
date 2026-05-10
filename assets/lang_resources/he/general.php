@@ -1,6 +1,6 @@
 <?php
 
-//Hebrew
+//general Hebrew
 return [
     'icon' => 'סמליל',
     'museumIcon' => 'סמליל המוזיאון',
