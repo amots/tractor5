@@ -35,13 +35,11 @@ class inventory
                 if (!$isAdmin) {
                     $editLink = $itemLink;
                 }
-            } 
+            }
 
             $name = collection::renderTitle($item);
-            // $registrationTxt = (util::IsNullOrEmptyString($item['registration'])) ? 'N/A' : $item['registration'];
 
-            $statusText = (isset(collection::$status[$item['status']]['he'])) ? collection::$status[$item['status']]['he']
-                : '';
+            $statusText = collection::$status[$item['status'] ?? '']['he'] ?? '';
             $displayed = $item['display'] > 0 ? '' : list_items::$thumbsDown;
             $editIcon = ((strtoupper($param) == 'ARCHIVE') and !$isAdmin) ? $infoIcon : list_items::$biPencilSquare;
             $lines[] = <<<EOF
@@ -51,7 +49,7 @@ class inventory
                     {$item['item_id']}
                     </a>
                 </td>
-                <td class="text-left"><span dir="ltr">{$item['registration']}</span></td>   
+                <td class="text-left"><span dir="ltr">{$item['registration']}</span></td>
                 <td>{$displayed}</td>
                 <td><a href="{$itemLink}" target=_blank>{$name}</a></td>
                 <td>{$item['location']}</td>
@@ -248,9 +246,9 @@ class inventory
         $whereStr = join(' AND ', $where);
         // Debug::dump($whereStr, 'where string in ', util::getCaller());
         $sql = <<<EOF
-            SELECT {$field2get} FROM `items` it 
+            SELECT {$field2get} FROM `items` it
                 LEFT JOIN storage_location sl ON
-                sl.location_id = it.`location` 
+                sl.location_id = it.`location`
             WHERE {$whereStr}
             EOF;
         //    Debug::dump([$param,$where], 'where in ' . __METHOD__ . ' line ' . __LINE__);
