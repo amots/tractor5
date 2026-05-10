@@ -81,16 +81,17 @@ class User extends Password
             return intval($_SESSION['permission']);
         } else {
             return 0;
-            $_SESSION['messages'][] = [1,'User must be authorized to access'];
+           /*  $_SESSION['messages'][] = [1,'User must be authorized to access'];
             header('Location: /login');
-            exit();
+            exit(); */
         }
     }
-    static function checkAuthorization($level = 0)
+
+     static function checkAuthorization($level = user::permission_guest)
     {
         $permission = self::permission();
-        if ($permission and (($level == 0) or ($permission & $level))) return;
-        $_SESSION['messages'][] = [1,'User must be authorized to access'];
+        if ($permission and (($level == user::permission_guest) or ($permission & $level))) return;
+        $_SESSION['messages'][] = [1,Lang::trans('msg.mustLogin')];
         header('Location: /login');
         exit();
     }
@@ -104,7 +105,7 @@ class User extends Password
             $data[] = <<<EOF
                 <div class="ltr">
                 <a href="/mng/user/{$value['memberID']}">{$value['username']}</a>
-                </div>                    
+                </div>
                 EOF;
         }
         $addIcon = list_items::$addUser;
@@ -135,7 +136,6 @@ class User extends Password
             $user = $this->getUserData($memberID);
             $new = false;
         }
-        // Debug::dump($user,'user at ' . util::getCaller());
         unset($_SESSION['NewToken']);
         $data = [];
         foreach ($this->permission as $key => $value) {
@@ -147,7 +147,7 @@ class User extends Password
                 <input type="checkbox" id="{$key}" name="{$key}" data-p = "{$this->permission[$key]}"
                 class="permission_opt"
                 {$checked}>
-                <label for="{$key}">{$key} 
+                <label for="{$key}">{$key}
                 </div>
                 EOF;
         }
