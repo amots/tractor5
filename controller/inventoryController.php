@@ -1,10 +1,8 @@
 <?php
 
 /**
- * Description of inventoryController
- *
  * @author amots
- * @data 2021-04-02
+ * @since 2021-04-02
  */
 class inventoryController extends baseController
 {
