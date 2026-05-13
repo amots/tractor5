@@ -1,4 +1,4 @@
-<!-- <script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js" 
+<!-- <script src="https://cdn.tiny.cloud/1/81c14yduod7ywfwp8bacp4rjd9deabbw5avns90mntyy1px8/tinymce/5/tinymce.min.js"
 referrerpolicy="origin"></script> -->
 <!DOCTYPE html>
 <script type="text/javascript" src="/resources/tinymce/tinymce.min.js"></script>
@@ -262,8 +262,8 @@ referrerpolicy="origin"></script> -->
               <select class="form-select" id='fuel_type' name="fuel_type">
                 <?= $item['fuelTypeSelect'] ?>
               </select>
-              <!--              <input 
-                                type="text" name="fuel_type" id="fuel_type" class="form-control" 
+              <!--              <input
+                                type="text" name="fuel_type" id="fuel_type" class="form-control"
                                 placeholder="סוג דלק" value="<?= $item['fuel_type'] ?>" />-->
             </div>
           </div>
@@ -273,8 +273,8 @@ referrerpolicy="origin"></script> -->
               <select class="form-select" id='color' name="color">
                 <?= $item['colorSelect'] ?>
               </select>
-              <!--              <input 
-                                type="text" id="color" class="form-control" 
+              <!--              <input
+                                type="text" id="color" class="form-control"
                                 placeholder="צבע" value="<?= $item['color'] ?>" />-->
             </div>
           </div>
@@ -295,12 +295,12 @@ referrerpolicy="origin"></script> -->
                 <div class="col-sm-6 px-2">
                   <label for="sourceHe" class="col-md-2 control-label">מקור</label>
                   <input type="text" name="sourceHe" class="form-control"
-                    value="<?= htmlspecialchars($item['sourceHe']) ?>" />
+                    value="<?= htmlspecialchars((string)($item['sourceHe'] ?? '')) ?>" />
                 </div>
                 <div class="col-sm-6 px-2">
                   <label for="sourceEn" class="col-md-2 control-label">source</label>
                   <input type="text" name="sourceEn" class="form-control ltr"
-                    value="<?= htmlspecialchars($item['sourceEn']) ?>" />
+                    value="<?= htmlspecialchars((string) $item['sourceEn'] ?? '') ?>" />
                 </div>
               </div>
             </div>

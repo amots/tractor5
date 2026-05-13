@@ -134,7 +134,7 @@ class serviceController extends baseController
         $item_id = filter_input(INPUT_POST, 'item_id');
         $service_id = filter_input(INPUT_POST, 'service_id');
         if (!util::validatePostToken('csrf_token', 'csrf_token')) {
-            $storeErrors[] = $_SESSION['messages'][] = [2,'Failed to validate csrf token'];
+            $storeErrors[] = $_SESSION['messages'][] = [2, 'Failed to validate csrf token'];
         } else {
             $form = new form('service');
             $storeErrors[] = $form->storePostedData();
@@ -143,10 +143,10 @@ class serviceController extends baseController
         unset($_SESSION['csrf_token']);
 
         if (util::is_array_empty($storeErrors)) {
-            $_SESSION['messages'][] = [0,"Record {$service_id} stored OK"];
+            $_SESSION['messages'][] = [0, "Record {$service_id} stored OK"];
         } else {
-            $_SESSION['messages'][] = [2,"Failed to store {$service_id}"];
-            $_SESSION['messages'][] = [2,$storeErrors];
+            $_SESSION['messages'][] = [2, "Failed to store {$service_id}"];
+            $_SESSION['messages'][] = [2, $storeErrors];
         }
 
         $newUrl = "/service/editService/{$item_id}/{$service_id}";
@@ -177,29 +177,4 @@ class serviceController extends baseController
         $this->registry->template->show('service/serviceList');
         $this->registry->template->show('/envelope/bottom');
     }
-   /*  private function renderTemplateAnnouncements()
-    {
-        $this->registry->template->errors = util::renderErrors($this->errors);
-        $this->registry->template->messages = util::renderMessages($this->messages);
-    } */
-
-    /*  private function setMenuPermissions()
-    {
-        $this->checkAuthorization();
-        $hide = 'd-none';
-        $table = [
-            'ms_auto' => $this->registry->template->ms_auto,
-            'hide1' => $_SESSION['permission'] & User::permission_content ? NULL
-                : $hide,
-            'hide2' => $_SESSION['permission'] & User::permission_inventory ? NULL
-                : $hide,
-            'hide4' => $_SESSION['permission'] & User::permission_service ? NULL
-                : $hide,
-            'hide8' => $_SESSION['permission'] & User::permission_ownership ? NULL
-                : $hide,
-            'hide16' => $_SESSION['permission'] & User::permission_administrator
-                ? NULL : $hide,
-        ];
-        return $table;
-    } */
 }

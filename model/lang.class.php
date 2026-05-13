@@ -19,7 +19,7 @@ class Lang {
             setcookie($this->langCookieName, $this->registry->language,
                     time() + (86400 * 30), '/');
         }
-        
+
     }
 
     private function langCode($lang) {

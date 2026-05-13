@@ -1,7 +1,7 @@
-RewriteEngine on
+RewriteEngine On
+
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteRule ^(.*)$ index.php?rt=$1 [L,QSA]
+RewriteRule ^(.*)$ index.php?rt=$1 [B,L,QSA]

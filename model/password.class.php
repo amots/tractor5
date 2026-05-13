@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 if (!defined('PASSWORD_BCRYPT')) {
     define('PASSWORD_BCRYPT', 1);
     define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
@@ -8,7 +8,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 Class Password {
 
     public function __construct() {
-        
+
     }
 
     /**
