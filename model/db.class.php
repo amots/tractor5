@@ -13,11 +13,12 @@ class db {
     static $defFile = __SITE_PATH . '/private/db_config.php';
 
     private function __construct() {
-    
+
     }
     public static function getDbName() {
-        require_once self::$defFile;
-        return DBconfig::basename;
+        // require_once self::$defFile;
+        // return DBconfig::basename;
+        return $_SERVER['BASENAME'];
     }
     /**
      *
@@ -29,19 +30,24 @@ class db {
      *
      */
     public static function getInstance() {
-        
         if (!self::$instance) {
-            
-            require_once self::$defFile;
-            $dsn = 'mysql:host=' . DBconfig::host . ';dbname=' . DBconfig::basename . ';port=' . DBconfig::port . ';connect_timeout=15';
-            $user = DBconfig::user;
-            $password = DBconfig::password;
+
+            // require_once self::$defFile;
+            // $dsn = 'mysql:host=' . DBconfig::host . ';dbname=' . DBconfig::basename . ';port=' . DBconfig::port . ';connect_timeout=15';
+            // $dsn = 'mysql:host=' . DBconfig::host . ';dbname=' . DBconfig::basename;
+            // error_log(print_r($_SERVER, true));
+            // $dsn = 'mysql:host=' . DBconfig::host . ';dbname=' . DBconfig::basename;
+            $host= $_SERVER['HOST'];//DBconfig::host;
+            $dbname = $_SERVER['BASENAME'];//DBconfig::basename;
+            $dsn = "mysql:host={$host};dbname={$dbname}";
+            // error_log($dsn . "  ". __METHOD__ .'::'. __LINE__);
+            $user = $_SERVER['USER']; //DBconfig::user;
+            $password =  $_SERVER['PASSWORD']; //DBconfig::password;
 
             $opt = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_EMULATE_PREPARES => true,
             ];
             try {
                 self::$instance = new PDO($dsn, $user, $password, $opt);
@@ -63,7 +69,7 @@ class db {
      *
      */
     private function __clone() {
-        
+
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /**
  * Description of QRController
  *
@@ -7,16 +7,15 @@
  * @Date 2018-10-18
  * url example: tractor.org.il/QR/005
  */
-class QRController Extends baseController {
+class qrController Extends baseController {
 
-    private $rt = NULL;
-    private $qr;
+    private $rt = []; /** @var array */
+    private $qr; /** @var object  */
 
     public function __construct($registry) {
         parent::__construct($registry);
         $this->rt = explode('/', $_REQUEST['rt']);
         $this->qr = new QR();
-        // Debug::dump($this->rt, 'rt in ' . util::getCaller());
     }
 
     public function index() {
@@ -35,10 +34,6 @@ class QRController Extends baseController {
                 exit();
             }
         }
-        // echo 'dest is: ' . $dest;
-        // Debug::dump($link, 'link in ' . util::getCaller());
-
-        // echo 'link is: ' . $link;
         header($dest);
     }
 public function list () {
